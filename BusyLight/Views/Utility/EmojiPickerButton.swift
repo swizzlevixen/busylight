@@ -3,143 +3,118 @@ import AppKit
 
 // MARK: - EmojiPickerButton
 
-/// A bordered button showing the current emoji.  Clicking opens a small popover
-/// that hosts a focused text field and immediately launches the system Character
-/// Palette.  Picking an emoji closes both the palette and the popover.
+/// A bordered button showing the current emoji.  Clicking opens the system
+/// Character Palette immediately — no intermediate text field is visible.
+///
+/// Because SwiftUI List cells run in a remote-view process, calling
+/// orderFrontCharacterPalette from an NSViewRepresentable inside the list fails
+/// silently.  EmojiInputProxy works around this by routing input through a
+/// hidden, off-screen NSWindow that lives in the normal process context.
 struct EmojiPickerButton: View {
     @Binding var emoji: String
-    @State private var showPopover = false
 
     var body: some View {
         Button {
-            showPopover = true
+            EmojiInputProxy.shared.pick { picked in
+                emoji = picked
+            }
         } label: {
             Text(emoji)
                 .font(.system(size: 18))
         }
         .buttonStyle(.bordered)
         .frame(width: 36, height: 28)
-        // Popover lives in a normal NSWindow — outside the SwiftUI List remote
-        // view process — so orderFrontCharacterPalette works correctly there.
-        .popover(isPresented: $showPopover, arrowEdge: .bottom) {
-            EmojiPickerPopover(emoji: $emoji) { showPopover = false }
-        }
     }
 }
 
-// MARK: - EmojiPickerPopover
+// MARK: - EmojiInputProxy
 
-/// Content of the popover: a single focused field wired to the Character Palette.
-private struct EmojiPickerPopover: View {
-    @Binding var emoji: String
-    let dismiss: () -> Void
+/// Singleton that owns a hidden, off-screen NSWindow containing a 1×1
+/// NSTextField.  When `pick(completion:)` is called:
+///   1. The hidden window is made key so its text field can receive input.
+///   2. The system Character Palette is opened via orderFrontCharacterPalette.
+///   3. The user picks an emoji; controlTextDidChange intercepts it.
+///   4. The completion is called, the palette and hidden window are closed,
+///      and focus is returned to the Settings window.
+@MainActor
+final class EmojiInputProxy: NSObject, NSTextFieldDelegate {
+    static let shared = EmojiInputProxy()
 
-    var body: some View {
-        EmojiAutoFieldRepresentable(emoji: $emoji, onPicked: dismiss)
-            .frame(width: 52, height: 36)
-            .padding(8)
+    private let inputWindow: NSWindow
+    private let textField: NSTextField
+    private var completion: ((String) -> Void)?
+    private weak var characterViewerWindow: NSWindow?
+    private weak var previousKeyWindow: NSWindow?
+
+    private override init() {
+        // Tiny borderless window placed far off-screen — never visible.
+        inputWindow = NSWindow(
+            contentRect: NSRect(x: -9999, y: -9999, width: 1, height: 1),
+            styleMask: [],
+            backing: .buffered,
+            defer: false
+        )
+        inputWindow.isOpaque = false
+        inputWindow.backgroundColor = .clear
+        inputWindow.hasShadow = false
+        inputWindow.level = .floating
+        inputWindow.collectionBehavior = [.canJoinAllSpaces, .stationary, .ignoresCycle]
+
+        textField = NSTextField(frame: NSRect(x: 0, y: 0, width: 1, height: 1))
+        textField.isEditable = true
+        inputWindow.contentView?.addSubview(textField)
+
+        super.init()
+        textField.delegate = self
     }
-}
 
-// MARK: - EmojiAutoTextField
+    /// Open the system Character Palette and call `completion` with the emoji
+    /// the user selects.
+    func pick(completion: @escaping (String) -> Void) {
+        self.completion = completion
+        previousKeyWindow = NSApp.keyWindow
 
-/// NSTextField subclass that:
-///   • Becomes first responder as soon as it enters a window
-///   • Opens the system Character Palette immediately
-///   • Tracks the palette window so it can close it after one emoji is chosen
-class EmojiAutoTextField: NSTextField {
-    weak var characterViewerWindow: NSWindow?
+        textField.stringValue = ""
+        inputWindow.makeKeyAndOrderFront(nil)
+        inputWindow.makeFirstResponder(textField)
 
-    override func viewDidMoveToWindow() {
-        super.viewDidMoveToWindow()
-        guard let w = window else { return }
-        w.makeFirstResponder(self)
+        // Snapshot the window list so we can identify the palette later.
+        let windowsBefore = Set(NSApp.windows.map { ObjectIdentifier($0) })
+        NSApp.orderFrontCharacterPalette(nil)
 
-        DispatchQueue.main.async { [weak self] in
-            // Snapshot the window list so we can identify the new palette window
-            let before = Set(NSApp.windows.map { ObjectIdentifier($0) })
-            NSApp.orderFrontCharacterPalette(nil)
-            // Give the palette a moment to appear, then capture its window
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
-                self?.characterViewerWindow = NSApp.windows.first {
-                    !before.contains(ObjectIdentifier($0))
-                }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
+            self?.characterViewerWindow = NSApp.windows.first {
+                !windowsBefore.contains(ObjectIdentifier($0))
             }
         }
     }
 
-    /// Dismiss the Character Palette that was opened when this field appeared.
-    func closeCharacterViewer() {
+    // MARK: NSTextFieldDelegate
+
+    func controlTextDidChange(_ obj: Notification) {
+        guard let tf = obj.object as? NSTextField else { return }
+        let text = tf.stringValue
+
+        // Ignore non-emoji keystrokes (e.g. accidental typing).
+        guard let first = text.first, first.isEmoji else {
+            tf.stringValue = ""
+            return
+        }
+
+        let picked = String(first)
+
+        // Fire the completion.
+        completion?(picked)
+        completion = nil
+
+        // Close the Character Palette.
         characterViewerWindow?.orderOut(nil)
         characterViewerWindow = nil
-    }
-}
 
-// MARK: - EmojiAutoFieldRepresentable
-
-struct EmojiAutoFieldRepresentable: NSViewRepresentable {
-    @Binding var emoji: String
-    let onPicked: () -> Void
-
-    func makeNSView(context: Context) -> EmojiAutoTextField {
-        let field = EmojiAutoTextField()
-        field.stringValue = emoji
-        field.alignment = .center
-        field.font = NSFont.systemFont(ofSize: 18)
-        field.isBordered = true
-        field.isBezeled = true
-        field.bezelStyle = .roundedBezel
-        field.isEditable = true
-        field.isSelectable = true
-        field.delegate = context.coordinator
-        return field
-    }
-
-    func updateNSView(_ nsView: EmojiAutoTextField, context: Context) {
-        if nsView.stringValue != emoji {
-            nsView.stringValue = emoji
-        }
-    }
-
-    func makeCoordinator() -> Coordinator { Coordinator(emoji: $emoji, onPicked: onPicked) }
-
-    // MARK: Coordinator
-
-    final class Coordinator: NSObject, NSTextFieldDelegate {
-        var emoji: Binding<String>
-        let onPicked: () -> Void
-
-        init(emoji: Binding<String>, onPicked: @escaping () -> Void) {
-            self.emoji = emoji
-            self.onPicked = onPicked
-        }
-
-        func controlTextDidChange(_ obj: Notification) {
-            guard let field = obj.object as? EmojiAutoTextField else { return }
-            let text = field.stringValue
-
-            if let first = text.first, first.isEmoji {
-                let single = String(first)
-                if text != single { field.stringValue = single }
-                emoji.wrappedValue = single
-                // Close the palette then the popover
-                field.closeCharacterViewer()
-                onPicked()
-            } else if text.isEmpty {
-                field.stringValue = emoji.wrappedValue   // revert — don't allow blank
-            } else {
-                field.stringValue = emoji.wrappedValue   // non-emoji typed — revert
-            }
-        }
-
-        func control(_ control: NSControl, textView: NSTextView,
-                     doCommandBy sel: Selector) -> Bool {
-            if sel == #selector(NSResponder.insertNewline(_:)) {
-                control.window?.makeFirstResponder(nil)
-                return true
-            }
-            return false
-        }
+        // Hide the input window and return focus to the Settings window.
+        inputWindow.orderOut(nil)
+        tf.stringValue = ""
+        previousKeyWindow?.makeKeyAndOrderFront(nil)
     }
 }
 
@@ -150,7 +125,6 @@ extension Character {
     var isEmoji: Bool {
         guard let first = unicodeScalars.first else { return false }
         if first.properties.isEmoji && first.properties.isEmojiPresentation { return true }
-        // Digits + variation selector, keycap sequences, etc.
         if unicodeScalars.count > 1 {
             return unicodeScalars.contains { $0.properties.isEmoji }
         }
