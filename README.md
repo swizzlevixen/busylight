@@ -8,8 +8,7 @@ A macOS menu bar application that connects to [Home Assistant](https://www.home-
 
 - Displays the currently active scene (emoji, name, or both) in the macOS menu bar
 - Click to see your list of configured scenes and switch between them
-- Option-click to access Settings or quit the app
-- Visual feedback when a scene is activated or fails
+- **Settings…** and **Quit Busy Light** are always available at the bottom of the menu
 
 ### Home Assistant Integration
 

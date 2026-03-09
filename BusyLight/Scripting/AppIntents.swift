@@ -15,7 +15,7 @@ struct ActivateSceneIntent: AppIntent {
     func perform() async throws -> some IntentResult & ReturnsValue<String> {
         let settings = AppSettings.shared
         settings.activeSceneId = entityId
-        MenuBarManager.shared.updateButtonTitle()
+        // MenuBarLabelView updates automatically via @Observable on AppSettings
 
         guard !settings.haBaseURL.isEmpty && !settings.haToken.isEmpty else {
             return .result(value: "Scene set locally but HA not configured")
@@ -45,7 +45,7 @@ struct DeactivateSceneIntent: AppIntent {
     @MainActor
     func perform() async throws -> some IntentResult & ReturnsValue<String> {
         AppSettings.shared.activeSceneId = nil
-        MenuBarManager.shared.updateButtonTitle()
+        // MenuBarLabelView updates automatically via @Observable on AppSettings
         return .result(value: "Scene deactivated")
     }
 }

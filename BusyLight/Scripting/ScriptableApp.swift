@@ -13,7 +13,7 @@ class ScriptableApp: NSApplication {
             } else {
                 AppSettings.shared.activeSceneId = newValue
             }
-            MenuBarManager.shared.updateButtonTitle()
+            // MenuBarLabelView updates automatically via @Observable on AppSettings
 
             // If setting a scene, also trigger it via HA
             if !newValue.isEmpty {
@@ -41,7 +41,7 @@ class ScriptableApp: NSApplication {
         set {
             if let mode = DisplayMode(rawValue: newValue) {
                 AppSettings.shared.displayMode = mode
-                MenuBarManager.shared.updateButtonTitle()
+                // MenuBarLabelView updates automatically via @Observable on AppSettings
             }
         }
     }

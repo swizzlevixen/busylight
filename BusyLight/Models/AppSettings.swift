@@ -120,6 +120,28 @@ final class AppSettings {
         menuItems.compactMap { $0.sceneItem }
     }
 
+    /// Text shown in the menu bar, reflecting the active scene and display mode.
+    var menuBarLabel: String {
+        if let activeId = activeSceneId,
+           let scene = scenes.first(where: { $0.entityId == activeId }) {
+            switch displayMode {
+            case .emojiOnly: return scene.emoji
+            case .nameOnly:  return scene.displayName
+            case .both:      return "\(scene.emoji) \(scene.displayName)"
+            }
+        }
+        return noSceneLabel
+    }
+
+    /// Text shown when no scene is active, respecting the display mode setting.
+    var noSceneLabel: String {
+        switch displayMode {
+        case .emojiOnly: return "\u{26AB}"
+        case .nameOnly:  return "No Scene"
+        case .both:      return "\u{26AB} No Scene"
+        }
+    }
+
     // MARK: - Init
 
     private init() {

@@ -14,9 +14,8 @@ struct GeneralTab: View {
                     Text("Both").tag(DisplayMode.both)
                 }
                 .pickerStyle(.radioGroup)
-                .onChange(of: settings.displayMode) { _, _ in
-                    MenuBarManager.shared.updateButtonTitle()
-                }
+                // No manual update needed; MenuBarLabelView reacts automatically
+                // via @Observable on AppSettings.displayMode
             }
 
             Section("Startup") {

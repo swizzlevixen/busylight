@@ -13,7 +13,7 @@ class ActivateSceneCommand: NSScriptCommand {
         Task { @MainActor in
             let settings = AppSettings.shared
             settings.activeSceneId = entityId
-            MenuBarManager.shared.updateButtonTitle()
+            // MenuBarLabelView updates automatically via @Observable on AppSettings
 
             if !settings.haBaseURL.isEmpty && !settings.haToken.isEmpty {
                 await HomeAssistantService.shared.activateScene(
@@ -32,7 +32,7 @@ class DeactivateSceneCommand: NSScriptCommand {
     override func performDefaultImplementation() -> Any? {
         Task { @MainActor in
             AppSettings.shared.activeSceneId = nil
-            MenuBarManager.shared.updateButtonTitle()
+            // MenuBarLabelView updates automatically via @Observable on AppSettings
         }
         return nil
     }

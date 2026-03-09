@@ -37,12 +37,11 @@ final class GlobalHotkeyManager {
         let entityId = shortcut.sceneEntityId
 
         // Toggle: if this scene is already active, deactivate it
+        // MenuBarLabelView updates automatically via @Observable on AppSettings
         if settings.activeSceneId == entityId {
             settings.activeSceneId = nil
-            MenuBarManager.shared.updateButtonTitle()
         } else {
             settings.activeSceneId = entityId
-            MenuBarManager.shared.updateButtonTitle()
 
             Task {
                 await HomeAssistantService.shared.activateScene(

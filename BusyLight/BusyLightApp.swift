@@ -5,6 +5,14 @@ struct BusyLightApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
     var body: some Scene {
+        MenuBarExtra {
+            MenuBarContentView()
+        } label: {
+            // Kept as a separate View so @Observable change tracking works.
+            MenuBarLabelView()
+        }
+        .menuBarExtraStyle(.menu)
+
         Settings {
             SettingsView()
                 .onDisappear {

@@ -152,7 +152,7 @@ final class TriggerManager {
         }
 
         settings.activeSceneId = entityId
-        MenuBarManager.shared.updateButtonTitle()
+        // MenuBarLabelView updates automatically via @Observable on AppSettings
 
         guard !settings.haBaseURL.isEmpty && !settings.haToken.isEmpty else { return }
 
@@ -172,7 +172,7 @@ final class TriggerManager {
     private func revertToPreviousScene() {
         if let previous = previousSceneId {
             settings.activeSceneId = previous
-            MenuBarManager.shared.updateButtonTitle()
+            // MenuBarLabelView updates automatically via @Observable on AppSettings
 
             // Activate the previous scene on HA
             guard !settings.haBaseURL.isEmpty && !settings.haToken.isEmpty else {
@@ -190,7 +190,7 @@ final class TriggerManager {
         } else {
             // No previous scene to revert to; clear active scene
             settings.activeSceneId = nil
-            MenuBarManager.shared.updateButtonTitle()
+            // MenuBarLabelView updates automatically via @Observable on AppSettings
         }
         previousSceneId = nil
     }
