@@ -30,10 +30,48 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         TriggerManager.shared.startAllMonitors()
 
-        // First-run welcome dialog
+        // Observe settings open/close requests (replaces the hidden-window workaround)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleOpenSettings(_:)),
+            name: .openSettingsRequest,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleSettingsWindowClosed),
+            name: .settingsWindowClosed,
+            object: nil
+        )
+
+        // First-run welcome dialog (deferred to next run-loop cycle so the
+        // app finishes launching first)
         if !AppSettings.shared.hasCompletedFirstRun {
-            showFirstRunDialog()
+            DispatchQueue.main.async { [self] in
+                showFirstRunDialog()
+            }
         }
+    }
+
+    @objc private func handleOpenSettings(_ notification: Notification) {
+        NSApp.setActivationPolicy(.regular)
+        NSApp.activate(ignoringOtherApps: true)
+        NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+
+        // Set the window title after the settings window appears
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            if let settingsWindow = NSApp.windows.first(where: {
+                $0.isVisible && $0.styleMask.contains(.titled)
+            }) {
+                settingsWindow.title = "Settings"
+                settingsWindow.makeKeyAndOrderFront(nil)
+                settingsWindow.orderFrontRegardless()
+            }
+        }
+    }
+
+    @objc private func handleSettingsWindowClosed() {
+        NSApp.setActivationPolicy(.accessory)
     }
 
     private func showFirstRunDialog() {
