@@ -29,10 +29,23 @@ struct EmojiPickerButton: View {
     }
 }
 
+// MARK: - EmojiInputWindow
+
+/// Borderless NSWindow subclass that opts into becoming key.
+///
+/// A plain NSWindow with styleMask [] returns NO from canBecomeKeyWindow,
+/// so makeKeyAndOrderFront silently fails, makeFirstResponder has no effect,
+/// and the Character Palette never delivers input.  Overriding canBecomeKey
+/// here fixes that without needing a visible title bar.
+final class EmojiInputWindow: NSWindow {
+    override var canBecomeKey: Bool { true }
+    override var canBecomeMain: Bool { false }
+}
+
 // MARK: - EmojiInputProxy
 
-/// Manages a persistent off-screen NSWindow containing an NSTextView that acts
-/// as the Character Palette's insertion target.
+/// Manages a persistent off-screen EmojiInputWindow containing an NSTextView
+/// that acts as the Character Palette's insertion target.
 ///
 /// Flow:
 ///   1. pick(completion:) is called.
@@ -46,7 +59,7 @@ struct EmojiPickerButton: View {
 final class EmojiInputProxy: NSObject, NSTextViewDelegate {
     static let shared = EmojiInputProxy()
 
-    private let inputWindow: NSWindow
+    private let inputWindow: EmojiInputWindow
     private let textView: NSTextView
 
     private var completion: ((String) -> Void)?
@@ -56,7 +69,8 @@ final class EmojiInputProxy: NSObject, NSTextViewDelegate {
     private override init() {
         // Off-screen, properly-sized window. NSTextView requires a real size
         // to properly initialise its text input context; 1×1 is insufficient.
-        let win = NSWindow(
+        // EmojiInputWindow overrides canBecomeKey so makeKeyAndOrderFront works.
+        let win = EmojiInputWindow(
             contentRect: NSRect(x: -600, y: 200, width: 200, height: 50),
             styleMask: [],
             backing: .buffered,
