@@ -147,19 +147,18 @@ final class EmojiInputProxy: NSObject, NSTextViewDelegate {
     ///   Palette to (typically `NSEvent.mouseLocation` offset as desired).
     ///   This point is written to `paletteAnchorScreenRect` so that
     ///   `firstRect(forCharacterRange:actualRange:)` returns it directly,
-    ///   giving the palette a precise anchor rather than the coarse one
-    ///   provided by `setFrameOrigin` alone.
+    ///   giving the palette a precise, pixel-accurate anchor.
+    ///
+    ///   The input window intentionally stays at its default off-screen position.
+    ///   Moving it to the button location is unnecessary (firstRect controls the
+    ///   palette anchor, not the window frame) and causes the NSTextView's
+    ///   insertion-point caret to appear as a floating cursor near the button.
     func pick(near screenPoint: NSPoint, completion: @escaping (String) -> Void) {
         self.completion = completion
         previousKeyWindow = NSApp.keyWindow
 
-        // Move the input window near the button so it is on-screen and can
-        // become key.  The palette's exact position is controlled by firstRect.
-        inputWindow.setFrameOrigin(screenPoint)
-
-        // Tell firstRect where to point the palette.  This is the canonical
-        // NSTextInputClient mechanism the Character Palette uses for anchoring,
-        // and it overrides any effect the window frame position might have.
+        // Tell firstRect exactly where to anchor the palette.  This is the
+        // canonical NSTextInputClient mechanism — the window frame is irrelevant.
         textView.paletteAnchorScreenRect = NSRect(
             origin: screenPoint,
             size: NSSize(width: 1, height: 1)
@@ -171,7 +170,16 @@ final class EmojiInputProxy: NSObject, NSTextViewDelegate {
 
         // Snapshot before opening so we can identify the palette window later.
         windowsBefore = Set(NSApp.windows.map { ObjectIdentifier($0) })
-        NSApp.orderFrontCharacterPalette(nil)
+
+        // Defer by one run-loop cycle.  NSTextView's NSTextInputContext is lazily
+        // initialised on the very first makeFirstResponder call; calling
+        // orderFrontCharacterPalette synchronously on that same call stack means
+        // the context isn't active yet and the palette silently fails to open
+        // (reproduces as "first click does nothing").  One async hop lets the
+        // run-loop complete the initialisation before the palette attaches.
+        DispatchQueue.main.async {
+            NSApp.orderFrontCharacterPalette(nil)
+        }
     }
 
     // MARK: NSTextViewDelegate

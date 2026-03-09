@@ -231,22 +231,24 @@ final class EmojiInputProxyTests: XCTestCase {
             "can be overridden for precise palette positioning")
     }
 
-    func testInputWindowInitiallyOffScreen() {
-        // On creation the window starts off-screen; it is only moved on-screen
-        // when pick(near:) is called with the button's location.
-        let win = EmojiInputWindow(
-            contentRect: NSRect(x: -600, y: 200, width: 200, height: 50),
-            styleMask: [],
-            backing: .buffered,
-            defer: false
-        )
-        XCTAssertLessThan(win.frame.origin.x, 0,
-            "inputWindow initial x should be negative (off-screen)")
+    func testInputWindowStaysOffScreen() {
+        // The input window lives permanently off-screen.  pick(near:) never calls
+        // setFrameOrigin because moving the window to the button location would
+        // make the NSTextView's insertion-point caret visible as a floating cursor.
+        // Palette positioning is handled entirely by firstRect, not the window frame.
+        let proxy = EmojiInputProxy.shared
+        let mirror = Mirror(reflecting: proxy)
+        let windowChild = mirror.children.first { $0.label == "inputWindow" }
+        XCTAssertNotNil(windowChild, "EmojiInputProxy should have an inputWindow property")
+        if let win = windowChild?.value as? NSWindow {
+            XCTAssertLessThan(win.frame.origin.x, 0,
+                "inputWindow must stay off-screen (x < 0) so the text caret is never visible")
+        }
     }
 
-    func testSetFrameOriginRepositionsWindow() {
-        // Verifies that setFrameOrigin (called by pick(near:)) moves the window
-        // to the requested location so the Character Palette anchors there.
+    func testEmojiInputWindowCanBeReposistionedIfNeeded() {
+        // Documents that EmojiInputWindow supports setFrameOrigin (NSWindow API),
+        // even though pick(near:) no longer calls it.  Kept as a contract test.
         let win = EmojiInputWindow(
             contentRect: NSRect(x: -600, y: 200, width: 200, height: 50),
             styleMask: [],
