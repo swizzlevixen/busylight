@@ -1,97 +1,140 @@
 import SwiftUI
 import AppKit
 
-/// A button that displays the current emoji and opens the system emoji picker when clicked.
-/// Only allows a single emoji character to be set.
+// MARK: - EmojiPickerButton
+
+/// A bordered button showing the current emoji.  Clicking opens a small popover
+/// that hosts a focused text field and immediately launches the system Character
+/// Palette.  Picking an emoji closes both the palette and the popover.
 struct EmojiPickerButton: View {
     @Binding var emoji: String
+    @State private var showPopover = false
 
     var body: some View {
-        EmojiFieldRepresentable(emoji: $emoji)
-            .frame(width: 36, height: 28)
-    }
-}
-
-// MARK: - EmojiTextField (NSTextField subclass)
-
-/// NSTextField subclass that opens the system Character Palette whenever the
-/// user clicks on it.  The palette sends its chosen character to whatever is
-/// currently first-responder — which will be this field's field editor — so
-/// the existing `controlTextDidChange` delegate method picks it up normally.
-class EmojiTextField: NSTextField {
-    override func mouseDown(with event: NSEvent) {
-        super.mouseDown(with: event)
-        // Defer so the field editor (first responder) is in place before the
-        // palette is shown; otherwise the palette has nowhere to send input.
-        DispatchQueue.main.async {
-            NSApp.orderFrontCharacterPalette(nil)
+        Button {
+            showPopover = true
+        } label: {
+            Text(emoji)
+                .font(.system(size: 18))
+        }
+        .buttonStyle(.bordered)
+        .frame(width: 36, height: 28)
+        // Popover lives in a normal NSWindow — outside the SwiftUI List remote
+        // view process — so orderFrontCharacterPalette works correctly there.
+        .popover(isPresented: $showPopover, arrowEdge: .bottom) {
+            EmojiPickerPopover(emoji: $emoji) { showPopover = false }
         }
     }
 }
 
-// MARK: - EmojiFieldRepresentable
+// MARK: - EmojiPickerPopover
 
-/// NSViewRepresentable wrapping an EmojiTextField that opens the system Character Palette
-/// and restricts input to a single emoji character.
-struct EmojiFieldRepresentable: NSViewRepresentable {
+/// Content of the popover: a single focused field wired to the Character Palette.
+private struct EmojiPickerPopover: View {
     @Binding var emoji: String
+    let dismiss: () -> Void
 
-    func makeNSView(context: Context) -> EmojiTextField {
-        let textField = EmojiTextField()
-        textField.stringValue = emoji
-        textField.alignment = .center
-        textField.font = NSFont.systemFont(ofSize: 18)
-        textField.isBordered = true
-        textField.isBezeled = true
-        textField.bezelStyle = .roundedBezel
-        textField.isEditable = true
-        textField.isSelectable = true
-        textField.delegate = context.coordinator
-        textField.setContentHuggingPriority(.required, for: .horizontal)
-        return textField
+    var body: some View {
+        EmojiAutoFieldRepresentable(emoji: $emoji, onPicked: dismiss)
+            .frame(width: 52, height: 36)
+            .padding(8)
+    }
+}
+
+// MARK: - EmojiAutoTextField
+
+/// NSTextField subclass that:
+///   • Becomes first responder as soon as it enters a window
+///   • Opens the system Character Palette immediately
+///   • Tracks the palette window so it can close it after one emoji is chosen
+class EmojiAutoTextField: NSTextField {
+    weak var characterViewerWindow: NSWindow?
+
+    override func viewDidMoveToWindow() {
+        super.viewDidMoveToWindow()
+        guard let w = window else { return }
+        w.makeFirstResponder(self)
+
+        DispatchQueue.main.async { [weak self] in
+            // Snapshot the window list so we can identify the new palette window
+            let before = Set(NSApp.windows.map { ObjectIdentifier($0) })
+            NSApp.orderFrontCharacterPalette(nil)
+            // Give the palette a moment to appear, then capture its window
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
+                self?.characterViewerWindow = NSApp.windows.first {
+                    !before.contains(ObjectIdentifier($0))
+                }
+            }
+        }
     }
 
-    func updateNSView(_ nsView: EmojiTextField, context: Context) {
+    /// Dismiss the Character Palette that was opened when this field appeared.
+    func closeCharacterViewer() {
+        characterViewerWindow?.orderOut(nil)
+        characterViewerWindow = nil
+    }
+}
+
+// MARK: - EmojiAutoFieldRepresentable
+
+struct EmojiAutoFieldRepresentable: NSViewRepresentable {
+    @Binding var emoji: String
+    let onPicked: () -> Void
+
+    func makeNSView(context: Context) -> EmojiAutoTextField {
+        let field = EmojiAutoTextField()
+        field.stringValue = emoji
+        field.alignment = .center
+        field.font = NSFont.systemFont(ofSize: 18)
+        field.isBordered = true
+        field.isBezeled = true
+        field.bezelStyle = .roundedBezel
+        field.isEditable = true
+        field.isSelectable = true
+        field.delegate = context.coordinator
+        return field
+    }
+
+    func updateNSView(_ nsView: EmojiAutoTextField, context: Context) {
         if nsView.stringValue != emoji {
             nsView.stringValue = emoji
         }
     }
 
-    func makeCoordinator() -> Coordinator {
-        Coordinator(emoji: $emoji)
-    }
+    func makeCoordinator() -> Coordinator { Coordinator(emoji: $emoji, onPicked: onPicked) }
 
-    class Coordinator: NSObject, NSTextFieldDelegate {
+    // MARK: Coordinator
+
+    final class Coordinator: NSObject, NSTextFieldDelegate {
         var emoji: Binding<String>
+        let onPicked: () -> Void
 
-        init(emoji: Binding<String>) {
+        init(emoji: Binding<String>, onPicked: @escaping () -> Void) {
             self.emoji = emoji
+            self.onPicked = onPicked
         }
 
         func controlTextDidChange(_ obj: Notification) {
-            guard let textField = obj.object as? NSTextField else { return }
-            let text = textField.stringValue
+            guard let field = obj.object as? EmojiAutoTextField else { return }
+            let text = field.stringValue
 
-            // Extract only the first emoji character
-            if let firstEmoji = text.first, firstEmoji.isEmoji {
-                let emojiString = String(firstEmoji)
-                if text != emojiString {
-                    textField.stringValue = emojiString
-                }
-                emoji.wrappedValue = emojiString
+            if let first = text.first, first.isEmoji {
+                let single = String(first)
+                if text != single { field.stringValue = single }
+                emoji.wrappedValue = single
+                // Close the palette then the popover
+                field.closeCharacterViewer()
+                onPicked()
             } else if text.isEmpty {
-                // Allow clearing, but reset to a default emoji
-                emoji.wrappedValue = "\u{1F3AC}" // 🎬
-                textField.stringValue = "\u{1F3AC}"
+                field.stringValue = emoji.wrappedValue   // revert — don't allow blank
             } else {
-                // Non-emoji character entered; revert
-                textField.stringValue = emoji.wrappedValue
+                field.stringValue = emoji.wrappedValue   // non-emoji typed — revert
             }
         }
 
-        func control(_ control: NSControl, textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
-            if commandSelector == #selector(NSResponder.insertNewline(_:)) {
-                // Dismiss on Enter
+        func control(_ control: NSControl, textView: NSTextView,
+                     doCommandBy sel: Selector) -> Bool {
+            if sel == #selector(NSResponder.insertNewline(_:)) {
                 control.window?.makeFirstResponder(nil)
                 return true
             }
@@ -100,23 +143,17 @@ struct EmojiFieldRepresentable: NSViewRepresentable {
     }
 }
 
-// MARK: - Character emoji detection
+// MARK: - Character.isEmoji
 
 extension Character {
-    /// Returns true if this character is an emoji (including multi-scalar sequences like flags and skin tones).
+    /// True for any emoji character, including multi-scalar sequences (flags, skin tones, ZWJ).
     var isEmoji: Bool {
-        guard let firstScalar = unicodeScalars.first else { return false }
-
-        // Emoji presentation sequences
-        if firstScalar.properties.isEmoji && firstScalar.properties.isEmojiPresentation {
-            return true
-        }
-
-        // Characters that become emoji with variation selector (e.g., digit + FE0F)
+        guard let first = unicodeScalars.first else { return false }
+        if first.properties.isEmoji && first.properties.isEmojiPresentation { return true }
+        // Digits + variation selector, keycap sequences, etc.
         if unicodeScalars.count > 1 {
-            return unicodeScalars.contains(where: { $0.properties.isEmoji })
+            return unicodeScalars.contains { $0.properties.isEmoji }
         }
-
         return false
     }
 }
