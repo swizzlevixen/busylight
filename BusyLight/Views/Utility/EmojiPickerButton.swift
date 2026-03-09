@@ -20,7 +20,10 @@ struct EmojiPickerButton: View {
             // Capture the cursor position now (it's right at the button).
             // The proxy moves its input window here so the Character Palette
             // appears attached to this location rather than off-screen.
-            let clickLocation = NSEvent.mouseLocation
+            // Offset 20 pts below the click so the palette appears just under the button.
+            // macOS screen coordinates have y increasing upward, so subtract to go lower.
+            let click = NSEvent.mouseLocation
+            let clickLocation = NSPoint(x: click.x, y: click.y - 20)
             EmojiInputProxy.shared.pick(near: clickLocation) { picked in
                 emoji = picked
             }
