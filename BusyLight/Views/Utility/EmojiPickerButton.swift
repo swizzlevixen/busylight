@@ -12,13 +12,32 @@ struct EmojiPickerButton: View {
     }
 }
 
-/// NSViewRepresentable wrapping an NSTextField that opens the system Character Palette
+// MARK: - EmojiTextField (NSTextField subclass)
+
+/// NSTextField subclass that opens the system Character Palette whenever the
+/// user clicks on it.  The palette sends its chosen character to whatever is
+/// currently first-responder — which will be this field's field editor — so
+/// the existing `controlTextDidChange` delegate method picks it up normally.
+class EmojiTextField: NSTextField {
+    override func mouseDown(with event: NSEvent) {
+        super.mouseDown(with: event)
+        // Defer so the field editor (first responder) is in place before the
+        // palette is shown; otherwise the palette has nowhere to send input.
+        DispatchQueue.main.async {
+            NSApp.orderFrontCharacterPalette(nil)
+        }
+    }
+}
+
+// MARK: - EmojiFieldRepresentable
+
+/// NSViewRepresentable wrapping an EmojiTextField that opens the system Character Palette
 /// and restricts input to a single emoji character.
 struct EmojiFieldRepresentable: NSViewRepresentable {
     @Binding var emoji: String
 
-    func makeNSView(context: Context) -> NSTextField {
-        let textField = NSTextField()
+    func makeNSView(context: Context) -> EmojiTextField {
+        let textField = EmojiTextField()
         textField.stringValue = emoji
         textField.alignment = .center
         textField.font = NSFont.systemFont(ofSize: 18)
@@ -32,7 +51,7 @@ struct EmojiFieldRepresentable: NSViewRepresentable {
         return textField
     }
 
-    func updateNSView(_ nsView: NSTextField, context: Context) {
+    func updateNSView(_ nsView: EmojiTextField, context: Context) {
         if nsView.stringValue != emoji {
             nsView.stringValue = emoji
         }
