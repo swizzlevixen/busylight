@@ -29,7 +29,7 @@ struct EmojiPickerButton: View {
             // macOS screen coordinates have y increasing upward, so subtract
             // to place the anchor (and therefore the palette) below the button.
             let click = NSEvent.mouseLocation
-            let clickLocation = NSPoint(x: click.x, y: click.y - 20)
+            let clickLocation = NSPoint(x: click.x, y: click.y)
             EmojiInputProxy.shared.pick(near: clickLocation) { picked in
                 emoji = picked
             }
