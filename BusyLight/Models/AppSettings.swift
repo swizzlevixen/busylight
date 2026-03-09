@@ -17,6 +17,13 @@ struct KeyboardShortcutConfig: Codable, Hashable {
 @Observable
 final class AppSettings {
     static let shared = AppSettings()
+    static let revertSceneId = "__revert__"
+
+    // MARK: - First Run
+
+    var hasCompletedFirstRun: Bool {
+        didSet { UserDefaults.standard.set(hasCompletedFirstRun, forKey: "hasCompletedFirstRun") }
+    }
 
     // MARK: - Home Assistant
 
@@ -117,9 +124,10 @@ final class AppSettings {
 
     private init() {
         let defaults = UserDefaults.standard
-        self.haBaseURL = defaults.string(forKey: "ha_baseURL") ?? ""
+        self.haBaseURL = defaults.string(forKey: "ha_baseURL") ?? "http://homeassistant.local:8123"
         self.displayMode = DisplayMode(rawValue: defaults.string(forKey: "displayMode") ?? "") ?? .both
         self.activeSceneId = defaults.string(forKey: "activeSceneId")
+        self.hasCompletedFirstRun = defaults.bool(forKey: "hasCompletedFirstRun")
 
         self.webcamTriggerEnabled = defaults.bool(forKey: "webcamTriggerEnabled")
         self.webcamOnSceneId = defaults.string(forKey: "webcamOnSceneId") ?? ""
@@ -158,9 +166,10 @@ final class AppSettings {
 
     // For testing: allow injecting a different UserDefaults
     init(defaults: UserDefaults) {
-        self.haBaseURL = defaults.string(forKey: "ha_baseURL") ?? ""
+        self.haBaseURL = defaults.string(forKey: "ha_baseURL") ?? "http://homeassistant.local:8123"
         self.displayMode = DisplayMode(rawValue: defaults.string(forKey: "displayMode") ?? "") ?? .both
         self.activeSceneId = defaults.string(forKey: "activeSceneId")
+        self.hasCompletedFirstRun = defaults.bool(forKey: "hasCompletedFirstRun")
 
         self.webcamTriggerEnabled = defaults.bool(forKey: "webcamTriggerEnabled")
         self.webcamOnSceneId = defaults.string(forKey: "webcamOnSceneId") ?? ""

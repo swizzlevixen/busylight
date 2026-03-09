@@ -22,6 +22,10 @@ struct HomeAssistantTab: View {
                         settings.haToken = newValue
                     }
 
+                Text("To create a Long-Lived Access Token, go to your Home Assistant instance, click on your profile (bottom left), scroll to the bottom, and click \"Create Token\".")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
                 HStack {
                     Button("Test Connection") {
                         testConnection()
@@ -32,12 +36,6 @@ struct HomeAssistantTab: View {
 
                     statusView
                 }
-            }
-
-            Section("Help") {
-                Text("To create a Long-Lived Access Token, go to your Home Assistant instance, click on your profile (bottom left), scroll to the bottom, and click \"Create Token\".")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
             }
         }
         .formStyle(.grouped)

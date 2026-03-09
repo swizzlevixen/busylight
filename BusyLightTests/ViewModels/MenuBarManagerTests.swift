@@ -8,7 +8,7 @@ final class MenuBarManagerTests: XCTestCase {
         let settings = AppSettings.shared
         settings.displayMode = .emojiOnly
         settings.menuItems = [
-            .scene(SceneItem(entityId: "scene.test", emoji: "🔴", displayName: "Busy")),
+            .scene(SceneItem(entityId: "scene.test", emoji: "\u{1F534}", displayName: "Busy")),
         ]
         settings.activeSceneId = "scene.test"
 
@@ -17,7 +17,7 @@ final class MenuBarManagerTests: XCTestCase {
         manager.configure(statusItem: statusItem)
         manager.updateButtonTitle()
 
-        XCTAssertEqual(statusItem.button?.title, "🔴")
+        XCTAssertEqual(statusItem.button?.title, "\u{1F534}")
 
         NSStatusBar.system.removeStatusItem(statusItem)
     }
@@ -26,7 +26,7 @@ final class MenuBarManagerTests: XCTestCase {
         let settings = AppSettings.shared
         settings.displayMode = .nameOnly
         settings.menuItems = [
-            .scene(SceneItem(entityId: "scene.test", emoji: "🔴", displayName: "Busy")),
+            .scene(SceneItem(entityId: "scene.test", emoji: "\u{1F534}", displayName: "Busy")),
         ]
         settings.activeSceneId = "scene.test"
 
@@ -44,7 +44,7 @@ final class MenuBarManagerTests: XCTestCase {
         let settings = AppSettings.shared
         settings.displayMode = .both
         settings.menuItems = [
-            .scene(SceneItem(entityId: "scene.test", emoji: "🔴", displayName: "Busy")),
+            .scene(SceneItem(entityId: "scene.test", emoji: "\u{1F534}", displayName: "Busy")),
         ]
         settings.activeSceneId = "scene.test"
 
@@ -53,13 +53,14 @@ final class MenuBarManagerTests: XCTestCase {
         manager.configure(statusItem: statusItem)
         manager.updateButtonTitle()
 
-        XCTAssertEqual(statusItem.button?.title, "🔴 Busy")
+        XCTAssertEqual(statusItem.button?.title, "\u{1F534} Busy")
 
         NSStatusBar.system.removeStatusItem(statusItem)
     }
 
-    func testNoActiveScene() {
+    func testNoActiveSceneDisplayModeBoth() {
         let settings = AppSettings.shared
+        settings.displayMode = .both
         settings.activeSceneId = nil
 
         let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
@@ -72,12 +73,43 @@ final class MenuBarManagerTests: XCTestCase {
         NSStatusBar.system.removeStatusItem(statusItem)
     }
 
+    func testNoActiveSceneDisplayModeEmojiOnly() {
+        let settings = AppSettings.shared
+        settings.displayMode = .emojiOnly
+        settings.activeSceneId = nil
+
+        let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+        let manager = MenuBarManager.shared
+        manager.configure(statusItem: statusItem)
+        manager.updateButtonTitle()
+
+        XCTAssertEqual(statusItem.button?.title, "\u{26AB}")
+
+        NSStatusBar.system.removeStatusItem(statusItem)
+    }
+
+    func testNoActiveSceneDisplayModeNameOnly() {
+        let settings = AppSettings.shared
+        settings.displayMode = .nameOnly
+        settings.activeSceneId = nil
+
+        let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+        let manager = MenuBarManager.shared
+        manager.configure(statusItem: statusItem)
+        manager.updateButtonTitle()
+
+        XCTAssertEqual(statusItem.button?.title, "No Scene")
+
+        NSStatusBar.system.removeStatusItem(statusItem)
+    }
+
     func testPopulateMenuWithScenes() {
         let settings = AppSettings.shared
+        settings.displayMode = .both
         settings.menuItems = [
-            .scene(SceneItem(entityId: "scene.busy", emoji: "🔴", displayName: "Busy")),
+            .scene(SceneItem(entityId: "scene.busy", emoji: "\u{1F534}", displayName: "Busy")),
             .newDivider(),
-            .scene(SceneItem(entityId: "scene.free", emoji: "🟢", displayName: "Free")),
+            .scene(SceneItem(entityId: "scene.free", emoji: "\u{1F7E2}", displayName: "Free")),
         ]
         settings.activeSceneId = "scene.busy"
 
@@ -85,8 +117,8 @@ final class MenuBarManagerTests: XCTestCase {
         let manager = MenuBarManager.shared
         manager.populateMenu(menu)
 
-        // 2 scenes + 1 divider + 1 separator before "No Scene" + "No Scene" = 5 items
-        XCTAssertGreaterThanOrEqual(menu.items.count, 4)
+        // 2 scenes + 1 divider = 3 items (No Scene is not shown when scenes exist)
+        XCTAssertEqual(menu.items.count, 3)
 
         // First item should be the first scene
         XCTAssertTrue(menu.items[0].title.contains("Busy"))
@@ -100,8 +132,9 @@ final class MenuBarManagerTests: XCTestCase {
         XCTAssertEqual(menu.items[2].state, .off)
     }
 
-    func testPopulateMenuEmpty() {
+    func testPopulateMenuEmptyShowsAddScene() {
         let settings = AppSettings.shared
+        settings.displayMode = .both
         settings.menuItems = []
         settings.activeSceneId = nil
 
@@ -109,10 +142,9 @@ final class MenuBarManagerTests: XCTestCase {
         let manager = MenuBarManager.shared
         manager.populateMenu(menu)
 
-        // Should have at least "No Scene" item
+        // Should have "Add Scene..." item
         XCTAssertGreaterThanOrEqual(menu.items.count, 1)
-        let lastItem = menu.items.last!
-        XCTAssertTrue(lastItem.title.contains("No Scene"))
-        XCTAssertEqual(lastItem.state, .on) // No scene active
+        let firstItem = menu.items.first!
+        XCTAssertTrue(firstItem.title.contains("Add Scene"))
     }
 }

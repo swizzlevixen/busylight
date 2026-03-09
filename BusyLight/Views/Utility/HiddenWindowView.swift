@@ -17,6 +17,7 @@ struct HiddenWindowView: View {
                         $0.isVisible && $0.styleMask.contains(.titled)
                             && $0.title != "Hidden"
                     }) {
+                        settingsWindow.title = "Settings"
                         settingsWindow.makeKeyAndOrderFront(nil)
                         settingsWindow.orderFrontRegardless()
                     }

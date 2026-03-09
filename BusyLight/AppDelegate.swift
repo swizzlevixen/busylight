@@ -10,7 +10,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
 
         if let button = statusItem.button {
-            button.title = "\u{26AB} No Scene"
+            let settings = AppSettings.shared
+            switch settings.displayMode {
+            case .emojiOnly:
+                button.title = "\u{26AB}"
+            case .nameOnly:
+                button.title = "No Scene"
+            case .both:
+                button.title = "\u{26AB} No Scene"
+            }
         }
 
         menu = NSMenu()
@@ -21,6 +29,41 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         MenuBarManager.shared.configure(statusItem: statusItem)
 
         TriggerManager.shared.startAllMonitors()
+
+        // First-run welcome dialog
+        if !AppSettings.shared.hasCompletedFirstRun {
+            showFirstRunDialog()
+        }
+    }
+
+    private func showFirstRunDialog() {
+        let alert = NSAlert()
+        alert.messageText = "Welcome to Busy Light"
+        alert.informativeText = """
+            Busy Light connects to Home Assistant to control scenes that \
+            indicate your availability.
+
+            To get started, you\u{2019}ll need:
+            1. Your Home Assistant URL (e.g., http://homeassistant.local:8123)
+            2. A Long-Lived Access Token (created in your HA profile settings)
+
+            Click \u{201C}Open Settings\u{201D} to configure your connection.
+            """
+        alert.addButton(withTitle: "Open Settings")
+        alert.addButton(withTitle: "Later")
+        alert.alertStyle = .informational
+
+        AppSettings.shared.hasCompletedFirstRun = true
+
+        let response = alert.runModal()
+
+        if response == .alertFirstButtonReturn {
+            NotificationCenter.default.post(
+                name: .openSettingsRequest,
+                object: nil,
+                userInfo: ["tab": "homeassistant"]
+            )
+        }
     }
 
     func applicationWillTerminate(_ notification: Notification) {
@@ -39,8 +82,8 @@ final class MenuDelegateHandler: NSObject, NSMenuDelegate {
 
             if isOptionPressed {
                 let prefsItem = NSMenuItem(
-                    title: "Preferences\u{2026}",
-                    action: #selector(openPreferences),
+                    title: "Settings\u{2026}",
+                    action: #selector(openSettings),
                     keyEquivalent: ","
                 )
                 prefsItem.target = self
@@ -58,7 +101,7 @@ final class MenuDelegateHandler: NSObject, NSMenuDelegate {
         }
     }
 
-    @objc private func openPreferences() {
+    @objc private func openSettings() {
         NotificationCenter.default.post(name: .openSettingsRequest, object: nil)
     }
 }

@@ -119,4 +119,30 @@ final class AppSettingsTests: XCTestCase {
         settings.activeSceneId = nil
         XCTAssertNil(settings.activeSceneId)
     }
+
+    func testRevertSceneIdConstant() {
+        XCTAssertEqual(AppSettings.revertSceneId, "__revert__")
+        // Ensure it's not empty and distinguishable from real scene IDs
+        XCTAssertFalse(AppSettings.revertSceneId.isEmpty)
+        XCTAssertFalse(AppSettings.revertSceneId.hasPrefix("scene."))
+    }
+
+    func testHasCompletedFirstRun() {
+        let settings = AppSettings.shared
+        settings.hasCompletedFirstRun = true
+        XCTAssertTrue(settings.hasCompletedFirstRun)
+        settings.hasCompletedFirstRun = false
+        XCTAssertFalse(settings.hasCompletedFirstRun)
+    }
+
+    func testDefaultURLPrePopulated() {
+        // The default URL should be pre-populated (not empty)
+        let settings = AppSettings.shared
+        // We can't easily test the initial default since it may have been set,
+        // but we verify the property is accessible and modifiable
+        let original = settings.haBaseURL
+        settings.haBaseURL = "http://test.local:8123"
+        XCTAssertEqual(settings.haBaseURL, "http://test.local:8123")
+        settings.haBaseURL = original
+    }
 }

@@ -7,6 +7,9 @@ final class TriggerManager {
     private let settings = AppSettings.shared
     private var observers: [NSObjectProtocol] = []
 
+    /// Stores the scene that was active before a trigger fired, so we can revert to it.
+    private var previousSceneId: String?
+
     func startAllMonitors() {
         CameraMonitor.shared.startMonitoring()
         MicrophoneMonitor.shared.startMonitoring()
@@ -136,6 +139,18 @@ final class TriggerManager {
     // MARK: - Scene Activation
 
     private func activateScene(entityId: String) {
+        // Handle revert sentinel
+        if entityId == AppSettings.revertSceneId {
+            revertToPreviousScene()
+            return
+        }
+
+        // Capture the current scene as "previous" only if we haven't already
+        // (i.e., only the first trigger in a chain captures the pre-trigger state)
+        if previousSceneId == nil {
+            previousSceneId = settings.activeSceneId
+        }
+
         settings.activeSceneId = entityId
         MenuBarManager.shared.updateButtonTitle()
 
@@ -151,5 +166,32 @@ final class TriggerManager {
                 // TODO: Show transient error notification
             }
         }
+    }
+
+    /// Reverts to the scene that was active before a trigger fired.
+    private func revertToPreviousScene() {
+        if let previous = previousSceneId {
+            settings.activeSceneId = previous
+            MenuBarManager.shared.updateButtonTitle()
+
+            // Activate the previous scene on HA
+            guard !settings.haBaseURL.isEmpty && !settings.haToken.isEmpty else {
+                previousSceneId = nil
+                return
+            }
+
+            Task {
+                await HomeAssistantService.shared.activateScene(
+                    entityId: previous,
+                    baseURL: settings.haBaseURL,
+                    token: settings.haToken
+                )
+            }
+        } else {
+            // No previous scene to revert to; clear active scene
+            settings.activeSceneId = nil
+            MenuBarManager.shared.updateButtonTitle()
+        }
+        previousSceneId = nil
     }
 }

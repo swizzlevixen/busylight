@@ -58,20 +58,18 @@ final class MenuBarManager {
             }
         }
 
-        // "No Scene" option
-        if hasItems {
-            menu.addItem(NSMenuItem.separator())
+        // "No Scene" / "Add Scene…" options
+        if settings.scenes.isEmpty {
+            // No scenes configured: show "Add Scene…"
+            let addSceneItem = NSMenuItem(
+                title: "Add Scene\u{2026}",
+                action: #selector(openScenesSettings),
+                keyEquivalent: ""
+            )
+            addSceneItem.target = self
+            menu.addItem(addSceneItem)
         }
-        let noSceneItem = NSMenuItem(
-            title: "\u{26AB} No Scene",
-            action: #selector(clearScene),
-            keyEquivalent: ""
-        )
-        noSceneItem.target = self
-        if settings.activeSceneId == nil {
-            noSceneItem.state = .on
-        }
-        menu.addItem(noSceneItem)
+        // When user has scenes, "No Scene" is not shown in the menu
 
         // Connection status indicator
         let connectionState = ConnectionState.unknown // Will be updated async
@@ -115,12 +113,20 @@ final class MenuBarManager {
         updateButtonTitle()
     }
 
+    @objc private func openScenesSettings() {
+        NotificationCenter.default.post(
+            name: .openSettingsRequest,
+            object: nil,
+            userInfo: ["tab": "scenes"]
+        )
+    }
+
     func updateButtonTitle() {
         guard let button = statusItem?.button else { return }
 
         guard let activeId = settings.activeSceneId,
               let scene = settings.scenes.first(where: { $0.entityId == activeId }) else {
-            button.title = "\u{26AB} No Scene"
+            button.title = noSceneTitle
             return
         }
 
@@ -131,6 +137,18 @@ final class MenuBarManager {
             button.title = scene.displayName
         case .both:
             button.title = "\(scene.emoji) \(scene.displayName)"
+        }
+    }
+
+    /// Returns the display text for "No Scene" respecting the current display mode.
+    var noSceneTitle: String {
+        switch settings.displayMode {
+        case .emojiOnly:
+            return "\u{26AB}"
+        case .nameOnly:
+            return "No Scene"
+        case .both:
+            return "\u{26AB} No Scene"
         }
     }
 
