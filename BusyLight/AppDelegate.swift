@@ -6,9 +6,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         TriggerManager.shared.startAllMonitors()
 
-        // Handle activation policy and window title when Settings opens.
-        // MenuBarContentView handles the actual openSettings() call via
-        // @Environment(\.openSettings) in its own .onReceive.
+        // Handle opening the Settings window (activation policy + window title).
+        // Uses SettingsOpener, which captures the openSettings action from
+        // MenuBarLabelView (always live), so this works at any time.
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(handleOpenSettings(_:)),
@@ -27,6 +27,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @objc private func handleOpenSettings(_ notification: Notification) {
         NSApp.setActivationPolicy(.regular)
         NSApp.activate(ignoringOtherApps: true)
+
+        // Open the Settings window via the captured SwiftUI openSettings action.
+        // SettingsOpener captures this from MenuBarLabelView, which is always live.
+        SettingsOpener.shared.openSettings()
 
         // Rename the settings window after it appears
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {

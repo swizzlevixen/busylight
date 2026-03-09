@@ -1,5 +1,28 @@
 import SwiftUI
 
+// MARK: - SettingsOpener
+
+/// Singleton that captures the SwiftUI `openSettings` environment action from
+/// `MenuBarLabelView` (which is always live) so that `AppDelegate` can open the
+/// Settings window at any time — even before the menu has ever been opened.
+@MainActor
+final class SettingsOpener {
+    static let shared = SettingsOpener()
+    private init() {}
+
+    private var openAction: (() -> Void)?
+
+    func capture(_ action: OpenSettingsAction) {
+        openAction = { action() }
+    }
+
+    func openSettings() {
+        openAction?()
+    }
+}
+
+// MARK: - MenuBarContentView
+
 /// The SwiftUI content of the MenuBarExtra menu.
 /// Owns @Environment(\.openSettings) — the canonical way to open the Settings
 /// window — so there is no need for a separate hidden utility window.
@@ -8,13 +31,7 @@ struct MenuBarContentView: View {
     private var settings = AppSettings.shared
 
     var body: some View {
-        // Wrap all content so we can attach .onReceive to the root view.
-        // MenuBarExtra(.menu) renders the individual items (Button, Divider…)
-        // normally; the modifiers are purely lifecycle hooks.
         menuItems
-            .onReceive(NotificationCenter.default.publisher(for: .openSettingsRequest)) { _ in
-                openSettings()
-            }
             .onReceive(NotificationCenter.default.publisher(for: .settingsWindowClosed)) { _ in
                 NSApp.setActivationPolicy(.accessory)
             }
@@ -95,10 +112,16 @@ struct MenuBarContentView: View {
 }
 
 /// Separate label view so @Observable tracking fires inside a View.body.
+/// This view is always live (it renders the menu bar label), so it is the
+/// ideal place to capture @Environment(\.openSettings) for use by AppDelegate.
 struct MenuBarLabelView: View {
+    @Environment(\.openSettings) private var openSettings
     private var settings = AppSettings.shared
 
     var body: some View {
         Text(settings.menuBarLabel)
+            .onAppear {
+                SettingsOpener.shared.capture(openSettings)
+            }
     }
 }
