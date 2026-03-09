@@ -17,7 +17,11 @@ struct EmojiPickerButton: View {
 
     var body: some View {
         Button {
-            EmojiInputProxy.shared.pick { picked in
+            // Capture the cursor position now (it's right at the button).
+            // The proxy moves its input window here so the Character Palette
+            // appears attached to this location rather than off-screen.
+            let clickLocation = NSEvent.mouseLocation
+            EmojiInputProxy.shared.pick(near: clickLocation) { picked in
                 emoji = picked
             }
         } label: {
@@ -98,9 +102,16 @@ final class EmojiInputProxy: NSObject, NSTextViewDelegate {
         tv.delegate = self
     }
 
-    func pick(completion: @escaping (String) -> Void) {
+    /// - Parameter screenPoint: The screen coordinate of the clicked emoji button
+    ///   (pass `NSEvent.mouseLocation`).  The input window is repositioned here so
+    ///   the Character Palette opens attached to that location.
+    func pick(near screenPoint: NSPoint, completion: @escaping (String) -> Void) {
         self.completion = completion
         previousKeyWindow = NSApp.keyWindow
+
+        // Move the input window to the button's screen location so the palette
+        // anchors to it instead of to the window's default off-screen position.
+        inputWindow.setFrameOrigin(screenPoint)
 
         textView.string = ""
         inputWindow.makeKeyAndOrderFront(nil)

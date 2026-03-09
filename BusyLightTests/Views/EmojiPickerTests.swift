@@ -82,6 +82,7 @@ final class CharacterIsEmojiTests: XCTestCase {
 
 // MARK: - EmojiInputWindow tests
 
+@MainActor
 final class EmojiInputWindowTests: XCTestCase {
 
     func testCanBecomeKey() {
@@ -145,14 +146,31 @@ final class EmojiInputProxyTests: XCTestCase {
         }
     }
 
-    func testInputWindowIsOffScreen() {
-        let proxy = EmojiInputProxy.shared
-        let mirror = Mirror(reflecting: proxy)
-        let windowChild = mirror.children.first { $0.label == "inputWindow" }
-        if let win = windowChild?.value as? NSWindow {
-            // Window should be positioned off the visible screen area.
-            XCTAssertLessThan(win.frame.origin.x, 0,
-                "inputWindow x should be negative (off-screen)")
-        }
+    func testInputWindowInitiallyOffScreen() {
+        // On creation the window starts off-screen; it is only moved on-screen
+        // when pick(near:) is called with the button's location.
+        let win = EmojiInputWindow(
+            contentRect: NSRect(x: -600, y: 200, width: 200, height: 50),
+            styleMask: [],
+            backing: .buffered,
+            defer: false
+        )
+        XCTAssertLessThan(win.frame.origin.x, 0,
+            "inputWindow initial x should be negative (off-screen)")
+    }
+
+    func testSetFrameOriginRepositionsWindow() {
+        // Verifies that setFrameOrigin (called by pick(near:)) moves the window
+        // to the requested location so the Character Palette anchors there.
+        let win = EmojiInputWindow(
+            contentRect: NSRect(x: -600, y: 200, width: 200, height: 50),
+            styleMask: [],
+            backing: .buffered,
+            defer: false
+        )
+        let target = NSPoint(x: 400, y: 300)
+        win.setFrameOrigin(target)
+        XCTAssertEqual(win.frame.origin.x, target.x, accuracy: 1)
+        XCTAssertEqual(win.frame.origin.y, target.y, accuracy: 1)
     }
 }
