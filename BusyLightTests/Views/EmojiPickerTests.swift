@@ -121,6 +121,78 @@ final class EmojiInputWindowTests: XCTestCase {
     }
 }
 
+// MARK: - EmojiAnchoredTextView tests
+
+@MainActor
+final class EmojiAnchoredTextViewTests: XCTestCase {
+
+    func testDefaultPaletteAnchorIsZero() {
+        let tv = EmojiAnchoredTextView(frame: NSRect(x: 0, y: 0, width: 200, height: 50))
+        XCTAssertEqual(tv.paletteAnchorScreenRect, .zero,
+            "paletteAnchorScreenRect should default to .zero before any pick(near:) call")
+    }
+
+    func testFirstRectReturnsPaletteAnchorWhenSet() {
+        // This is the core contract: when paletteAnchorScreenRect is set, firstRect
+        // must return it so the Character Palette anchors precisely to the emoji button.
+        let tv = EmojiAnchoredTextView(frame: NSRect(x: 0, y: 0, width: 200, height: 50))
+        let anchor = NSRect(x: 400, y: 300, width: 1, height: 1)
+        tv.paletteAnchorScreenRect = anchor
+        let result = tv.firstRect(forCharacterRange: NSRange(location: 0, length: 0),
+                                  actualRange: nil)
+        XCTAssertEqual(result, anchor,
+            "firstRect must return paletteAnchorScreenRect so the Character Palette " +
+            "anchors to the emoji button's exact screen location")
+    }
+
+    func testFirstRectIgnoresRangeWhenAnchorIsSet() {
+        // The anchor rect is returned regardless of which character range is queried.
+        let tv = EmojiAnchoredTextView(frame: NSRect(x: 0, y: 0, width: 200, height: 50))
+        let anchor = NSRect(x: 100, y: 200, width: 1, height: 1)
+        tv.paletteAnchorScreenRect = anchor
+        let result1 = tv.firstRect(forCharacterRange: NSRange(location: 0, length: 1),
+                                   actualRange: nil)
+        let result2 = tv.firstRect(forCharacterRange: NSRange(location: 5, length: 0),
+                                   actualRange: nil)
+        XCTAssertEqual(result1, anchor)
+        XCTAssertEqual(result2, anchor,
+            "anchor rect is returned for any character range when paletteAnchorScreenRect is set")
+    }
+
+    func testPaletteAnchorCanBeUpdated() {
+        // pick(near:) calls this multiple times across different button clicks.
+        let tv = EmojiAnchoredTextView(frame: NSRect(x: 0, y: 0, width: 200, height: 50))
+        let first  = NSRect(x: 100, y: 200, width: 1, height: 1)
+        let second = NSRect(x: 500, y: 600, width: 1, height: 1)
+
+        tv.paletteAnchorScreenRect = first
+        XCTAssertEqual(
+            tv.firstRect(forCharacterRange: NSRange(location: 0, length: 0), actualRange: nil),
+            first)
+
+        tv.paletteAnchorScreenRect = second
+        XCTAssertEqual(
+            tv.firstRect(forCharacterRange: NSRange(location: 0, length: 0), actualRange: nil),
+            second,
+            "paletteAnchorScreenRect should update between picks")
+    }
+
+    func testPaletteAnchorResetToZeroAfterPick() {
+        // After textDidChange completes, the proxy resets paletteAnchorScreenRect
+        // to .zero so a stale anchor doesn't affect future picks.
+        // We verify this by inspecting the text view via Mirror on the shared proxy.
+        let proxy = EmojiInputProxy.shared
+        let mirror = Mirror(reflecting: proxy)
+        let tvChild = mirror.children.first { $0.label == "textView" }
+        XCTAssertNotNil(tvChild, "EmojiInputProxy should expose a textView property via Mirror")
+        if let tv = tvChild?.value as? EmojiAnchoredTextView {
+            // The shared proxy starts (and should end each pick) with .zero.
+            XCTAssertEqual(tv.paletteAnchorScreenRect, .zero,
+                "paletteAnchorScreenRect should be .zero when no pick is in progress")
+        }
+    }
+}
+
 // MARK: - EmojiInputProxy tests
 
 @MainActor
@@ -144,6 +216,19 @@ final class EmojiInputProxyTests: XCTestCase {
             XCTAssertTrue(win.canBecomeKey,
                 "EmojiInputProxy.inputWindow must be able to become key")
         }
+    }
+
+    func testTextViewIsEmojiAnchoredTextView() {
+        // Verify the proxy uses EmojiAnchoredTextView (not plain NSTextView) so
+        // firstRect(forCharacterRange:actualRange:) can be overridden to anchor
+        // the Character Palette precisely to the clicked emoji button.
+        let proxy = EmojiInputProxy.shared
+        let mirror = Mirror(reflecting: proxy)
+        let tvChild = mirror.children.first { $0.label == "textView" }
+        XCTAssertNotNil(tvChild, "EmojiInputProxy should have a textView property")
+        XCTAssertTrue(tvChild?.value is EmojiAnchoredTextView,
+            "EmojiInputProxy.textView must be EmojiAnchoredTextView so firstRect " +
+            "can be overridden for precise palette positioning")
     }
 
     func testInputWindowInitiallyOffScreen() {

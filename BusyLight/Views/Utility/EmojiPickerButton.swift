@@ -7,21 +7,27 @@ import AppKit
 /// Character Palette immediately — no intermediate text field is visible.
 ///
 /// EmojiInputProxy owns a persistent, off-screen NSWindow containing an
-/// NSTextView.  Using NSTextView (not NSTextField) is critical: NSTextView
-/// implements NSTextInputClient directly so the Character Palette's
+/// EmojiAnchoredTextView.  Using NSTextView (not NSTextField) is critical:
+/// NSTextView implements NSTextInputClient directly so the Character Palette's
 /// insertText: arrives without any field-editor indirection.  The window is
 /// kept off-screen (not inside the SwiftUI hosting view) to avoid the
 /// "Adding NSTextView as subview of NSHostingController.view" restriction.
+///
+/// EmojiAnchoredTextView overrides firstRect(forCharacterRange:actualRange:) —
+/// the NSTextInputClient method the Character Palette calls to position itself —
+/// so the palette anchors precisely to the clicked button rather than to the
+/// input window's frame origin.
 struct EmojiPickerButton: View {
     @Binding var emoji: String
 
     var body: some View {
         Button {
             // Capture the cursor position now (it's right at the button).
-            // The proxy moves its input window here so the Character Palette
-            // appears attached to this location rather than off-screen.
-            // Offset 20 pts below the click so the palette appears just under the button.
-            // macOS screen coordinates have y increasing upward, so subtract to go lower.
+            // Pass it directly to the proxy; EmojiAnchoredTextView.firstRect
+            // returns this as the palette anchor so it appears just below
+            // the button on screen.
+            // macOS screen coordinates have y increasing upward, so subtract
+            // to place the anchor (and therefore the palette) below the button.
             let click = NSEvent.mouseLocation
             let clickLocation = NSPoint(x: click.x, y: click.y - 20)
             EmojiInputProxy.shared.pick(near: clickLocation) { picked in
@@ -49,34 +55,66 @@ final class EmojiInputWindow: NSWindow {
     override var canBecomeMain: Bool { false }
 }
 
+// MARK: - EmojiAnchoredTextView
+
+/// NSTextView subclass that overrides firstRect(forCharacterRange:actualRange:)
+/// to point the Character Palette to a caller-specified screen location.
+///
+/// The Character Palette (and other input methods) call firstRect to ask
+/// "where on screen is the text insertion point?", then position themselves
+/// relative to the returned rect.  By overriding firstRect here, the proxy
+/// can direct the palette to appear at the exact screen position of the
+/// clicked emoji button rather than relying on the input window's frame,
+/// which provides only a coarse anchor.
+final class EmojiAnchoredTextView: NSTextView {
+    /// Screen-coordinate rect returned from firstRect when non-zero.
+    /// Set this before calling orderFrontCharacterPalette so the palette
+    /// anchors to the clicked button's location.  Reset to .zero after
+    /// the pick completes.
+    var paletteAnchorScreenRect: NSRect = .zero
+
+    override func firstRect(forCharacterRange range: NSRange,
+                            actualRange: NSRangePointer?) -> NSRect {
+        guard paletteAnchorScreenRect != .zero else {
+            return super.firstRect(forCharacterRange: range, actualRange: actualRange)
+        }
+        return paletteAnchorScreenRect
+    }
+}
+
 // MARK: - EmojiInputProxy
 
-/// Manages a persistent off-screen EmojiInputWindow containing an NSTextView
-/// that acts as the Character Palette's insertion target.
+/// Manages a persistent off-screen EmojiInputWindow containing an
+/// EmojiAnchoredTextView that acts as the Character Palette's insertion target.
 ///
 /// Flow:
-///   1. pick(completion:) is called.
-///   2. The input window is made key; NSTextView becomes first responder.
-///   3. orderFrontCharacterPalette opens the system picker.
-///   4. The user picks an emoji → insertText: lands in the NSTextView →
+///   1. pick(near:completion:) is called.
+///   2. paletteAnchorScreenRect is set on the text view so firstRect returns
+///      the exact button location; the input window is moved near the button.
+///   3. The input window is made key; EmojiAnchoredTextView becomes first responder.
+///   4. orderFrontCharacterPalette opens the system picker, which calls firstRect
+///      to position itself — returning the precise button location.
+///   5. The user picks an emoji → insertText: lands in EmojiAnchoredTextView →
 ///      NSTextViewDelegate.textDidChange fires.
-///   5. The completion fires, new windows are closed (the palette), the input
-///      window is hidden, and the Settings window gets key focus back.
+///   6. The completion fires, palette windows are closed, the input window is
+///      hidden, paletteAnchorScreenRect is reset, and the Settings window
+///      regains key focus.
 @MainActor
 final class EmojiInputProxy: NSObject, NSTextViewDelegate {
     static let shared = EmojiInputProxy()
 
     private let inputWindow: EmojiInputWindow
-    private let textView: NSTextView
+    private let textView: EmojiAnchoredTextView
 
     private var completion: ((String) -> Void)?
     private var windowsBefore: Set<ObjectIdentifier> = []
     private weak var previousKeyWindow: NSWindow?
 
     private override init() {
-        // Off-screen, properly-sized window. NSTextView requires a real size
-        // to properly initialise its text input context; 1×1 is insufficient.
-        // EmojiInputWindow overrides canBecomeKey so makeKeyAndOrderFront works.
+        // Off-screen, properly-sized window. EmojiAnchoredTextView requires a
+        // real size to properly initialise its text input context; 1×1 is
+        // insufficient.  EmojiInputWindow overrides canBecomeKey so
+        // makeKeyAndOrderFront works.
         let win = EmojiInputWindow(
             contentRect: NSRect(x: -600, y: 200, width: 200, height: 50),
             styleMask: [],
@@ -89,7 +127,7 @@ final class EmojiInputProxy: NSObject, NSTextViewDelegate {
         win.level = .floating
         win.collectionBehavior = [.canJoinAllSpaces, .stationary, .ignoresCycle]
 
-        let tv = NSTextView(frame: NSRect(x: 0, y: 0, width: 200, height: 50))
+        let tv = EmojiAnchoredTextView(frame: NSRect(x: 0, y: 0, width: 200, height: 50))
         tv.isEditable = true
         tv.isSelectable = true
         tv.backgroundColor = .clear
@@ -105,16 +143,27 @@ final class EmojiInputProxy: NSObject, NSTextViewDelegate {
         tv.delegate = self
     }
 
-    /// - Parameter screenPoint: The screen coordinate of the clicked emoji button
-    ///   (pass `NSEvent.mouseLocation`).  The input window is repositioned here so
-    ///   the Character Palette opens attached to that location.
+    /// - Parameter screenPoint: The screen coordinate to anchor the Character
+    ///   Palette to (typically `NSEvent.mouseLocation` offset as desired).
+    ///   This point is written to `paletteAnchorScreenRect` so that
+    ///   `firstRect(forCharacterRange:actualRange:)` returns it directly,
+    ///   giving the palette a precise anchor rather than the coarse one
+    ///   provided by `setFrameOrigin` alone.
     func pick(near screenPoint: NSPoint, completion: @escaping (String) -> Void) {
         self.completion = completion
         previousKeyWindow = NSApp.keyWindow
 
-        // Move the input window to the button's screen location so the palette
-        // anchors to it instead of to the window's default off-screen position.
+        // Move the input window near the button so it is on-screen and can
+        // become key.  The palette's exact position is controlled by firstRect.
         inputWindow.setFrameOrigin(screenPoint)
+
+        // Tell firstRect where to point the palette.  This is the canonical
+        // NSTextInputClient mechanism the Character Palette uses for anchoring,
+        // and it overrides any effect the window frame position might have.
+        textView.paletteAnchorScreenRect = NSRect(
+            origin: screenPoint,
+            size: NSSize(width: 1, height: 1)
+        )
 
         textView.string = ""
         inputWindow.makeKeyAndOrderFront(nil)
@@ -148,9 +197,11 @@ final class EmojiInputProxy: NSObject, NSTextViewDelegate {
         }
         windowsBefore = []
 
-        // Hide the input window and return focus to the Settings window.
+        // Hide the input window, reset the anchor, and return focus to
+        // the Settings window.
         inputWindow.orderOut(nil)
         textView.string = ""
+        textView.paletteAnchorScreenRect = .zero
         previousKeyWindow?.makeKeyAndOrderFront(nil)
     }
 }
