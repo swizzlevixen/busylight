@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dictionary SYSTEM "file://localhost/System/Library/DTDs/sdef.dtd">
+<dictionary title="Busy Light Terminology">
+
+    <suite name="Standard Suite" code="????" description="Common commands for all applications.">
+        <command name="quit" code="aevtquit" description="Quit the application.">
+            <cocoa class="NSQuitCommand"/>
+        </command>
+    </suite>
+
+    <suite name="Busy Light Suite" code="BsLt" description="Busy Light scripting commands and classes.">
+
+        <command name="activate scene" code="BsLtActS" description="Activate a Home Assistant scene by entity ID.">
+            <cocoa class="BusyLight.ActivateSceneCommand"/>
+            <direct-parameter type="text" description="The scene entity ID (e.g., scene.office_busy)."/>
+        </command>
+
+        <command name="deactivate scene" code="BsLtDact" description="Deactivate the current scene (set to No Scene).">
+            <cocoa class="BusyLight.DeactivateSceneCommand"/>
+        </command>
+
+        <command name="list scenes" code="BsLtLsSc" description="List all configured scenes.">
+            <cocoa class="BusyLight.ListScenesCommand"/>
+            <result>
+                <type type="text" list="yes"/>
+            </result>
+        </command>
+
+        <class name="application" code="capp" description="The Busy Light application.">
+            <cocoa class="BusyLight.ScriptableApp"/>
+
+            <property name="current scene" code="BsCu" type="text" access="rw"
+                      description="The entity ID of the currently active scene, or empty string if none.">
+                <cocoa key="currentSceneName"/>
+            </property>
+
+            <property name="is busy" code="BsBz" type="boolean" access="r"
+                      description="Whether a scene is currently active (true if any scene is active).">
+                <cocoa key="isBusy"/>
+            </property>
+
+            <property name="display mode" code="BsDm" type="text" access="rw"
+                      description="Menu bar display mode: 'emoji', 'name', or 'both'.">
+                <cocoa key="scriptDisplayMode"/>
+            </property>
+
+            <property name="camera active" code="BsCa" type="boolean" access="r"
+                      description="Whether any camera is currently in use.">
+                <cocoa key="isCameraActive"/>
+            </property>
+
+            <property name="microphone active" code="BsMa" type="boolean" access="r"
+                      description="Whether any microphone is currently in use.">
+                <cocoa key="isMicrophoneActive"/>
+            </property>
+        </class>
+
+    </suite>
+</dictionary>
