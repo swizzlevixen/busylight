@@ -1,0 +1,82 @@
+{
+  "fill" : {
+    "automatic-gradient" : "extended-gray:0.50000,1.00000"
+  },
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "glass" : true,
+          "image-name" : "App Icon Traffic Light - 3 Lights.svg",
+          "name" : "App Icon Traffic Light - 3 Lights",
+          "position" : {
+            "scale" : 1.17,
+            "translation-in-points" : [
+              0,
+              -4
+            ]
+          }
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    },
+    {
+      "layers" : [
+        {
+          "fill" : "automatic",
+          "glass" : true,
+          "image-name" : "App Icon Traffic Light - 2 Shades.svg",
+          "name" : "App Icon Traffic Light - 2 Shades",
+          "position" : {
+            "scale" : 1.17,
+            "translation-in-points" : [
+              0,
+              -4
+            ]
+          }
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    },
+    {
+      "layers" : [
+        {
+          "image-name" : "App Icon Traffic Light - 1 Frame.svg",
+          "name" : "App Icon Traffic Light - 1 Frame",
+          "position" : {
+            "scale" : 1.17,
+            "translation-in-points" : [
+              0,
+              -4
+            ]
+          }
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "squares" : "shared"
+  }
+}
