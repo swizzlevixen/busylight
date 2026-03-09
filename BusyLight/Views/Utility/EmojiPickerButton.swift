@@ -6,10 +6,11 @@ import AppKit
 /// A bordered button showing the current emoji.  Clicking opens the system
 /// Character Palette immediately — no intermediate text field is visible.
 ///
-/// Because SwiftUI List cells run in a remote-view process, calling
-/// orderFrontCharacterPalette from an NSViewRepresentable inside the list fails
-/// silently.  EmojiInputProxy works around this by routing input through a
-/// hidden, off-screen NSWindow that lives in the normal process context.
+/// EmojiInputProxy injects a transparent 1-pt NSTextView into the existing
+/// Settings window (which stays key throughout) and makes it first responder
+/// before calling orderFrontCharacterPalette.  Because the Settings window
+/// remains key, the palette's insertText: goes directly to our overlay and
+/// NSTextViewDelegate.textDidChange fires reliably.
 struct EmojiPickerButton: View {
     @Binding var emoji: String
 
@@ -29,56 +30,53 @@ struct EmojiPickerButton: View {
 
 // MARK: - EmojiInputProxy
 
-/// Singleton that owns a hidden, off-screen NSWindow containing a 1×1
-/// NSTextField.  When `pick(completion:)` is called:
-///   1. The hidden window is made key so its text field can receive input.
-///   2. The system Character Palette is opened via orderFrontCharacterPalette.
-///   3. The user picks an emoji; controlTextDidChange intercepts it.
-///   4. The completion is called, the palette and hidden window are closed,
-///      and focus is returned to the Settings window.
+/// Manages an invisible NSTextView overlay added to the Settings window.
+/// When `pick(completion:)` is called:
+///   1. A 1×1, fully-transparent NSTextView is added to the Settings window.
+///   2. The Settings window stays key; the overlay becomes first responder.
+///   3. The system Character Palette is opened.
+///   4. The user picks an emoji; textDidChange intercepts it immediately.
+///   5. The completion fires, the palette closes, the overlay is removed, and
+///      focus is restored to the previous first responder.
 @MainActor
-final class EmojiInputProxy: NSObject, NSTextFieldDelegate {
+final class EmojiInputProxy: NSObject, NSTextViewDelegate {
     static let shared = EmojiInputProxy()
 
-    private let inputWindow: NSWindow
-    private let textField: NSTextField
     private var completion: ((String) -> Void)?
     private weak var characterViewerWindow: NSWindow?
-    private weak var previousKeyWindow: NSWindow?
+    private weak var overlayView: NSTextView?
+    private weak var previousFirstResponder: NSResponder?
 
-    private override init() {
-        // Tiny borderless window placed far off-screen — never visible.
-        inputWindow = NSWindow(
-            contentRect: NSRect(x: -9999, y: -9999, width: 1, height: 1),
-            styleMask: [],
-            backing: .buffered,
-            defer: false
-        )
-        inputWindow.isOpaque = false
-        inputWindow.backgroundColor = .clear
-        inputWindow.hasShadow = false
-        inputWindow.level = .floating
-        inputWindow.collectionBehavior = [.canJoinAllSpaces, .stationary, .ignoresCycle]
+    private override init() { super.init() }
 
-        textField = NSTextField(frame: NSRect(x: 0, y: 0, width: 1, height: 1))
-        textField.isEditable = true
-        inputWindow.contentView?.addSubview(textField)
-
-        super.init()
-        textField.delegate = self
-    }
-
-    /// Open the system Character Palette and call `completion` with the emoji
-    /// the user selects.
     func pick(completion: @escaping (String) -> Void) {
         self.completion = completion
-        previousKeyWindow = NSApp.keyWindow
 
-        textField.stringValue = ""
-        inputWindow.makeKeyAndOrderFront(nil)
-        inputWindow.makeFirstResponder(textField)
+        // The emoji button only appears in the Settings window, so this is
+        // always the visible titled window the user is interacting with.
+        guard let settingsWindow = NSApp.windows.first(where: {
+            $0.isVisible && $0.styleMask.contains(.titled)
+        }), let contentView = settingsWindow.contentView else { return }
 
-        // Snapshot the window list so we can identify the palette later.
+        previousFirstResponder = settingsWindow.firstResponder
+
+        // 1×1 NSTextView placed in the far corner: completely invisible but
+        // within the view hierarchy so it receives insertText: from the palette.
+        let tv = NSTextView(frame: NSRect(x: 0, y: 0, width: 1, height: 1))
+        tv.isEditable = true
+        tv.isSelectable = true
+        tv.drawsBackground = false
+        tv.backgroundColor = .clear
+        tv.alphaValue = 0      // invisible; alpha=0 does not block first-responder
+        tv.delegate = self
+        tv.string = ""
+        contentView.addSubview(tv)
+        overlayView = tv
+
+        // Settings window stays key; only the first responder changes.
+        settingsWindow.makeFirstResponder(tv)
+
+        // Snapshot window list so we can identify the palette window later.
         let windowsBefore = Set(NSApp.windows.map { ObjectIdentifier($0) })
         NSApp.orderFrontCharacterPalette(nil)
 
@@ -89,32 +87,34 @@ final class EmojiInputProxy: NSObject, NSTextFieldDelegate {
         }
     }
 
-    // MARK: NSTextFieldDelegate
+    // MARK: NSTextViewDelegate
 
-    func controlTextDidChange(_ obj: Notification) {
-        guard let tf = obj.object as? NSTextField else { return }
-        let text = tf.stringValue
+    func textDidChange(_ notification: Notification) {
+        guard let tv = overlayView else { return }
+        let text = tv.string
 
-        // Ignore non-emoji keystrokes (e.g. accidental typing).
         guard let first = text.first, first.isEmoji else {
-            tf.stringValue = ""
+            tv.string = ""   // discard non-emoji keystrokes
             return
         }
 
         let picked = String(first)
 
-        // Fire the completion.
+        // Fire callback.
         completion?(picked)
         completion = nil
 
-        // Close the Character Palette.
+        // Close the palette and remove the overlay.
         characterViewerWindow?.orderOut(nil)
         characterViewerWindow = nil
+        overlayView?.removeFromSuperview()
+        overlayView = nil
 
-        // Hide the input window and return focus to the Settings window.
-        inputWindow.orderOut(nil)
-        tf.stringValue = ""
-        previousKeyWindow?.makeKeyAndOrderFront(nil)
+        // Restore focus to whatever was focused before (usually the button).
+        if let prev = previousFirstResponder {
+            tv.window?.makeFirstResponder(prev)
+        }
+        previousFirstResponder = nil
     }
 }
 
