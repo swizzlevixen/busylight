@@ -43,7 +43,9 @@ final class EmojiInputProxy: NSObject, NSTextViewDelegate {
     static let shared = EmojiInputProxy()
 
     private var completion: ((String) -> Void)?
-    private weak var characterViewerWindow: NSWindow?
+    /// Window IDs present before the palette was opened; any new ones afterward
+    /// are the palette — closed at textDidChange time, when they're guaranteed present.
+    private var windowsBefore: Set<ObjectIdentifier> = []
     private weak var overlayView: NSTextView?
     private weak var previousFirstResponder: NSResponder?
 
@@ -76,15 +78,11 @@ final class EmojiInputProxy: NSObject, NSTextViewDelegate {
         // Settings window stays key; only the first responder changes.
         settingsWindow.makeFirstResponder(tv)
 
-        // Snapshot window list so we can identify the palette window later.
-        let windowsBefore = Set(NSApp.windows.map { ObjectIdentifier($0) })
+        // Snapshot before opening — any new window that appears afterward is the palette.
+        // We close it in textDidChange (when it's guaranteed to be present) rather than
+        // after a fixed timer delay that may fire before the window is registered.
+        windowsBefore = Set(NSApp.windows.map { ObjectIdentifier($0) })
         NSApp.orderFrontCharacterPalette(nil)
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
-            self?.characterViewerWindow = NSApp.windows.first {
-                !windowsBefore.contains(ObjectIdentifier($0))
-            }
-        }
     }
 
     // MARK: NSTextViewDelegate
@@ -104,9 +102,14 @@ final class EmojiInputProxy: NSObject, NSTextViewDelegate {
         completion?(picked)
         completion = nil
 
-        // Close the palette and remove the overlay.
-        characterViewerWindow?.orderOut(nil)
-        characterViewerWindow = nil
+        // Close any windows that appeared after we called orderFrontCharacterPalette
+        // (the Character Palette is hosted in our process and appears in NSApp.windows).
+        for window in NSApp.windows where !windowsBefore.contains(ObjectIdentifier(window)) {
+            window.orderOut(nil)
+        }
+        windowsBefore = []
+
+        // Remove the overlay.
         overlayView?.removeFromSuperview()
         overlayView = nil
 
