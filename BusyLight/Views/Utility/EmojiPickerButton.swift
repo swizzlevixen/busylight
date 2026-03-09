@@ -6,11 +6,12 @@ import AppKit
 /// A bordered button showing the current emoji.  Clicking opens the system
 /// Character Palette immediately — no intermediate text field is visible.
 ///
-/// EmojiInputProxy injects a transparent 1-pt NSTextView into the existing
-/// Settings window (which stays key throughout) and makes it first responder
-/// before calling orderFrontCharacterPalette.  Because the Settings window
-/// remains key, the palette's insertText: goes directly to our overlay and
-/// NSTextViewDelegate.textDidChange fires reliably.
+/// EmojiInputProxy owns a persistent, off-screen NSWindow containing an
+/// NSTextView.  Using NSTextView (not NSTextField) is critical: NSTextView
+/// implements NSTextInputClient directly so the Character Palette's
+/// insertText: arrives without any field-editor indirection.  The window is
+/// kept off-screen (not inside the SwiftUI hosting view) to avoid the
+/// "Adding NSTextView as subview of NSHostingController.view" restriction.
 struct EmojiPickerButton: View {
     @Binding var emoji: String
 
@@ -30,57 +31,68 @@ struct EmojiPickerButton: View {
 
 // MARK: - EmojiInputProxy
 
-/// Manages an invisible NSTextView overlay added to the Settings window.
-/// When `pick(completion:)` is called:
-///   1. A 1×1, fully-transparent NSTextView is added to the Settings window.
-///   2. The Settings window stays key; the overlay becomes first responder.
-///   3. The system Character Palette is opened.
-///   4. The user picks an emoji; textDidChange intercepts it immediately.
-///   5. The completion fires, the palette closes, the overlay is removed, and
-///      focus is restored to the previous first responder.
+/// Manages a persistent off-screen NSWindow containing an NSTextView that acts
+/// as the Character Palette's insertion target.
+///
+/// Flow:
+///   1. pick(completion:) is called.
+///   2. The input window is made key; NSTextView becomes first responder.
+///   3. orderFrontCharacterPalette opens the system picker.
+///   4. The user picks an emoji → insertText: lands in the NSTextView →
+///      NSTextViewDelegate.textDidChange fires.
+///   5. The completion fires, new windows are closed (the palette), the input
+///      window is hidden, and the Settings window gets key focus back.
 @MainActor
 final class EmojiInputProxy: NSObject, NSTextViewDelegate {
     static let shared = EmojiInputProxy()
 
-    private var completion: ((String) -> Void)?
-    /// Window IDs present before the palette was opened; any new ones afterward
-    /// are the palette — closed at textDidChange time, when they're guaranteed present.
-    private var windowsBefore: Set<ObjectIdentifier> = []
-    private weak var overlayView: NSTextView?
-    private weak var previousFirstResponder: NSResponder?
+    private let inputWindow: NSWindow
+    private let textView: NSTextView
 
-    private override init() { super.init() }
+    private var completion: ((String) -> Void)?
+    private var windowsBefore: Set<ObjectIdentifier> = []
+    private weak var previousKeyWindow: NSWindow?
+
+    private override init() {
+        // Off-screen, properly-sized window. NSTextView requires a real size
+        // to properly initialise its text input context; 1×1 is insufficient.
+        let win = NSWindow(
+            contentRect: NSRect(x: -600, y: 200, width: 200, height: 50),
+            styleMask: [],
+            backing: .buffered,
+            defer: false
+        )
+        win.isOpaque = false
+        win.backgroundColor = .clear
+        win.hasShadow = false
+        win.level = .floating
+        win.collectionBehavior = [.canJoinAllSpaces, .stationary, .ignoresCycle]
+
+        let tv = NSTextView(frame: NSRect(x: 0, y: 0, width: 200, height: 50))
+        tv.isEditable = true
+        tv.isSelectable = true
+        tv.backgroundColor = .clear
+        tv.drawsBackground = false
+        win.contentView?.addSubview(tv)
+
+        inputWindow = win
+        textView = tv
+
+        super.init()
+
+        // Delegate set after super.init() since it captures self.
+        tv.delegate = self
+    }
 
     func pick(completion: @escaping (String) -> Void) {
         self.completion = completion
+        previousKeyWindow = NSApp.keyWindow
 
-        // The emoji button only appears in the Settings window, so this is
-        // always the visible titled window the user is interacting with.
-        guard let settingsWindow = NSApp.windows.first(where: {
-            $0.isVisible && $0.styleMask.contains(.titled)
-        }), let contentView = settingsWindow.contentView else { return }
+        textView.string = ""
+        inputWindow.makeKeyAndOrderFront(nil)
+        inputWindow.makeFirstResponder(textView)
 
-        previousFirstResponder = settingsWindow.firstResponder
-
-        // 1×1 NSTextView placed in the far corner: completely invisible but
-        // within the view hierarchy so it receives insertText: from the palette.
-        let tv = NSTextView(frame: NSRect(x: 0, y: 0, width: 1, height: 1))
-        tv.isEditable = true
-        tv.isSelectable = true
-        tv.drawsBackground = false
-        tv.backgroundColor = .clear
-        tv.alphaValue = 0      // invisible; alpha=0 does not block first-responder
-        tv.delegate = self
-        tv.string = ""
-        contentView.addSubview(tv)
-        overlayView = tv
-
-        // Settings window stays key; only the first responder changes.
-        settingsWindow.makeFirstResponder(tv)
-
-        // Snapshot before opening — any new window that appears afterward is the palette.
-        // We close it in textDidChange (when it's guaranteed to be present) rather than
-        // after a fixed timer delay that may fire before the window is registered.
+        // Snapshot before opening so we can identify the palette window later.
         windowsBefore = Set(NSApp.windows.map { ObjectIdentifier($0) })
         NSApp.orderFrontCharacterPalette(nil)
     }
@@ -88,36 +100,30 @@ final class EmojiInputProxy: NSObject, NSTextViewDelegate {
     // MARK: NSTextViewDelegate
 
     func textDidChange(_ notification: Notification) {
-        guard let tv = overlayView else { return }
-        let text = tv.string
+        let text = textView.string
 
         guard let first = text.first, first.isEmoji else {
-            tv.string = ""   // discard non-emoji keystrokes
+            textView.string = ""   // discard non-emoji keystrokes
             return
         }
 
         let picked = String(first)
 
-        // Fire callback.
+        // Fire the binding update.
         completion?(picked)
         completion = nil
 
-        // Close any windows that appeared after we called orderFrontCharacterPalette
-        // (the Character Palette is hosted in our process and appears in NSApp.windows).
+        // Close any windows that appeared after orderFrontCharacterPalette
+        // (the palette is hosted in-process and appears in NSApp.windows).
         for window in NSApp.windows where !windowsBefore.contains(ObjectIdentifier(window)) {
             window.orderOut(nil)
         }
         windowsBefore = []
 
-        // Remove the overlay.
-        overlayView?.removeFromSuperview()
-        overlayView = nil
-
-        // Restore focus to whatever was focused before (usually the button).
-        if let prev = previousFirstResponder {
-            tv.window?.makeFirstResponder(prev)
-        }
-        previousFirstResponder = nil
+        // Hide the input window and return focus to the Settings window.
+        inputWindow.orderOut(nil)
+        textView.string = ""
+        previousKeyWindow?.makeKeyAndOrderFront(nil)
     }
 }
 
