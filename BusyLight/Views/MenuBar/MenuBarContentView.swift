@@ -43,8 +43,8 @@ struct MenuBarContentView: View {
     private var menuItems: some View {
         // Scene list or empty-state shortcut
         if settings.menuItems.isEmpty {
-            Button("Add Scene\u{2026}") {
-                postOpen(tab: "scenes")
+            Button { postOpen(tab: "scenes") } label: {
+                Label("Add Scene\u{2026}", systemImage: "plus")
             }
         } else {
             ForEach(settings.menuItems) { item in
@@ -71,24 +71,26 @@ struct MenuBarContentView: View {
         Divider()
 
         // Help submenu — accessible even when Settings window is closed
-        Menu("Help") {
-            Button("Getting Started") {
-                HelpManager.openHelp(anchor: "getting-started")
+        Menu {
+            Button { HelpManager.openHelp(anchor: "getting-started") } label: {
+                Label("Getting Started", systemImage: "play.circle")
             }
-            Button("Adding Scenes") {
-                HelpManager.openHelp(anchor: "adding-scenes")
+            Button { HelpManager.openHelp(anchor: "adding-scenes") } label: {
+                Label("Adding Scenes", systemImage: "list.bullet")
             }
-            Button("Using Triggers") {
-                HelpManager.openHelp(anchor: "using-triggers")
+            Button { HelpManager.openHelp(anchor: "using-triggers") } label: {
+                Label("Using Triggers", systemImage: "bolt.fill")
             }
+        } label: {
+            Label("Help", systemImage: "questionmark.circle")
         }
 
-        Button("Settings\u{2026}") {
-            postOpen(tab: nil)
+        Button { postOpen(tab: nil) } label: {
+            Label("Settings\u{2026}", systemImage: "gear")
         }
 
-        Button("Quit Busy Light") {
-            NSApp.terminate(nil)
+        Button { NSApp.terminate(nil) } label: {
+            Label("Quit Busy Light", systemImage: "power")
         }
     }
 
