@@ -1,6 +1,14 @@
-# Busy Light
+# Busy Light Controller for macOS
 
 A macOS menu bar application that connects to [Home Assistant](https://www.home-assistant.io) to trigger scenes, designed for controlling a "busy light" outside a room to indicate whether you may be disturbed.
+
+_However,_ you can use it to trigger _any_ scene set up in HA, so the possibilities are quite unlimited!
+
+>>> [!note] Busy Light Hardware
+I have not yet documented the physical busy light I made for this project, but it is bacically a WS2812 LED ring connected to an ESP32 controller and set up with ESPHome using the [ESP32 RMT LED Strip component](https://esphome.io/components/light/esp32_rmt_led_strip/). This clips over a door, powered by a USB battery pack, in a 3D-printed enclosure.
+
+However, you can use anything you have a Scene set up for in Home Assistant: an RGB light bulb, a power switch for some other light, or it doesn't even have to be a light at all.
+>>>
 
 ## Features
 
@@ -13,10 +21,11 @@ A macOS menu bar application that connects to [Home Assistant](https://www.home-
 ### Home Assistant Integration
 
 - Connect to any Home Assistant instance via its REST API
-- Fetch available scenes and configure which ones appear in the menu
-- Customize each scene with an emoji (via the system emoji picker) and display name
-- Scenes can be reordered and separated with dividers using +/- buttons
-- Connection resilience with automatic retry and health monitoring
+- Automatically fetch available scenes and configure which ones appear in the menu
+- Customize each scene with an emoji (via the system emoji picker) and a display name
+- Scenes can be reordered and separated with dividers
+- Add and remove scenes and dividers using +/- buttons
+- HA connection resilience with automatic retry and health monitoring
 - Scenes automatically refresh when opening the Scenes settings tab
 
 ### Automatic Triggers
@@ -32,6 +41,10 @@ A macOS menu bar application that connects to [Home Assistant](https://www.home-
 - **Keyboard shortcuts** -- Assign global hotkeys to any scene directly in the Scenes settings tab
 - **AppleScript** -- Full scripting support for integration with other apps and workflows
 - **Shortcuts.app** -- Native Shortcuts actions for modern automation
+
+>>> [!caution]
+AppleScript and Shortcuts support is experimental and a work in progress. Something missing or broken? Please file a bug!
+>>>
 
 ### Other
 
@@ -78,9 +91,9 @@ A macOS menu bar application that connects to [Home Assistant](https://www.home-
 
 1. **First Run**: On first launch, a welcome dialog will guide you to configure your Home Assistant connection. Click "Open Settings" to get started.
 
-2. **Connect to Home Assistant**: In the Home Assistant tab, enter your HA URL and Long-Lived Access Token, then click "Test Connection". Help text below the token field explains how to create a token. The default URL (`http://homeassistant.local:8123`) is pre-filled for convenience.
+2. **Connect to Home Assistant**: In the Home Assistant tab, enter your HA URL and Long-Lived Access Token, then click "Test Connection". Help text below the token field explains how to create a token. A common default URL is pre-filled for convenience.
 
-3. **Add Scenes**: Go to the Scenes tab. Available scenes are automatically fetched from Home Assistant. Use the **➕** button to add scenes from the popup menu, or add a divider to organize your list. Use the **➖** button to remove a selected scene. Customize each scene's emoji (click to open the system emoji picker) and display name. Assign optional keyboard shortcuts directly in each scene row.
+3. **Add Scenes**: Go to the Scenes tab. Available scenes are automatically fetched from Home Assistant. Use the **➕** button to add scenes from the popup menu, or add a divider to organize your list. Use the **➖** button to remove a selected scene or divider. Customize each scene's emoji (click to open the system emoji picker) and display name. Assign optional keyboard shortcuts directly in each scene row.
 
 4. **Configure Triggers** (optional): Go to the Triggers tab to set up automatic scene activation based on webcam, microphone, screen lock, or Focus mode. For "off" triggers, you can select "Revert Scene" to automatically switch back to whatever scene was active before the trigger fired.
 
@@ -131,6 +144,23 @@ The detection checks a system property (`DeviceIsRunningSomewhere`) that reports
 
 When a trigger's "off" action is set to "Revert Scene", the app remembers which scene was active before the trigger fired. When the trigger turns off, it restores that previous scene. If multiple triggers fire in sequence, the app reverts to the scene that was active before the first trigger in the chain.
 
+>>> [!caution] Revert may not work as expected, if controlling multiple devices
+This app currently does not get any feedback from HA as to which scene is truly "active" — it only knows which one was triggered last from the app. This may get confusing if you are controlling multiple devices from the Busy Light menu.
+
+For instance, if I have "🔴 Busy", "🟡 Concentrating", and "🟢 Free" scenes for my RGB color busy light, but I have also decided to add "💡 Webcam Lights On" and "💡 Webcam Lights Off" controls to my menu, I can end up in a weird state. Something like this might happen:
+
+1. Set scene to "🟢 Free", changing the color of your busy light to green
+2. Set scene to "💡 Webcam Lights On"
+3. Open the webcam, which triggers the scene "🔴 Busy", making the busy light red
+4. Finishing your zoom, the webcam turns off, and the "Revert Scene" trigger returns to the last active scene, which is "💡 Webcam Lights On", and _not_ "🟢 Free" — it is likely here that your busy light stays in the red "🔴 Busy" state, which may not be what you intended
+
+The app doesn't really know what devices each scene affects, so it's really up to you to design your scenes in a way that makes sense to you.
+
+I'm not sure there's a great solution to this, other than to remember to activate the scene you want to return to right before triggering the event. (Getting HA to report on what state things are _really_ in would probably require a massive amount of logic that is outside the scope of this small scene launcher project.) Of course, you can always set the trigger-off to enable a specific scene, which also solves this problem.
+
+Got a better idea? Please submit an issue to this project!
+>>>
+
 ### Focus Mode Detection
 
 Focus mode detection reads from macOS system files and is considered experimental. It may not work across all macOS versions and degrades gracefully if the required files are unavailable.
@@ -145,7 +175,7 @@ The `hasCompletedFirstRun` flag is stored in UserDefaults. To reset it and see t
 defaults delete com.mboszko.BusyLight hasCompletedFirstRun
 ```
 
-To reset *all* app settings (scenes, triggers, display mode, etc.) back to a clean slate:
+To reset _all_ app settings (scenes, triggers, display mode, etc.) back to a clean slate:
 
 ```bash
 defaults delete com.mboszko.BusyLight
@@ -155,4 +185,4 @@ Note: The Home Assistant token is stored separately in the macOS Keychain, so `d
 
 ## License
 
-All rights reserved.
+©2026 Mark Boszko. All rights reserved.
