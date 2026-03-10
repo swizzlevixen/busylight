@@ -61,6 +61,7 @@ struct MenuBarContentView: View {
                             Text(sceneTitle(scene))
                         }
                     }
+                    .keyboardShortcutIfPresent(shortcutForScene(scene.entityId))
                 case .divider:
                     Divider()
                 }
@@ -79,6 +80,53 @@ struct MenuBarContentView: View {
     }
 
     // MARK: - Helpers
+
+    /// Returns a SwiftUI `KeyboardShortcut` for the given scene entity ID,
+    /// or `nil` if no shortcut has been configured for it.
+    ///
+    /// The shortcut is used only for **display** in the menu (the right-aligned
+    /// glyph string macOS renders from NSMenuItem.keyEquivalent).  The actual
+    /// activation continues to be handled by Carbon `RegisterEventHotKey` in
+    /// `GlobalHotkeyManager`, which intercepts at the CGEvent level and
+    /// consumes the event before NSMenuItem ever sees it — so there is no
+    /// risk of double-activation.
+    private func shortcutForScene(_ entityId: String) -> KeyboardShortcut? {
+        guard let config = settings.keyboardShortcuts
+                .first(where: { $0.sceneEntityId == entityId }),
+              let char = keyCodeToCharacter(config.keyCode)
+        else { return nil }
+        return KeyboardShortcut(KeyEquivalent(char),
+                                modifiers: toEventModifiers(config.modifiers))
+    }
+
+    /// Maps macOS virtual key codes to the `Character` expected by
+    /// `KeyEquivalent`.  Letters are lowercase; SwiftUI / AppKit uppercases
+    /// them for display automatically.  Matches the map in
+    /// `ShortcutRecorderView.keyCodeToString`.
+    private func keyCodeToCharacter(_ keyCode: UInt16) -> Character? {
+        let map: [UInt16: Character] = [
+            0: "a", 1: "s",  2: "d",  3: "f",  4: "h",  5: "g",  6: "z",  7: "x",
+            8: "c", 9: "v", 11: "b", 12: "q", 13: "w", 14: "e", 15: "r",
+           16: "y", 17: "t", 18: "1", 19: "2", 20: "3", 21: "4", 22: "6",
+           23: "5", 24: "=", 25: "9", 26: "7", 27: "-", 28: "8", 29: "0",
+           30: "]", 31: "o", 32: "u", 33: "[", 34: "i", 35: "p", 37: "l",
+           38: "j", 40: "k", 43: ",", 44: "/", 45: "n", 46: "m", 47: ".",
+           49: " ",
+        ]
+        return map[keyCode]
+    }
+
+    /// Converts `NSEvent.ModifierFlags` raw value (as stored in
+    /// `KeyboardShortcutConfig.modifiers`) to SwiftUI `EventModifiers`.
+    private func toEventModifiers(_ rawValue: UInt) -> EventModifiers {
+        let ns = NSEvent.ModifierFlags(rawValue: rawValue)
+        var em: EventModifiers = []
+        if ns.contains(.command) { em.insert(.command) }
+        if ns.contains(.shift)   { em.insert(.shift) }
+        if ns.contains(.option)  { em.insert(.option) }
+        if ns.contains(.control) { em.insert(.control) }
+        return em
+    }
 
     private func sceneTitle(_ scene: SceneItem) -> String {
         switch settings.displayMode {
@@ -108,6 +156,22 @@ struct MenuBarContentView: View {
             object: nil,
             userInfo: tab.map { ["tab": $0] }
         )
+    }
+}
+
+// MARK: - View helpers
+
+private extension View {
+    /// Applies `.keyboardShortcut(_:)` when `shortcut` is non-nil, otherwise
+    /// returns `self` unchanged.  Used to attach an optional display-only
+    /// shortcut hint to each scene menu item without duplicating the Button body.
+    @ViewBuilder
+    func keyboardShortcutIfPresent(_ shortcut: KeyboardShortcut?) -> some View {
+        if let shortcut {
+            self.keyboardShortcut(shortcut)
+        } else {
+            self
+        }
     }
 }
 
