@@ -44,9 +44,10 @@ struct GeneralTab: View {
             Divider()
 
             Link(destination: URL(string: "https://ko-fi.com/swizzlevixen")!) {
-                Label("Support Busy Light on Ko-fi", systemImage: "heart.fill")
+                Label("Buy me a coffee", systemImage: "heart.fill")
             }
             .buttonStyle(.borderedProminent)
+            .help(Text("Support Busy Light on Ko-fi"))
             .tint(.yellow)
             .padding()
         }
