@@ -54,7 +54,7 @@ AppleScript and Shortcuts support is experimental and a work in progress. Someth
 - No dock icon (runs purely in the menu bar)
 - Undo/Redo support in Scenes settings tab
 - Usage information in standard macOS Help menu
-- ❤️ Tip/domation button in General settings tab, if you feel so moved
+- ❤️ Tip/donation button in General settings tab, if you feel so moved
 
 ## Requirements
 
