@@ -15,6 +15,7 @@ import AppKit
 /// because the monitor runs in the host process, not the remote view.
 struct ShortcutRecorderView: View {
     let sceneEntityId: String
+    var onWillChange: (() -> Void)?
     @State private var settings = AppSettings.shared
     @State private var isRecording = false
     @State private var keyMonitor = LocalKeyEventMonitor()
@@ -54,6 +55,8 @@ struct ShortcutRecorderView: View {
     private func startRecording() {
         isRecording = true
         keyMonitor.install { [sceneEntityId] keyCode, modifiers in
+            // Capture undo snapshot before mutating shortcuts.
+            onWillChange?()
             // Upsert: remove any existing shortcut for this scene, then add the new one.
             var shortcuts = settings.keyboardShortcuts
             shortcuts.removeAll { $0.sceneEntityId == sceneEntityId }

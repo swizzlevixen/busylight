@@ -1,7 +1,9 @@
 import SwiftUI
 
 struct ScenesTab: View {
+    @Environment(\.undoManager) private var undoManager
     @State private var settings = AppSettings.shared
+    @State private var undoHandler = SceneUndoHandler()
     @State private var availableScenes: [HAScene] = []
     @State private var isFetching = false
     @State private var fetchError: String?
@@ -55,6 +57,7 @@ struct ScenesTab: View {
                 // "+" button with popup menu
                 Menu {
                     Button("Add Divider") {
+                        undoHandler.saveSnapshot(actionName: "Add Divider")
                         settings.menuItems.append(.newDivider())
                     }
 
@@ -91,6 +94,7 @@ struct ScenesTab: View {
         }
         .padding()
         .onAppear {
+            undoHandler.undoManager = undoManager
             // Auto-fetch scenes when switching to this tab, if HA is configured
             if !settings.haBaseURL.isEmpty && !settings.haToken.isEmpty {
                 fetchScenes()
@@ -116,7 +120,9 @@ struct ScenesTab: View {
 
                 Spacer()
 
-                ShortcutRecorderView(sceneEntityId: scene.entityId)
+                ShortcutRecorderView(sceneEntityId: scene.entityId) {
+                    undoHandler.saveSnapshot(actionName: "Set Shortcut")
+                }
             }
         case .divider:
             HStack {
@@ -138,6 +144,7 @@ struct ScenesTab: View {
             set: { newValue in
                 guard index < settings.menuItems.count,
                       case .scene(var scene) = settings.menuItems[index] else { return }
+                undoHandler.saveSnapshot(actionName: "Change Emoji")
                 scene.emoji = newValue
                 settings.menuItems[index] = .scene(scene)
             }
@@ -154,6 +161,7 @@ struct ScenesTab: View {
             set: { newValue in
                 guard index < settings.menuItems.count,
                       case .scene(var scene) = settings.menuItems[index] else { return }
+                undoHandler.saveSnapshot(actionName: "Change Name")
                 scene.displayName = newValue
                 settings.menuItems[index] = .scene(scene)
             }
@@ -161,12 +169,14 @@ struct ScenesTab: View {
     }
 
     private func moveItems(from source: IndexSet, to destination: Int) {
+        undoHandler.saveSnapshot(actionName: "Reorder")
         settings.menuItems.move(fromOffsets: source, toOffset: destination)
     }
 
     private func removeSelectedItem() {
         guard let selectedId = selectedItemId,
               let index = settings.menuItems.firstIndex(where: { $0.id == selectedId }) else { return }
+        undoHandler.saveSnapshot(actionName: "Remove Item")
         settings.menuItems.remove(at: index)
         selectedItemId = nil
     }
@@ -184,6 +194,7 @@ struct ScenesTab: View {
             emoji: "\u{1F3AC}",
             displayName: haScene.friendlyName
         )
+        undoHandler.saveSnapshot(actionName: "Add Scene")
         settings.menuItems.append(.scene(sceneItem))
     }
 
