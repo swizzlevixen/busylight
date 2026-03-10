@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="AppleTitle" content="Busy Light Help">
+    <meta name="description" content="How to set up Busy Light with your Home Assistant instance.">
+    <title>Getting Started</title>
+    <link rel="stylesheet" href="../shared/style.css">
+</head>
+<body>
+    <a name="getting-started"></a>
+    <div class="breadcrumb"><a href="index.html">Busy Light Help</a></div>
+    <h1>Getting Started</h1>
+    <p>
+        Busy Light connects to a Home Assistant instance on your network to
+        activate scenes. Before you can use the app you need a Home Assistant
+        server URL and a long-lived access token.
+    </p>
+
+    <h2>What you need</h2>
+    <ul>
+        <li>A running <a href="https://www.home-assistant.io">Home Assistant</a>
+            instance reachable from your Mac.</li>
+        <li>At least one scene configured in Home Assistant.</li>
+        <li>A long-lived access token for authentication.</li>
+    </ul>
+
+    <h2>Create a long-lived access token</h2>
+    <ol>
+        <li>Open your Home Assistant web interface.</li>
+        <li>Click your profile icon in the bottom-left corner of the sidebar.</li>
+        <li>Scroll down to the <strong>Long-Lived Access Tokens</strong>
+            section.</li>
+        <li>Click <strong>Create Token</strong>, give it a name (e.g.
+            "Busy Light"), and click <strong>OK</strong>.</li>
+        <li>Copy the token immediately &mdash; it is only shown once.</li>
+    </ol>
+
+    <h2>Configure the connection</h2>
+    <ol>
+        <li>Click the Busy Light icon in the menu bar and choose
+            <strong>Settings&hellip;</strong></li>
+        <li>In the <strong>Home Assistant</strong> tab, enter your server URL
+            (e.g. <code>http://homeassistant.local:8123</code>).</li>
+        <li>Paste your long-lived access token into the
+            <strong>Token</strong> field.</li>
+        <li>Click <strong>Test Connection</strong> to verify everything works.
+            A green checkmark means you are connected.</li>
+    </ol>
+
+    <div class="note">
+        Your access token is stored securely in the macOS Keychain and is never
+        sent anywhere other than your Home Assistant server.
+    </div>
+
+    <h2>Next steps</h2>
+    <p>
+        Once connected, head over to
+        <a href="adding-scenes.html">Adding Scenes</a> to choose which scenes
+        appear in the menu bar.
+    </p>
+</body>
+</html>

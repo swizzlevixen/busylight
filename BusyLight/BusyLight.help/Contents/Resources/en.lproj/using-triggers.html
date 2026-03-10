@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="AppleTitle" content="Busy Light Help">
+    <meta name="description" content="How to use triggers to automatically activate scenes in Busy Light.">
+    <title>Using Triggers</title>
+    <link rel="stylesheet" href="../shared/style.css">
+</head>
+<body>
+    <a name="using-triggers"></a>
+    <div class="breadcrumb"><a href="index.html">Busy Light Help</a></div>
+    <h1>Using Triggers</h1>
+    <p>
+        Triggers let Busy Light automatically activate a scene when something
+        happens on your Mac, such as turning on the webcam for a video call.
+        This is the key feature that makes your busy light work hands-free.
+    </p>
+
+    <h2>Available triggers</h2>
+    <p>Busy Light monitors four types of system events:</p>
+    <ul>
+        <li><strong>Webcam</strong> &mdash; fires when any camera on your Mac
+            starts or stops being used by an app.</li>
+        <li><strong>Microphone</strong> &mdash; fires when any microphone
+            starts or stops being used.</li>
+        <li><strong>Screen Lock</strong> &mdash; fires when you lock the
+            screen or when it unlocks.</li>
+        <li><strong>Focus Mode</strong> &mdash; fires when a system Focus
+            (e.g. Do Not Disturb) turns on or off. This trigger is
+            experimental and may not work on all macOS versions.</li>
+    </ul>
+
+    <h2>Set up a trigger</h2>
+    <ol>
+        <li>Open <strong>Settings&hellip;</strong> and select the
+            <strong>Triggers</strong> tab.</li>
+        <li>Find the trigger you want (e.g. Webcam &rarr; On) and turn on
+            its toggle.</li>
+        <li>Choose a scene from the dropdown. That scene will be activated
+            whenever the trigger fires.</li>
+    </ol>
+
+    <h2>On and Off triggers</h2>
+    <p>
+        Each trigger type has two states: <strong>On</strong> (e.g. camera
+        starts) and <strong>Off</strong> (e.g. camera stops). You can
+        configure each independently:
+    </p>
+    <ul>
+        <li>Set the <strong>On</strong> trigger to activate your "busy"
+            scene when a call starts.</li>
+        <li>Set the <strong>Off</strong> trigger to activate your "available"
+            scene when the call ends &mdash; or use
+            <strong>Revert Scene</strong>.</li>
+    </ul>
+
+    <h2>Revert Scene</h2>
+    <p>
+        Off-state triggers (webcam off, microphone off, screen unlock, and
+        focus off) offer a special <strong>Revert Scene</strong> option in the
+        scene picker. When selected, the app restores whatever scene was
+        active before the trigger fired, rather than switching to a
+        specific scene.
+    </p>
+    <p>
+        This is useful when you want the busy light to return to its previous
+        state after a call, without hard-coding a specific "available" scene.
+    </p>
+
+    <h2>Trigger priority</h2>
+    <p>
+        When multiple triggers fire at the same time, the webcam trigger takes
+        priority over the microphone trigger. For example, if both the camera
+        and microphone turn on simultaneously (as in a video call), the webcam
+        scene is used.
+    </p>
+
+    <div class="note">
+        Triggers work in the background regardless of which app is in the
+        foreground. The webcam and microphone monitors check the device status
+        every two seconds.
+    </div>
+</body>
+</html>

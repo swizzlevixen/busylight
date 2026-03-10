@@ -1,0 +1,119 @@
+/* Busy Light Help — Apple Help Viewer stylesheet */
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #333;
+    background-color: #fff;
+    margin: 0;
+    padding: 20px 24px;
+    max-width: 600px;
+}
+
+h1 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #000;
+    margin: 0 0 16px 0;
+}
+
+h2 {
+    font-size: 17px;
+    font-weight: 600;
+    color: #000;
+    margin: 24px 0 8px 0;
+}
+
+h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #000;
+    margin: 20px 0 6px 0;
+}
+
+p {
+    margin: 8px 0;
+}
+
+ul, ol {
+    margin: 8px 0;
+    padding-left: 24px;
+}
+
+li {
+    margin: 4px 0;
+}
+
+a {
+    color: #0068DA;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+code {
+    font-family: "SF Mono", Menlo, Monaco, monospace;
+    font-size: 12px;
+    background-color: #f5f5f5;
+    padding: 1px 5px;
+    border-radius: 3px;
+}
+
+/* Navigation */
+
+.breadcrumb {
+    font-size: 11px;
+    color: #888;
+    margin-bottom: 12px;
+}
+
+.breadcrumb a {
+    color: #888;
+}
+
+.breadcrumb a:hover {
+    color: #0068DA;
+}
+
+/* Topic links on landing page */
+
+.topics {
+    list-style: none;
+    padding: 0;
+    margin: 16px 0;
+}
+
+.topics li {
+    margin: 12px 0;
+}
+
+.topics a {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* Emphasized notes */
+
+.note {
+    background-color: #f8f8f8;
+    border-left: 3px solid #0068DA;
+    padding: 8px 12px;
+    margin: 12px 0;
+    font-size: 12px;
+    color: #555;
+}
+
+/* Keyboard shortcut styling */
+
+kbd {
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 12px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 1px 5px;
+    box-shadow: 0 1px 0 #bbb;
+}

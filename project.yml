@@ -21,6 +21,15 @@ targets:
       - path: BusyLight
         excludes:
           - "**/.DS_Store"
+          - "BusyLight.help"
+      - path: BusyLight/BusyLight.help
+        type: folder
+        buildPhase: resources
+    postBuildScripts:
+      - name: "Generate Help Index"
+        script: |
+          hiutil -I corespotlight -Caf "$BUILT_PRODUCTS_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/BusyLight.help/Contents/Resources/en.lproj/search.helpindex" "$BUILT_PRODUCTS_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/BusyLight.help/Contents/Resources/en.lproj/"
+        basedOnDependencyAnalysis: false
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.mboszko.BusyLight

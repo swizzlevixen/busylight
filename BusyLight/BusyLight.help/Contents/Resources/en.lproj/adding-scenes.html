@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="AppleTitle" content="Busy Light Help">
+    <meta name="description" content="How to add, organize, and customize scenes in Busy Light.">
+    <title>Adding Scenes</title>
+    <link rel="stylesheet" href="../shared/style.css">
+</head>
+<body>
+    <a name="adding-scenes"></a>
+    <div class="breadcrumb"><a href="index.html">Busy Light Help</a></div>
+    <h1>Adding Scenes</h1>
+    <p>
+        Scenes in Home Assistant capture the state of one or more devices
+        (lights, switches, etc.) so they can be restored with a single action.
+        Busy Light lets you pick which scenes appear in the menu bar for quick
+        activation.
+    </p>
+
+    <h2>Open the Scenes tab</h2>
+    <p>
+        Click the Busy Light icon in the menu bar, choose
+        <strong>Settings&hellip;</strong>, then select the
+        <strong>Scenes</strong> tab.
+    </p>
+    <p>
+        When the tab opens it automatically fetches the latest scenes from your
+        Home Assistant instance. You can also click
+        <strong>Refresh Scenes from Home Assistant</strong> at any time to
+        update the list.
+    </p>
+
+    <h2>Add a scene</h2>
+    <ol>
+        <li>Click the <strong>+</strong> button below the scene list.</li>
+        <li>Select a scene from the pop-up menu. Scenes already in the list
+            are dimmed.</li>
+        <li>The scene appears at the bottom of the list, ready to
+            customize.</li>
+    </ol>
+
+    <h2>Add a divider</h2>
+    <p>
+        Dividers help organize the menu when you have many scenes. Click the
+        <strong>+</strong> button and choose <strong>Add Divider</strong>.
+        The divider appears as a horizontal line in both the list and the
+        menu bar dropdown.
+    </p>
+
+    <h2>Customize a scene</h2>
+    <ul>
+        <li><strong>Emoji</strong> &mdash; click the emoji button to open the
+            system Character Viewer and pick any emoji.</li>
+        <li><strong>Display Name</strong> &mdash; type a friendly name that
+            appears in the menu (independent of the Home Assistant entity
+            name).</li>
+    </ul>
+
+    <h2>Reorder scenes</h2>
+    <p>
+        Drag a scene up or down in the list to change the order it appears in
+        the menu bar dropdown.
+    </p>
+
+    <h2>Remove a scene</h2>
+    <p>
+        Select a scene in the list and click the <strong>&minus;</strong> button
+        to remove it. This only removes it from the menu &mdash; the scene
+        still exists in Home Assistant.
+    </p>
+
+    <h2>Keyboard shortcuts</h2>
+    <p>
+        You can assign a global keyboard shortcut to any scene so it can be
+        activated from anywhere, even when the menu is closed.
+    </p>
+    <ol>
+        <li>Click the shortcut area next to a scene (it shows
+            <strong>None</strong> if no shortcut is set).</li>
+        <li>Press the key combination you want to use (e.g.
+            <kbd>&#x2318;</kbd><kbd>1</kbd>).</li>
+        <li>The shortcut is registered immediately and also appears next to
+            the scene in the menu bar dropdown.</li>
+    </ol>
+    <p>
+        Press the same shortcut again while the scene is active to deactivate
+        it.
+    </p>
+
+    <h2>Display mode</h2>
+    <p>
+        In the <strong>General</strong> tab of Settings you can choose how
+        scenes are displayed in the menu bar:
+    </p>
+    <ul>
+        <li><strong>Emoji Only</strong> &mdash; shows just the emoji.</li>
+        <li><strong>Name Only</strong> &mdash; shows the display name.</li>
+        <li><strong>Both</strong> &mdash; shows the emoji followed by the
+            name.</li>
+    </ul>
+</body>
+</html>

@@ -19,6 +19,24 @@ struct BusyLightApp: App {
                     NotificationCenter.default.post(name: .settingsWindowClosed, object: nil)
                 }
         }
+        .commands {
+            CommandGroup(replacing: .help) {
+                Button("Busy Light Help") {
+                    HelpManager.openHelp()
+                }
+                .keyboardShortcut("?", modifiers: .command)
+                Divider()
+                Button("Getting Started") {
+                    HelpManager.openHelp(anchor: "getting-started")
+                }
+                Button("Adding Scenes") {
+                    HelpManager.openHelp(anchor: "adding-scenes")
+                }
+                Button("Using Triggers") {
+                    HelpManager.openHelp(anchor: "using-triggers")
+                }
+            }
+        }
     }
 }
 

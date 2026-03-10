@@ -32,5 +32,9 @@
 	<string>BusyLight.ScriptableApp</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2026 mboszko. All rights reserved.</string>
+	<key>CFBundleHelpBookFolder</key>
+	<string>BusyLight.help</string>
+	<key>CFBundleHelpBookName</key>
+	<string>Busy Light Help</string>
 </dict>
 </plist>

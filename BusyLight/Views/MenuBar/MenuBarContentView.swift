@@ -70,6 +70,19 @@ struct MenuBarContentView: View {
 
         Divider()
 
+        // Help submenu — accessible even when Settings window is closed
+        Menu("Help") {
+            Button("Getting Started") {
+                HelpManager.openHelp(anchor: "getting-started")
+            }
+            Button("Adding Scenes") {
+                HelpManager.openHelp(anchor: "adding-scenes")
+            }
+            Button("Using Triggers") {
+                HelpManager.openHelp(anchor: "using-triggers")
+            }
+        }
+
         Button("Settings\u{2026}") {
             postOpen(tab: nil)
         }
