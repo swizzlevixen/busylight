@@ -32,7 +32,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // SettingsOpener captures this from MenuBarLabelView, which is always live.
         SettingsOpener.shared.openSettings()
 
-        // Rename the settings window after it appears
+        // Rename the settings window and remove the View menu after they appear.
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             if let settingsWindow = NSApp.windows.first(where: {
                 $0.isVisible && $0.styleMask.contains(.titled)
@@ -40,6 +40,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 settingsWindow.title = "Settings"
                 settingsWindow.makeKeyAndOrderFront(nil)
                 settingsWindow.orderFrontRegardless()
+            }
+            if let viewMenu = NSApp.mainMenu?.item(withTitle: "View") {
+                NSApp.mainMenu?.removeItem(viewMenu)
             }
         }
     }
