@@ -1,0 +1,43 @@
+2026-03-10 - v1.0
+
+First release. All original features:
+
+Menu Bar
+
+- Displays the last activated scene (emoji, name, or both) in the macOS menu bar
+- Click to see your list of configured scenes and switch between them
+- Help, Settings…, and Quit are always available at the bottom of the menu
+
+Home Assistant Integration
+
+- Connect to any Home Assistant instance via its REST API
+- Automatically fetch available scenes and configure which ones appear in the menu
+- Customize each scene with an emoji (via the system emoji picker) and a display name
+- Scenes can be reordered and separated with dividers
+- Add and remove scenes and dividers using +/- buttons
+- HA connection resilience with automatic retry and health monitoring
+- Scenes automatically refresh when opening the Scenes settings tab
+
+Automatic Triggers
+
+- Webcam detection -- Automatically trigger a scene when your camera turns on or off (great for video calls)
+- Microphone detection -- Trigger scenes for audio-only calls
+- Screen lock/unlock -- Change scenes when you lock your screen or step away
+- Focus mode -- React to macOS Focus/Do Not Disturb activation (experimental)
+- Revert Scene -- For any "off" trigger (webcam off, mic off, screen unlocked, focus deactivated), choose "Revert Scene" to automatically return to last activated scene before the trigger fired
+
+Automation
+
+- Keyboard shortcuts -- Assign global hotkeys to any scene directly in the Scenes settings tab
+- AppleScript -- Full scripting support for integration with other apps and workflows (experimental, WIP)
+- Shortcuts.app -- Native Shortcuts actions for modern automation (experimental, WIP)
+
+Other
+
+- First-run welcome dialog guides you through initial setup
+- Launch at login support
+- Secure HA token storage in macOS Keychain
+- No dock icon (runs purely in the menu bar)
+- Undo/Redo support in Scenes settings tab
+- Usage information in standard macOS Help menu
+- Tip/domation button in General settings tab, if you feel so moved
