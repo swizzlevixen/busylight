@@ -182,7 +182,3 @@ defaults delete com.mboszko.BusyLight
 ```
 
 Note: The Home Assistant token is stored separately in the macOS Keychain, so `defaults delete` won't clear it. To also remove the token, delete the `com.mboszko.BusyLight.haToken` entry from Keychain Access.
-
-## License
-
-©2026 Mark Boszko. All rights reserved.
