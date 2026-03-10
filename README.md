@@ -16,7 +16,7 @@ However, you can use anything you have a Scene set up for in Home Assistant: an 
 
 - Displays the currently active scene (emoji, name, or both) in the macOS menu bar
 - Click to see your list of configured scenes and switch between them
-- **Settings…** and **Quit Busy Light** are always available at the bottom of the menu
+- **Help,** **Settings…,** and **Quit Busy Light** are always available at the bottom of the menu
 
 ### Home Assistant Integration
 
@@ -52,6 +52,9 @@ AppleScript and Shortcuts support is experimental and a work in progress. Someth
 - Launch at login support
 - Secure HA token storage in macOS Keychain
 - No dock icon (runs purely in the menu bar)
+- Undo/Redo support in Scenes settings tab
+- Usage information in standard macOS Help menu
+- ❤️ Tip/domation button in General settings tab, if you feel so moved
 
 ## Requirements
 
