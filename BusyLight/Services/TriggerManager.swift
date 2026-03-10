@@ -15,7 +15,7 @@ final class TriggerManager {
         MicrophoneMonitor.shared.startMonitoring()
         ScreenLockMonitor.shared.startMonitoring()
         FocusModeMonitor.shared.startMonitoring()
-        GlobalHotkeyManager.shared.updateShortcuts(settings.keyboardShortcuts)
+        trackAndUpdateHotkeys()
 
         observers.append(
             NotificationCenter.default.addObserver(
@@ -68,6 +68,24 @@ final class TriggerManager {
                     baseURL: settings.haBaseURL,
                     token: settings.haToken
                 )
+            }
+        }
+    }
+
+    /// Register keyboard shortcuts with GlobalHotkeyManager and re-register
+    /// automatically whenever AppSettings.keyboardShortcuts changes.
+    ///
+    /// `withObservationTracking` reads `settings.keyboardShortcuts` inside its
+    /// apply block, which registers an @Observable observation.  When the user
+    /// records a new shortcut in ShortcutRecorderView (or deletes one), the
+    /// onChange closure fires, hops back to @MainActor, and calls this method
+    /// again — re-registering the updated set and re-installing the observation.
+    private func trackAndUpdateHotkeys() {
+        withObservationTracking {
+            GlobalHotkeyManager.shared.updateShortcuts(settings.keyboardShortcuts)
+        } onChange: { [weak self] in
+            Task { @MainActor [weak self] in
+                self?.trackAndUpdateHotkeys()
             }
         }
     }
