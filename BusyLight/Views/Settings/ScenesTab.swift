@@ -50,6 +50,7 @@ struct ScenesTab: View {
                     .onMove(perform: moveItems)
                 }
                 .listStyle(.bordered)
+                .onDeleteCommand(perform: removeSelectedItem)
             }
 
             // +/- toolbar buttons
