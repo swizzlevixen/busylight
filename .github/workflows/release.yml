@@ -21,7 +21,7 @@ permissions:
 jobs:
   build-and-release:
     name: Build, Sign, Notarize & Release
-    runs-on: macos-15
+    runs-on: skyfall
     timeout-minutes: 30
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -147,14 +147,20 @@ jobs:
 
       - name: Create DMG volume icon
         run: |
-          # Convert PNG to icns for DMG volume icon
+          # Convert production PNG to icns for DMG volume icon
           ICONSET_PATH="$RUNNER_TEMP/VolumeIcon.iconset"
           mkdir -p "$ICONSET_PATH"
-          sips -z 512 512 ProductionAssets/AppIcon-iOS-Default-1024x1024@1x.png --out "$ICONSET_PATH/icon_256x256@2x.png"
-          sips -z 256 256 ProductionAssets/AppIcon-iOS-Default-1024x1024@1x.png --out "$ICONSET_PATH/icon_256x256.png"
-          sips -z 128 128 ProductionAssets/AppIcon-iOS-Default-1024x1024@1x.png --out "$ICONSET_PATH/icon_128x128.png"
-          sips -z 32 32 ProductionAssets/AppIcon-iOS-Default-1024x1024@1x.png --out "$ICONSET_PATH/icon_32x32.png"
-          sips -z 16 16 ProductionAssets/AppIcon-iOS-Default-1024x1024@1x.png --out "$ICONSET_PATH/icon_16x16.png"
+          SRC="ProductionAssets/AppIcon-iOS-Default-1024x1024@1x.png"
+          sips -z 1024 1024 "$SRC" --out "$ICONSET_PATH/icon_512x512@2x.png"
+          sips -z 512 512   "$SRC" --out "$ICONSET_PATH/icon_512x512.png"
+          sips -z 512 512   "$SRC" --out "$ICONSET_PATH/icon_256x256@2x.png"
+          sips -z 256 256   "$SRC" --out "$ICONSET_PATH/icon_256x256.png"
+          sips -z 256 256   "$SRC" --out "$ICONSET_PATH/icon_128x128@2x.png"
+          sips -z 128 128   "$SRC" --out "$ICONSET_PATH/icon_128x128.png"
+          sips -z 64 64     "$SRC" --out "$ICONSET_PATH/icon_32x32@2x.png"
+          sips -z 32 32     "$SRC" --out "$ICONSET_PATH/icon_32x32.png"
+          sips -z 32 32     "$SRC" --out "$ICONSET_PATH/icon_16x16@2x.png"
+          sips -z 16 16     "$SRC" --out "$ICONSET_PATH/icon_16x16.png"
           iconutil -c icns "$ICONSET_PATH" -o "$RUNNER_TEMP/VolumeIcon.icns"
 
       - name: Create DMG
