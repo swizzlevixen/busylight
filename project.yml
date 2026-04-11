@@ -7,6 +7,10 @@ options:
   createIntermediateGroups: true
   generateEmptyDirectories: true
 
+configs:
+  Debug: debug
+  Release: release
+
 settings:
   base:
     SWIFT_VERSION: "6.0"
@@ -25,6 +29,8 @@ targets:
       - path: BusyLight/BusyLight.help
         type: folder
         buildPhase: resources
+      - path: AppIcon.icon
+        buildPhase: sources
     postBuildScripts:
       - name: "Generate Help Index"
         script: |
@@ -42,6 +48,10 @@ targets:
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         COMBINE_HIDPI_IMAGES: YES
         SWIFT_STRICT_CONCURRENCY: complete
+      configs:
+        Release:
+          CODE_SIGN_IDENTITY: "Developer ID Application"
+          CODE_SIGN_STYLE: Manual
     entitlements:
       path: BusyLight/BusyLight.entitlements
       properties: {}

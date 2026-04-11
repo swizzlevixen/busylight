@@ -11,7 +11,7 @@ enum HelpManager {
     /// - `"getting-started"` — Getting Started
     /// - `"adding-scenes"` — Adding Scenes
     /// - `"using-triggers"` — Using Triggers
-    static func openHelp(anchor: String = "busylight-help") {
+    @MainActor static func openHelp(anchor: String = "busylight-help") {
         NSHelpManager.shared.openHelpAnchor(
             anchor as NSHelpManager.AnchorName,
             inBook: bookName
