@@ -16,11 +16,13 @@ final class SceneUndoHandler {
         let savedShortcuts = AppSettings.shared.keyboardShortcuts
 
         undoManager?.registerUndo(withTarget: self) { handler in
-            handler.restoreSnapshot(
-                menuItems: savedMenuItems,
-                shortcuts: savedShortcuts,
-                actionName: actionName
-            )
+            MainActor.assumeIsolated {
+                handler.restoreSnapshot(
+                    menuItems: savedMenuItems,
+                    shortcuts: savedShortcuts,
+                    actionName: actionName
+                )
+            }
         }
         undoManager?.setActionName(actionName)
     }
