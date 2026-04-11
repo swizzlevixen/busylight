@@ -21,7 +21,7 @@ permissions:
 jobs:
   build-and-release:
     name: Build, Sign, Notarize & Release
-    runs-on: skyfall
+    runs-on: busylight
     timeout-minutes: 30
 
     steps:
