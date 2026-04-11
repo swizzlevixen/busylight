@@ -145,6 +145,18 @@ jobs:
 
           rm "$RUNNER_TEMP/app.zip"
 
+      - name: Create DMG volume icon
+        run: |
+          # Convert PNG to icns for DMG volume icon
+          ICONSET_PATH="$RUNNER_TEMP/VolumeIcon.iconset"
+          mkdir -p "$ICONSET_PATH"
+          sips -z 512 512 ProductionAssets/AppIcon-iOS-Default-1024x1024@1x.png --out "$ICONSET_PATH/icon_256x256@2x.png"
+          sips -z 256 256 ProductionAssets/AppIcon-iOS-Default-1024x1024@1x.png --out "$ICONSET_PATH/icon_256x256.png"
+          sips -z 128 128 ProductionAssets/AppIcon-iOS-Default-1024x1024@1x.png --out "$ICONSET_PATH/icon_128x128.png"
+          sips -z 32 32 ProductionAssets/AppIcon-iOS-Default-1024x1024@1x.png --out "$ICONSET_PATH/icon_32x32.png"
+          sips -z 16 16 ProductionAssets/AppIcon-iOS-Default-1024x1024@1x.png --out "$ICONSET_PATH/icon_16x16.png"
+          iconutil -c icns "$ICONSET_PATH" -o "$RUNNER_TEMP/VolumeIcon.icns"
+
       - name: Create DMG
         run: |
           DMG_PATH="$RUNNER_TEMP/BusyLight-${{ steps.version.outputs.version }}.dmg"
@@ -153,6 +165,7 @@ jobs:
 
           create-dmg \
             --volname "$PRODUCT_NAME" \
+            --volicon "$RUNNER_TEMP/VolumeIcon.icns" \
             --window-pos 200 120 \
             --window-size 600 400 \
             --icon-size 100 \

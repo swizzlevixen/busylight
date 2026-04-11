@@ -30,7 +30,7 @@ targets:
         type: folder
         buildPhase: resources
       - path: AppIcon.icon
-        buildPhase: resources
+        buildPhase: sources
     postBuildScripts:
       - name: "Generate Help Index"
         script: |
