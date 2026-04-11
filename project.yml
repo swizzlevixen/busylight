@@ -29,6 +29,8 @@ targets:
       - path: BusyLight/BusyLight.help
         type: folder
         buildPhase: resources
+      - path: AppIcon.icon
+        buildPhase: resources
     postBuildScripts:
       - name: "Generate Help Index"
         script: |
