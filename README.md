@@ -8,7 +8,7 @@ _However,_ you can use it to trigger _any_ scene set up in HA, so the possibilit
 >
 > #### Busy Light Hardware
 >
-> Documented [here](Hardware/Busy Light Hardware.md), it is bacically some WS2812 LEDs connected to an ESP32 controller and set up with ESPHome using the [ESP32 RMT LED Strip component](https://esphome.io/components/light/esp32_rmt_led_strip/). This clips over a door, powered by a USB battery pack, in a 3D-printed enclosure.
+> Documented [here](https://github.com/swizzlevixen/busylight/blob/main/Hardware/Busy%20Light%20Hardware.md), it is bacically some WS2812 LEDs connected to an ESP32 controller and set up with ESPHome using the [ESP32 RMT LED Strip component](https://esphome.io/components/light/esp32_rmt_led_strip/). This clips over a door, powered by a USB battery pack, in a 3D-printed enclosure.
 
 However, you can use anything you have a Scene set up for in Home Assistant: an RGB light bulb, a power switch for some other light, or it doesn't even have to be a light at all.
 

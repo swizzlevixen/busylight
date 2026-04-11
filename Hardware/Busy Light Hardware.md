@@ -10,8 +10,8 @@ I am linking to Amazon where I bought these myself. I may get a small kickback i
 - [RGB LED Ring 12 x WS2912B](https://amzn.to/4sXTLxY)
 - [RGB LED Stick 8 X WS2812B](https://amzn.to/4vsLBiY)
 - [Anker 10,000mAh USB Power Bank](https://amzn.to/4ellkwy)
-- A 3D-printed enclosure that hangs over the edge of the door — [my model](Busy Light - Door Hook.3mf)
-- (2) 3D-printed diffusers 3D-printed out of "clear" PLA or PETG — [my models](Busy Light - Diffusers.3mf)
+- A 3D-printed enclosure that hangs over the edge of the door — [my model](https://github.com/swizzlevixen/busylight/blob/main/Hardware/Busy%20Light%20-%20Door%20Hook.3mf)
+- (2) 3D-printed diffusers 3D-printed out of "clear" PLA or PETG — [my models](https://github.com/swizzlevixen/busylight/blob/main/Hardware/Busy%20Light%20-%20Diffusers.3mf)
 
 ## Construction
 
