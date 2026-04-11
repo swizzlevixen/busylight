@@ -79,6 +79,7 @@ jobs:
 
       - name: Build archive
         run: |
+          set -o pipefail
           ARCHIVE_PATH="$RUNNER_TEMP/BusyLight.xcarchive"
           xcodebuild archive \
             -project "$PROJECT" \
@@ -96,27 +97,14 @@ jobs:
 
       - name: Export archive
         run: |
+          set -o pipefail
           EXPORT_PATH="$RUNNER_TEMP/export"
 
           # Create export options plist
-          cat > "$RUNNER_TEMP/ExportOptions.plist" << 'PLIST'
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-          <dict>
-              <key>method</key>
-              <string>developer-id</string>
-              <key>teamID</key>
-          PLIST
-          echo "    <string>${{ secrets.APPLE_TEAM_ID }}</string>" >> "$RUNNER_TEMP/ExportOptions.plist"
-          cat >> "$RUNNER_TEMP/ExportOptions.plist" << 'PLIST'
-              <key>signingStyle</key>
-              <string>manual</string>
-              <key>signingCertificate</key>
-              <string>Developer ID Application</string>
-          </dict>
-          </plist>
-          PLIST
+          /usr/libexec/PlistBuddy -c "Add :method string developer-id" "$RUNNER_TEMP/ExportOptions.plist"
+          /usr/libexec/PlistBuddy -c "Add :teamID string ${{ secrets.APPLE_TEAM_ID }}" "$RUNNER_TEMP/ExportOptions.plist"
+          /usr/libexec/PlistBuddy -c "Add :signingStyle string manual" "$RUNNER_TEMP/ExportOptions.plist"
+          /usr/libexec/PlistBuddy -c "Add :signingCertificate string Developer ID Application" "$RUNNER_TEMP/ExportOptions.plist"
 
           xcodebuild -exportArchive \
             -archivePath "$ARCHIVE_PATH" \
@@ -124,6 +112,11 @@ jobs:
             -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist" \
             | xcpretty
 
+          # Find the exported app
+          echo "Export contents:"
+          ls -la "$EXPORT_PATH"
+          APP_PATH=$(find "$EXPORT_PATH" -name "*.app" -maxdepth 1 | head -1)
+          echo "APP_PATH=$APP_PATH" >> "$GITHUB_ENV"
           echo "EXPORT_PATH=$EXPORT_PATH" >> "$GITHUB_ENV"
 
       - name: Notarize app
@@ -132,8 +125,6 @@ jobs:
           APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         run: |
-          APP_PATH="$EXPORT_PATH/$PRODUCT_NAME.app"
-
           # Create a zip for notarization
           ditto -c -k --keepParent "$APP_PATH" "$RUNNER_TEMP/app.zip"
 
@@ -152,7 +143,8 @@ jobs:
       - name: Create DMG
         run: |
           DMG_PATH="$RUNNER_TEMP/BusyLight-${{ steps.version.outputs.version }}.dmg"
-          APP_PATH="$EXPORT_PATH/$PRODUCT_NAME.app"
+
+          APP_NAME=$(basename "$APP_PATH")
 
           create-dmg \
             --volname "$PRODUCT_NAME" \
@@ -160,8 +152,8 @@ jobs:
             --window-pos 200 120 \
             --window-size 600 400 \
             --icon-size 100 \
-            --icon "$PRODUCT_NAME.app" 150 190 \
-            --hide-extension "$PRODUCT_NAME.app" \
+            --icon "$APP_NAME" 150 190 \
+            --hide-extension "$APP_NAME" \
             --app-drop-link 450 190 \
             "$DMG_PATH" \
             "$APP_PATH"
