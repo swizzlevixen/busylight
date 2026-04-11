@@ -4,11 +4,13 @@ A macOS menu bar application that connects to [Home Assistant](https://www.home-
 
 _However,_ you can use it to trigger _any_ scene set up in HA, so the possibilities are quite unlimited!
 
->>> [!note] Busy Light Hardware
-I have not yet documented the physical busy light I made for this project, but it is bacically a WS2812 LED ring connected to an ESP32 controller and set up with ESPHome using the [ESP32 RMT LED Strip component](https://esphome.io/components/light/esp32_rmt_led_strip/). This clips over a door, powered by a USB battery pack, in a 3D-printed enclosure.
+> [!NOTE]
+>
+> #### Busy Light Hardware
+>
+> Documented [here](Hardware/Busy Light Hardware.md), it is bacically some WS2812 LEDs connected to an ESP32 controller and set up with ESPHome using the [ESP32 RMT LED Strip component](https://esphome.io/components/light/esp32_rmt_led_strip/). This clips over a door, powered by a USB battery pack, in a 3D-printed enclosure.
 
 However, you can use anything you have a Scene set up for in Home Assistant: an RGB light bulb, a power switch for some other light, or it doesn't even have to be a light at all.
->>>
 
 ## Features
 
@@ -42,9 +44,8 @@ However, you can use anything you have a Scene set up for in Home Assistant: an 
 - **AppleScript** -- Full scripting support for integration with other apps and workflows
 - **Shortcuts.app** -- Native Shortcuts actions for modern automation
 
->>> [!caution]
-AppleScript and Shortcuts support is experimental and a work in progress. Something missing or broken? Please file a bug!
->>>
+> [!CAUTION]
+> AppleScript and Shortcuts support is experimental and a work in progress. Something missing or broken? Please file a bug!
 
 ### Other
 
@@ -147,22 +148,24 @@ The detection checks a system property (`DeviceIsRunningSomewhere`) that reports
 
 When a trigger's "off" action is set to "Revert Scene", the app remembers which scene was active before the trigger fired. When the trigger turns off, it restores that previous scene. If multiple triggers fire in sequence, the app reverts to the scene that was active before the first trigger in the chain.
 
->>> [!caution] Revert may not work as expected, if controlling multiple devices
-This app currently does not get any feedback from HA as to which scene is truly "active" — it only knows which one was triggered last from the app. This may get confusing if you are controlling multiple devices from the Busy Light menu.
-
-For instance, if I have "🔴 Busy", "🟡 Concentrating", and "🟢 Free" scenes for my RGB color busy light, but I have also decided to add "💡 Webcam Lights On" and "💡 Webcam Lights Off" controls to my menu, I can end up in a weird state. Something like this might happen:
-
-1. Set scene to "🟢 Free", changing the color of your busy light to green
-2. Set scene to "💡 Webcam Lights On"
-3. Open the webcam, which triggers the scene "🔴 Busy", making the busy light red
-4. Finishing your zoom, the webcam turns off, and the "Revert Scene" trigger returns to the last active scene, which is "💡 Webcam Lights On", and _not_ "🟢 Free" — it is likely here that your busy light stays in the red "🔴 Busy" state, which may not be what you intended
-
-The app doesn't really know what devices each scene affects, so it's really up to you to design your scenes in a way that makes sense to you.
-
-I'm not sure there's a great solution to this, other than to remember to activate the scene you want to return to right before triggering the event. (Getting HA to report on what state things are _really_ in would probably require a massive amount of logic that is outside the scope of this small scene launcher project.) Of course, you can always set the trigger-off to enable a specific scene, which also solves this problem.
-
-Got a better idea? Please submit an issue to this project!
->>>
+> [!CAUTION]
+>
+> #### Revert may not work as expected, if controlling multiple devices
+>
+> This app currently does not get any feedback from HA as to which scene is truly "active" — it only knows which one was triggered last from the app. This may get confusing if you are controlling multiple devices from the Busy Light menu.
+>
+> For instance, if I have "🔴 Busy", "🟡 Concentrating", and "🟢 Free" scenes for my RGB color busy light, but I have also decided to add "💡 Webcam Lights On" and "💡 Webcam Lights Off" controls to my menu, I can end up in a weird state. Something like this might happen:
+>
+> 1. Set scene to "🟢 Free", changing the color of your busy light to green
+> 2. Set scene to "💡 Webcam Lights On"
+> 3. Open the webcam, which triggers the scene "🔴 Busy", making the busy light red
+> 4. Finishing your zoom, the webcam turns off, and the "Revert Scene" trigger returns to the last active scene, which is "💡 Webcam Lights On", and _not_ "🟢 Free" — it is likely here that your busy light stays in the red "🔴 Busy" state, which may not be what you intended
+>
+> The app doesn't really know what devices each scene affects, so it's really up to you to design your scenes in a way that makes sense to you.
+>
+> I'm not sure there's a great solution to this, other than to remember to activate the scene you want to return to right before triggering the event. (Getting HA to report on what state things are _really_ in would probably require a massive amount of logic that is outside the scope of this small scene launcher project.) Of course, you can always set the trigger-off to enable a specific scene, which also solves this problem.
+>
+> Got a better idea? Please submit an issue to this project!
 
 ### Focus Mode Detection
 
