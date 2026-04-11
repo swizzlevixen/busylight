@@ -1,0 +1,50 @@
+wing: busylight
+rooms:
+- name: hardware
+  description: Files from Hardware/
+  keywords:
+  - hardware
+  - hardware
+- name: busylight
+  description: Files from BusyLight/
+  keywords:
+  - busylight
+  - busylight
+- name: productionassets
+  description: Files from ProductionAssets/
+  keywords:
+  - productionassets
+  - productionassets
+- name: appicon.icon
+  description: Files from AppIcon.icon/
+  keywords:
+  - appicon.icon
+  - appicon.icon
+- name: busylight.xcodeproj
+  description: Files from BusyLight.xcodeproj/
+  keywords:
+  - busylight.xcodeproj
+  - busylight.xcodeproj
+- name: busylighttests
+  description: Files from BusyLightTests/
+  keywords:
+  - busylighttests
+  - busylighttests
+- name: backend
+  description: Files from Models/
+  keywords:
+  - backend
+  - models
+- name: frontend
+  description: Files from Views/
+  keywords:
+  - frontend
+  - views
+- name: design
+  description: Files from Assets/
+  keywords:
+  - design
+  - assets
+- name: general
+  description: Files that don't fit other rooms
+  keywords: []

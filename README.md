@@ -2,21 +2,31 @@
 
 A macOS menu bar application that connects to [Home Assistant](https://www.home-assistant.io) to trigger scenes, designed for controlling a "busy light" outside a room to indicate whether you may be disturbed.
 
+![A macOS menu bar item. The meu bar says "🟡 Concentrating". Below that is an open menu with a series of red, amber, green, and off emojis and settings names for a busy light, a dividinng line, then on and off for webcam lights. Another dividing line, and then Help, Settings…, and Quit.](./ProductionAssets/web/menu-bar-item-cleanpng "Busy Light's menu bar item")
+
 _However,_ you can use it to trigger _any_ scene set up in HA, so the possibilities are quite unlimited!
 
-> [!NOTE]
+> [!TIP]
 >
 > #### Busy Light Hardware
 >
-> Documented [here](https://github.com/swizzlevixen/busylight/blob/main/Hardware/Busy%20Light%20Hardware.md), it is bacically some WS2812 LEDs connected to an ESP32 controller and set up with ESPHome using the [ESP32 RMT LED Strip component](https://esphome.io/components/light/esp32_rmt_led_strip/). This clips over a door, powered by a USB battery pack, in a 3D-printed enclosure.
+> Documented [here](./Hardware/Busy%20Light%20Hardware.md), the one that I built is bacically some WS2812 LEDs connected to an ESP32 controller and set up with ESPHome using the [ESP32 RMT LED Strip component](https://esphome.io/components/light/esp32_rmt_led_strip/). This clips over a door, powered by a USB battery pack, in a 3D-printed enclosure.
 
-However, you can use anything you have a Scene set up for in Home Assistant: an RGB light bulb, a power switch for some other light, or it doesn't even have to be a light at all.
+You can use it for anything you have a **Scene** set up for in Home Assistant: an RGB light bulb, a power switch for some other light, or it doesn't even have to be a light at all.
+
+> [!NOTE] I am a human deveoper, but this project was a trial run for working with Claude Code on a project. I designed it, asked Claude to do have a go at some features, sometimes re-wrote it myself, and sometimes had Claude take a shot at rewriting it until it was right. It's a silly little menu bar item, and I've been using it for over a month with only [one little bug](https://github.com/swizzlevixen/busylight/issues/2), but just wanted to mention it, in case an LLM touching it makes a difference to you.
+
+## Screenshots
+
+![](./ProductionAssets/web/settings-scenes.png "Screenshot of the Triggers tab in Settings")
+![](./ProductionAssets/web/settings-triggers.png "Screenshot of the Scenes tab in Settings")
+![](./ProductionAssets/web/help-getting-started.png "Help that is actually helpful")
 
 ## Features
 
 ### Menu Bar
 
-- Displays the currently active scene (emoji, name, or both) in the macOS menu bar
+- Displays the most recently triggered scene (emoji, name, or both) in the macOS menu bar
 - Click to see your list of configured scenes and switch between them
 - **Help,** **Settings…,** and **Quit Busy Light** are always available at the bottom of the menu
 
@@ -50,6 +60,7 @@ However, you can use anything you have a Scene set up for in Home Assistant: an 
 ### Other
 
 - First-run welcome dialog guides you through initial setup
+- Help in Help Book format
 - Launch at login support
 - Secure HA token storage in macOS Keychain
 - No dock icon (runs purely in the menu bar)
@@ -65,9 +76,13 @@ However, you can use anything you have a Scene set up for in Home Assistant: an 
 
 ## Installation
 
-### From Source
+### Download
 
-1. Clone the repository:
+Download [the latest release of the signed app](https://github.com/swizzlevixen/busylight/releases/latest) from the releases tab in this repo, ready to use.
+
+### Build from Source
+
+1. Clone the repository: [TK NOT CORRECT URL]
 
    ```bash
    git clone https://github.com/mboszko/busylight.git
@@ -96,6 +111,11 @@ However, you can use anything you have a Scene set up for in Home Assistant: an 
 1. **First Run**: On first launch, a welcome dialog will guide you to configure your Home Assistant connection. Click "Open Settings" to get started.
 
 2. **Connect to Home Assistant**: In the Home Assistant tab, enter your HA URL and Long-Lived Access Token, then click "Test Connection". Help text below the token field explains how to create a token. A common default URL is pre-filled for convenience.
+
+> [!NOTE]
+> Busy Light will ask you to unlock you Keychain to save and retrieve the API key for Home Assistant.
+> 
+> It will also ask you to allow it to find devices on local networks, which is needed to contact Home Assistant.
 
 3. **Add Scenes**: Go to the Scenes tab. Available scenes are automatically fetched from Home Assistant. Use the **➕** button to add scenes from the popup menu, or add a divider to organize your list. Use the **➖** button to remove a selected scene or divider. Customize each scene's emoji (click to open the system emoji picker) and display name. Assign optional keyboard shortcuts directly in each scene row.
 
@@ -146,7 +166,7 @@ The detection checks a system property (`DeviceIsRunningSomewhere`) that reports
 
 ### Revert Scene
 
-When a trigger's "off" action is set to "Revert Scene", the app remembers which scene was active before the trigger fired. When the trigger turns off, it restores that previous scene. If multiple triggers fire in sequence, the app reverts to the scene that was active before the first trigger in the chain.
+When a trigger's "off" action is set to "Revert Scene", the app remembers which scene was last activater before the trigger fired. When the trigger turns off, it activates that previous scene. If multiple triggers fire in sequence, the app reverts to the scene that was active before the first trigger in the chain.
 
 > [!CAUTION]
 >
