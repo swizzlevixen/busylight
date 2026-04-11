@@ -23,8 +23,6 @@ jobs:
     name: Build, Sign, Notarize & Release
     runs-on: skyfall
     timeout-minutes: 30
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       - name: Checkout
@@ -44,7 +42,7 @@ jobs:
           echo "Version: $VERSION, Build: $BUILD_NUMBER"
 
       - name: Install tools
-        run: brew install xcodegen create-dmg
+        run: brew install create-dmg
 
       - name: Generate Xcode project
         run: xcodegen generate
@@ -84,7 +82,6 @@ jobs:
 
       - name: Build archive
         run: |
-          set -o pipefail
           ARCHIVE_PATH="$RUNNER_TEMP/BusyLight.xcarchive"
           xcodebuild archive \
             -project "$PROJECT" \
@@ -96,13 +93,11 @@ jobs:
             DEVELOPMENT_TEAM="${{ secrets.APPLE_TEAM_ID }}" \
             CODE_SIGN_IDENTITY="Developer ID Application" \
             CODE_SIGN_STYLE=Manual \
-            OTHER_CODE_SIGN_FLAGS="--keychain $KEYCHAIN_PATH" \
-            | xcpretty
+            OTHER_CODE_SIGN_FLAGS="--keychain $KEYCHAIN_PATH"
           echo "ARCHIVE_PATH=$ARCHIVE_PATH" >> "$GITHUB_ENV"
 
       - name: Export archive
         run: |
-          set -o pipefail
           EXPORT_PATH="$RUNNER_TEMP/export"
 
           # Create export options plist
@@ -114,8 +109,7 @@ jobs:
           xcodebuild -exportArchive \
             -archivePath "$ARCHIVE_PATH" \
             -exportPath "$EXPORT_PATH" \
-            -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist" \
-            | xcpretty
+            -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist"
 
           # Find the exported app
           echo "Export contents:"
