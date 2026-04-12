@@ -48,8 +48,6 @@ You can use it for anything you have a **Scene** set up for in Home Assistant: a
 - **Microphone detection** -- Trigger scenes for audio-only calls
 - **Screen lock/unlock** -- Change scenes when you lock your screen or step away
 - **Focus mode** -- React to macOS Focus/Do Not Disturb activation (experimental)
-- **Revert Scene** -- For any "off" trigger (webcam off, mic off, screen unlocked, focus deactivated), choose "Revert Scene" to automatically return to whatever scene was active before the trigger fired
-
 ### Automation
 
 - **Keyboard shortcuts** -- Assign global hotkeys to any scene directly in the Scenes settings tab
@@ -121,7 +119,7 @@ Download [the latest release of the signed app](https://github.com/swizzlevixen/
 
 3. **Add Scenes**: Go to the Scenes tab. Available scenes are automatically fetched from Home Assistant. Use the **➕** button to add scenes from the popup menu, or add a divider to organize your list. Use the **➖** button to remove a selected scene or divider. Customize each scene's emoji (click to open the system emoji picker) and display name. Assign optional keyboard shortcuts directly in each scene row.
 
-4. **Configure Triggers** (optional): Go to the Triggers tab to set up automatic scene activation based on webcam, microphone, screen lock, or Focus mode. For "off" triggers, you can select "Revert Scene" to automatically switch back to whatever scene was active before the trigger fired.
+4. **Configure Triggers** (optional): Go to the Triggers tab to set up automatic scene activation based on webcam, microphone, screen lock, or Focus mode.
 
 5. **Set Display Preferences**: In the General tab, choose how scenes appear in the menu bar (emoji only, name only, or both) and enable launch at login.
 
@@ -165,29 +163,6 @@ The following actions are available in Shortcuts.app:
 The app uses macOS system APIs (CoreMediaIO and CoreAudio) to detect when any application is using your camera or microphone. This works with Zoom, Teams, FaceTime, Discord, Google Meet, and any other application -- no app-specific integration needed.
 
 The detection checks a system property (`DeviceIsRunningSomewhere`) that reports whether any process has the camera/microphone open. This does **not** require camera or microphone permission, as it only reads metadata rather than accessing the actual device stream.
-
-### Revert Scene
-
-When a trigger's "off" action is set to "Revert Scene", the app remembers which scene was last activated before the trigger fired. When the trigger turns off, it activates that previous scene. If multiple triggers fire in sequence, the app reverts to the scene that was active before the first trigger in the chain.
-
-> [!CAUTION]
->
-> #### Revert may not work as expected, if controlling multiple devices
->
-> This app currently does not get any feedback from HA as to which scene is truly "active" — it only knows which one was triggered last from the app. This may get confusing if you are controlling multiple devices from the Busy Light menu.
->
-> For instance, if I have "🔴 Busy", "🟡 Concentrating", and "🟢 Free" scenes for my RGB color busy light, but I have also decided to add "💡 Webcam Lights On" and "💡 Webcam Lights Off" controls to my menu, I can end up in a weird state. Something like this might happen:
->
-> 1. Set scene to "🟢 Free", changing the color of your busy light to green
-> 2. Set scene to "💡 Webcam Lights On"
-> 3. Open the webcam, which triggers the scene "🔴 Busy", making the busy light red
-> 4. Finishing your zoom, the webcam turns off, and the "Revert Scene" trigger returns to the last active scene, which is "💡 Webcam Lights On", and _not_ "🟢 Free" — it is likely here that your busy light stays in the red "🔴 Busy" state, which may not be what you intended
->
-> The app doesn't really know what devices each scene affects, so it's really up to you to design your scenes in a way that makes sense to you.
->
-> I'm not sure there's a great solution to this, other than to remember to activate the scene you want to return to right before triggering the event. (Getting HA to report on what state things are _really_ in would probably require a massive amount of logic that is outside the scope of this small scene launcher project.) Of course, you can always set the trigger-off to enable a specific scene, which also solves this problem.
->
-> Got a better idea? Please submit an issue to this project!
 
 ### Focus Mode Detection
 

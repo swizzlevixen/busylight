@@ -41,7 +41,7 @@ xcodebuild test -project BusyLight.xcodeproj -scheme BusyLight -destination 'pla
 - Tab selection support: can open to a specific tab via notification userInfo `["tab": "scenes"]`
 - Token stored in Keychain via `KeychainHelper`
 - Scenes tab: emoji picker (system character palette), +/- buttons, keyboard shortcuts per scene, auto-fetch on appear
-- Triggers tab: "Revert Scene" option for off-state triggers (reverts to pre-trigger scene)
+- Triggers tab: configure on/off scene for each trigger type
 
 ### Services
 - `HomeAssistantService`: Actor with async/await REST API client, exponential backoff retry, connection health checks
@@ -50,7 +50,7 @@ xcodebuild test -project BusyLight.xcodeproj -scheme BusyLight -destination 'pla
 - `ScreenLockMonitor`: `DistributedNotificationCenter` for lock/unlock/sleep/wake
 - `FocusModeMonitor`: Reads `~/Library/DoNotDisturb/DB/Assertions.json` (5s polling, experimental)
 - `GlobalHotkeyManager`: `NSEvent.addGlobalMonitorForEvents` for system-wide keyboard shortcuts
-- `TriggerManager`: Coordinates all monitors, applies trigger settings, camera > mic priority, "Revert Scene" support via `previousSceneId` tracking
+- `TriggerManager`: Coordinates all monitors, applies trigger settings, camera > mic priority
 
 ### Automation
 - AppleScript via SDEF (`BusyLight.sdef`) + `ScriptableApp` (NSApplication subclass) + `NSScriptCommand` subclasses
@@ -69,7 +69,7 @@ xcodebuild test -project BusyLight.xcodeproj -scheme BusyLight -destination 'pla
 - `BusyLight/AppDelegate.swift` - Menu bar NSStatusItem + NSMenuDelegate + first-run dialog
 - `BusyLight/Services/HomeAssistantService.swift` - HA REST API client
 - `BusyLight/Services/TriggerManager.swift` - Monitor coordination + Revert Scene logic
-- `BusyLight/Models/AppSettings.swift` - All settings persistence + `revertSceneId` constant
+- `BusyLight/Models/AppSettings.swift` - All settings persistence
 - `BusyLight/Views/Utility/EmojiPickerButton.swift` - System emoji picker component (NSViewRepresentable)
 - `BusyLight/Views/Utility/ShortcutRecorderView.swift` - Keyboard shortcut recorder component
 
