@@ -50,15 +50,23 @@ struct TriggersTab: View {
                     isEnabled: $settings.focusOnTriggerEnabled,
                     sceneId: $settings.focusOnSceneId
                 )
+                .disabled(!FocusModeMonitor.shared.isAvailable)
                 triggerRow(
                     label: "Enable scene when Focus mode deactivated:",
                     isEnabled: $settings.focusOffTriggerEnabled,
                     sceneId: $settings.focusOffSceneId
                 )
+                .disabled(!FocusModeMonitor.shared.isAvailable)
 
-                Text("Focus mode detection is experimental and may not work on all macOS versions.")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                if FocusModeMonitor.shared.isAvailable {
+                    Text("Focus mode detection is experimental and may not work on all macOS versions.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                } else {
+                    Text("Focus mode detection is not available on this version of macOS.")
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                }
             }
         }
         .formStyle(.grouped)

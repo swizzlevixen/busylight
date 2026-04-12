@@ -12,7 +12,7 @@ final class FocusModeMonitor {
     private(set) var isFocusActive = false
     private var pollingTimer: Timer?
     private var isMonitoring = false
-    private var isAvailable = true
+    private(set) var isAvailable = true
 
     func startMonitoring() {
         guard !isMonitoring else { return }
