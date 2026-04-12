@@ -28,8 +28,8 @@ enum URLSanitizer {
     static func isValid(_ url: String) -> Bool {
         guard !url.isEmpty,
               let parsed = URL(string: url),
-              parsed.host() != nil,
-              !parsed.host()!.isEmpty else {
+              let host = parsed.host(),
+              !host.isEmpty else {
             return false
         }
         return true

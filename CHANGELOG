@@ -24,8 +24,6 @@ Automatic Triggers
 - Microphone detection -- Trigger scenes for audio-only calls
 - Screen lock/unlock -- Change scenes when you lock your screen or step away
 - Focus mode -- React to macOS Focus/Do Not Disturb activation (experimental)
-- Revert Scene -- For any "off" trigger (webcam off, mic off, screen unlocked, focus deactivated), choose "Revert Scene" to automatically return to last activated scene before the trigger fired
-
 Automation
 
 - Keyboard shortcuts -- Assign global hotkeys to any scene directly in the Scenes settings tab
