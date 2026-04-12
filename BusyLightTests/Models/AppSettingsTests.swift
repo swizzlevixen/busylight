@@ -6,6 +6,7 @@ final class AppSettingsTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
+        KeychainHelper.testStore = [:]
         // Reset settings to defaults for each test
         let settings = AppSettings.shared
         settings.menuItems = []
@@ -22,6 +23,7 @@ final class AppSettingsTests: XCTestCase {
         let settings = AppSettings.shared
         settings.menuItems = []
         settings.activeSceneId = nil
+        KeychainHelper.testStore = nil
         super.tearDown()
     }
 

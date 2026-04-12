@@ -8,10 +8,16 @@ final class MenuBarManagerTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
+        KeychainHelper.testStore = [:]
         let settings = AppSettings.shared
         settings.displayMode = .both
         settings.menuItems = []
         settings.activeSceneId = nil
+    }
+
+    override func tearDown() {
+        KeychainHelper.testStore = nil
+        super.tearDown()
     }
 
     // MARK: - noSceneLabel

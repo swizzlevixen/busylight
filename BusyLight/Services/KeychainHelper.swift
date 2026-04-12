@@ -2,7 +2,26 @@ import Foundation
 import Security
 
 enum KeychainHelper {
+
+    // MARK: - Test Support
+
+    #if DEBUG
+    /// When non-nil, all operations use this in-memory dictionary instead of
+    /// the system keychain.  Set to `[:]` in test setUp, `nil` in tearDown.
+    nonisolated(unsafe) static var testStore: [String: String]?
+    #endif
+
+    // MARK: - Public API
+
     static func save(key: String, value: String) {
+        #if DEBUG
+        if testStore != nil {
+            if value.isEmpty { testStore?.removeValue(forKey: key) }
+            else { testStore?[key] = value }
+            return
+        }
+        #endif
+
         guard let data = value.data(using: .utf8) else { return }
 
         let query: [String: Any] = [
@@ -27,6 +46,12 @@ enum KeychainHelper {
     }
 
     static func load(key: String) -> String? {
+        #if DEBUG
+        if testStore != nil {
+            return testStore?[key]
+        }
+        #endif
+
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: key,
@@ -47,6 +72,13 @@ enum KeychainHelper {
     }
 
     static func delete(key: String) {
+        #if DEBUG
+        if testStore != nil {
+            testStore?.removeValue(forKey: key)
+            return
+        }
+        #endif
+
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: key,
@@ -56,6 +88,14 @@ enum KeychainHelper {
     }
 
     static func update(key: String, value: String) {
+        #if DEBUG
+        if testStore != nil {
+            if value.isEmpty { testStore?.removeValue(forKey: key) }
+            else { testStore?[key] = value }
+            return
+        }
+        #endif
+
         guard let data = value.data(using: .utf8) else { return }
 
         let query: [String: Any] = [

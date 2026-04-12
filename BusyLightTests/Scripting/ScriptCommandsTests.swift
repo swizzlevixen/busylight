@@ -6,6 +6,7 @@ final class ScriptCommandsTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
+        KeychainHelper.testStore = [:]
         // Reset state
         AppSettings.shared.activeSceneId = nil
         AppSettings.shared.menuItems = [
@@ -17,6 +18,7 @@ final class ScriptCommandsTests: XCTestCase {
     override func tearDown() {
         AppSettings.shared.activeSceneId = nil
         AppSettings.shared.menuItems = []
+        KeychainHelper.testStore = nil
         super.tearDown()
     }
 
