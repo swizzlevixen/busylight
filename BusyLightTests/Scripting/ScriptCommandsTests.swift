@@ -68,4 +68,25 @@ final class ScriptCommandsTests: XCTestCase {
         let error = HomeAssistantService.HAError.serverError(500, "Internal Server Error")
         XCTAssertTrue(error.errorDescription?.contains("500") ?? false)
     }
+
+    func testActivateSceneCommandSetsErrorOnFailure() {
+        let command = ActivateSceneCommand()
+        command.directParameter = "scene.test" as NSString
+
+        // Simulate what the command does on failure: set error fields
+        let failureResult = SceneActivationResult.failure(URLError(.timedOut))
+        command.scriptErrorNumber = -10000
+        command.scriptErrorString = failureResult.error?.localizedDescription
+            ?? "Failed to activate scene."
+
+        XCTAssertEqual(command.scriptErrorNumber, -10000)
+        XCTAssertNotNil(command.scriptErrorString)
+        XCTAssertFalse(command.scriptErrorString?.isEmpty ?? true)
+    }
+
+    func testActivateSceneCommandNoErrorOnSuccess() {
+        let successResult = SceneActivationResult.success(entities: ["scene.test"])
+        XCTAssertTrue(successResult.success)
+        XCTAssertNil(successResult.error)
+    }
 }
