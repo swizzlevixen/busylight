@@ -30,16 +30,6 @@ class ActivateSceneCommand: NSScriptCommand {
     }
 }
 
-@objc(DeactivateSceneCommand)
-class DeactivateSceneCommand: NSScriptCommand {
-    override func performDefaultImplementation() -> Any? {
-        Task { @MainActor in
-            MenuBarManager.shared.deactivateScene()
-        }
-        return nil
-    }
-}
-
 @objc(ListScenesCommand)
 class ListScenesCommand: NSScriptCommand {
     @MainActor
