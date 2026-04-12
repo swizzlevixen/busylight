@@ -7,13 +7,6 @@ final class TriggerManager {
     private let settings = AppSettings.shared
     private var observers: [NSObjectProtocol] = []
 
-    /// Stores the scene that was active before a trigger fired, so we can revert to it.
-    private var previousSceneId: String?
-
-    /// The entity ID most recently activated by a trigger. Used to detect whether
-    /// the user manually changed the scene between trigger-on and trigger-off.
-    private var lastTriggerSetEntityId: String?
-
     func startAllMonitors() {
         CameraMonitor.shared.startMonitoring()
         MicrophoneMonitor.shared.startMonitoring()
@@ -161,43 +154,6 @@ final class TriggerManager {
     // MARK: - Scene Activation
 
     private func activateScene(entityId: String) {
-        // Handle revert sentinel
-        if entityId == AppSettings.revertSceneId {
-            revertToPreviousScene()
-            return
-        }
-
-        // Capture the current scene as "previous" only if we haven't already
-        // (i.e., only the first trigger in a chain captures the pre-trigger state)
-        if previousSceneId == nil {
-            previousSceneId = settings.activeSceneId
-        }
-
-        lastTriggerSetEntityId = entityId
         MenuBarManager.shared.activateScene(entityId: entityId)
-    }
-
-    /// Reverts to the scene that was active before a trigger fired.
-    /// If the user manually changed the scene after the trigger, their choice
-    /// is preserved instead of reverting to the stale pre-trigger scene.
-    private func revertToPreviousScene() {
-        defer {
-            previousSceneId = nil
-            lastTriggerSetEntityId = nil
-        }
-
-        // If the active scene differs from what the trigger set, the user
-        // manually changed it — respect their choice and don't revert.
-        if let lastTrigger = lastTriggerSetEntityId,
-           settings.activeSceneId != lastTrigger {
-            return
-        }
-
-        if let previous = previousSceneId {
-            MenuBarManager.shared.activateScene(entityId: previous)
-        } else {
-            // No previous scene to revert to; clear active scene
-            MenuBarManager.shared.deactivateScene()
-        }
     }
 }

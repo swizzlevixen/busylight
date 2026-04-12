@@ -17,8 +17,6 @@ struct KeyboardShortcutConfig: Codable, Hashable {
 @Observable
 final class AppSettings {
     static let shared = AppSettings()
-    static let revertSceneId = "__revert__"
-
     // MARK: - First Run
 
     var hasCompletedFirstRun: Bool {

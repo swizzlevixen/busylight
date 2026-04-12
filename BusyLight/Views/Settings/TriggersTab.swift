@@ -14,8 +14,7 @@ struct TriggersTab: View {
                 triggerRow(
                     label: "Enable scene when webcam turned off:",
                     isEnabled: $settings.webcamOffTriggerEnabled,
-                    sceneId: $settings.webcamOffSceneId,
-                    showRevert: true
+                    sceneId: $settings.webcamOffSceneId
                 )
             }
 
@@ -28,8 +27,7 @@ struct TriggersTab: View {
                 triggerRow(
                     label: "Enable scene when microphone turned off:",
                     isEnabled: $settings.micOffTriggerEnabled,
-                    sceneId: $settings.micOffSceneId,
-                    showRevert: true
+                    sceneId: $settings.micOffSceneId
                 )
             }
 
@@ -42,8 +40,7 @@ struct TriggersTab: View {
                 triggerRow(
                     label: "Enable scene when screen is unlocked:",
                     isEnabled: $settings.screenUnlockTriggerEnabled,
-                    sceneId: $settings.screenUnlockSceneId,
-                    showRevert: true
+                    sceneId: $settings.screenUnlockSceneId
                 )
             }
 
@@ -56,8 +53,7 @@ struct TriggersTab: View {
                 triggerRow(
                     label: "Enable scene when Focus mode deactivated:",
                     isEnabled: $settings.focusOffTriggerEnabled,
-                    sceneId: $settings.focusOffSceneId,
-                    showRevert: true
+                    sceneId: $settings.focusOffSceneId
                 )
 
                 Text("Focus mode detection is experimental and may not work on all macOS versions.")
@@ -73,8 +69,7 @@ struct TriggersTab: View {
     private func triggerRow(
         label: String,
         isEnabled: Binding<Bool>,
-        sceneId: Binding<String>,
-        showRevert: Bool = false
+        sceneId: Binding<String>
     ) -> some View {
         HStack {
             Toggle(label, isOn: isEnabled)
@@ -83,10 +78,6 @@ struct TriggersTab: View {
 
             Picker("", selection: sceneId) {
                 Text("None").tag("")
-                if showRevert {
-                    Text("Revert Scene").tag(AppSettings.revertSceneId)
-                    Divider()
-                }
                 ForEach(settings.scenes) { scene in
                     Text("\(scene.emoji) \(scene.displayName)").tag(scene.entityId)
                 }

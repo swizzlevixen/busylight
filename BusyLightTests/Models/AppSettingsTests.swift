@@ -120,13 +120,6 @@ final class AppSettingsTests: XCTestCase {
         XCTAssertNil(settings.activeSceneId)
     }
 
-    func testRevertSceneIdConstant() {
-        XCTAssertEqual(AppSettings.revertSceneId, "__revert__")
-        // Ensure it's not empty and distinguishable from real scene IDs
-        XCTAssertFalse(AppSettings.revertSceneId.isEmpty)
-        XCTAssertFalse(AppSettings.revertSceneId.hasPrefix("scene."))
-    }
-
     func testHasCompletedFirstRun() {
         let settings = AppSettings.shared
         settings.hasCompletedFirstRun = true
