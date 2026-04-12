@@ -4,6 +4,14 @@ import AppKit
 class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        #if DEBUG
+        // When running as a test host, bypass the system keychain to avoid
+        // the authorization dialog (we may be running remotely / unattended).
+        if ProcessInfo.processInfo.environment["XCInjectBundleInto"] != nil {
+            KeychainHelper.testStore = KeychainHelper.testStore ?? [:]
+        }
+        #endif
+
         TriggerManager.shared.startAllMonitors()
 
         // Handle opening the Settings window (activation policy + window title).
