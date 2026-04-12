@@ -14,7 +14,9 @@ _However,_ you can use it to trigger _any_ scene set up in HA, so the possibilit
 
 You can use it for anything you have a **Scene** set up for in Home Assistant: an RGB light bulb, a power switch for some other light, or it doesn't even have to be a light at all.
 
-> [!NOTE] I am a human developer, but this project was a trial run for working with Claude Code on a project. I designed it, asked Claude to do have a go at some features, sometimes re-wrote it myself, and sometimes had Claude take a shot at rewriting it until it was right. It's a silly little menu bar item, and I've been using it for over a month with only [one little bug](https://github.com/swizzlevixen/busylight/issues/2), but just wanted to mention it, in case an LLM touching it makes a difference to you.
+> [!NOTE]
+> 
+> I am a human developer, but this project was a trial run for working with Claude Code on a project. I designed it, asked Claude to do have a go at some features, sometimes re-wrote it myself, and sometimes had Claude take a shot at rewriting it until it was right. It's a silly little menu bar item, and I've been using it for over a month with only [one little bug](https://github.com/swizzlevixen/busylight/issues/2), but just wanted to mention it, in case an LLM touching it makes a difference to you.
 
 ## Screenshots
 
