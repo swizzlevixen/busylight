@@ -165,7 +165,7 @@ actor HomeAssistantService {
         token: String, body: Data? = nil, maxRetries: Int = 3
     ) async throws -> Data {
         var lastError: (any Error)?
-        var delay: UInt64 = 1_000_000_000 // 1 second
+        var delay: Duration = .seconds(1)
 
         for attempt in 0..<maxRetries {
             do {
@@ -175,7 +175,7 @@ actor HomeAssistantService {
                 case .networkError, .serverError(500..., _):
                     lastError = error
                     if attempt < maxRetries - 1 {
-                        try? await Task.sleep(nanoseconds: delay)
+                        try? await Task.sleep(for: delay)
                         delay *= 2
                     }
                 default:

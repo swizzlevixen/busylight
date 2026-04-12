@@ -2,7 +2,7 @@ name: BusyLight
 options:
   bundleIdPrefix: com.mboszko
   deploymentTarget:
-    macOS: "14.0"
+    macOS: "15.0"
   xcodeVersion: "16.0"
   createIntermediateGroups: true
   generateEmptyDirectories: true
@@ -14,7 +14,7 @@ configs:
 settings:
   base:
     SWIFT_VERSION: "6.0"
-    MACOSX_DEPLOYMENT_TARGET: "14.0"
+    MACOSX_DEPLOYMENT_TARGET: "15.0"
     ENABLE_HARDENED_RUNTIME: YES
 
 targets:

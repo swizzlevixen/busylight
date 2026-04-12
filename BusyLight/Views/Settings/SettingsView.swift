@@ -5,18 +5,18 @@ struct SettingsView: View {
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            HomeAssistantTab()
-                .tabItem { Label("Home Assistant", systemImage: "house") }
-                .tag("homeassistant")
-            ScenesTab()
-                .tabItem { Label("Scenes", systemImage: "theatermasks") }
-                .tag("scenes")
-            TriggersTab()
-                .tabItem { Label("Triggers", systemImage: "bolt.fill") }
-                .tag("triggers")
-            GeneralTab()
-                .tabItem { Label("General", systemImage: "gear") }
-                .tag("general")
+            Tab("Home Assistant", systemImage: "house", value: "homeassistant") {
+                HomeAssistantTab()
+            }
+            Tab("Scenes", systemImage: "theatermasks", value: "scenes") {
+                ScenesTab()
+            }
+            Tab("Triggers", systemImage: "bolt.fill", value: "triggers") {
+                TriggersTab()
+            }
+            Tab("General", systemImage: "gear", value: "general") {
+                GeneralTab()
+            }
         }
         .frame(minWidth: 600, idealWidth: 600, minHeight: 500)
         .onReceive(NotificationCenter.default.publisher(for: .openSettingsRequest)) { notification in
