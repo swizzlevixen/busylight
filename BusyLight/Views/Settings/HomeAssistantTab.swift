@@ -6,6 +6,8 @@ struct HomeAssistantTab: View {
     @State private var isTesting = false
     @State private var tokenText: String = ""
 
+    @State private var urlWarning: String?
+
     enum ConnectionStatus {
         case unknown, testing, success, failure(String)
     }
@@ -15,6 +17,13 @@ struct HomeAssistantTab: View {
             Section("Connection") {
                 TextField("URL", text: $settings.haBaseURL, prompt: Text("http://homeassistant.local:8123"))
                     .textFieldStyle(.roundedBorder)
+                    .onSubmit { sanitizeAndValidateURL() }
+
+                if let urlWarning {
+                    Text(urlWarning)
+                        .foregroundStyle(.orange)
+                        .font(.caption)
+                }
 
                 SecureField("Long-Lived Access Token", text: $tokenText)
                     .textFieldStyle(.roundedBorder)
@@ -68,7 +77,22 @@ struct HomeAssistantTab: View {
         }
     }
 
+    private func sanitizeAndValidateURL() {
+        let sanitized = URLSanitizer.sanitize(settings.haBaseURL)
+        settings.haBaseURL = sanitized
+
+        if sanitized.isEmpty {
+            urlWarning = nil
+        } else if !URLSanitizer.isValid(sanitized) {
+            urlWarning = "This doesn\u{2019}t look like a valid URL"
+        } else {
+            urlWarning = nil
+        }
+    }
+
     private func testConnection() {
+        sanitizeAndValidateURL()
+        guard urlWarning == nil else { return }
         isTesting = true
         connectionStatus = .testing
         Task {
