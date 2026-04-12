@@ -43,12 +43,23 @@ struct GeneralTab: View {
 
             Divider()
 
-            Link(destination: URL(string: "https://ko-fi.com/swizzlevixen")!) {
-                Label("Buy Me a Coffee", systemImage: "heart.fill")
+            HStack {
+                if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String,
+                   let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
+                    Text("Version \(version) (\(build))")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                Spacer()
+
+                Link(destination: URL(string: "https://ko-fi.com/swizzlevixen")!) {
+                    Label("Buy Me a Coffee", systemImage: "heart.fill")
+                }
+                .buttonStyle(.borderedProminent)
+                .help(Text("Support Busy Light on Ko-fi"))
+                .tint(.yellow)
             }
-            .buttonStyle(.borderedProminent)
-            .help(Text("Support Busy Light on Ko-fi"))
-            .tint(.yellow)
             .padding()
         }
     }

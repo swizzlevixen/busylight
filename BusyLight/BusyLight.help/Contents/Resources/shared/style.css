@@ -117,3 +117,45 @@ kbd {
     padding: 1px 5px;
     box-shadow: 0 1px 0 #bbb;
 }
+
+/* Dark Mode */
+
+@media (prefers-color-scheme: dark) {
+    body {
+        color: #e0e0e0;
+        background-color: #1e1e1e;
+    }
+
+    h1, h2, h3 {
+        color: #f0f0f0;
+    }
+
+    a {
+        color: #4da3ff;
+    }
+
+    .breadcrumb,
+    .breadcrumb a {
+        color: #999;
+    }
+
+    .breadcrumb a:hover {
+        color: #4da3ff;
+    }
+
+    code {
+        background-color: #2a2a2a;
+    }
+
+    .note {
+        background-color: #2a2a2a;
+        border-left-color: #4da3ff;
+        color: #bbb;
+    }
+
+    kbd {
+        background-color: #333;
+        border-color: #555;
+        box-shadow: 0 1px 0 #444;
+    }
+}

@@ -80,11 +80,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         alert.addButton(withTitle: "Later")
         alert.alertStyle = .informational
 
-        AppSettings.shared.hasCompletedFirstRun = true
-
         let response = alert.runModal()
 
         if response == .alertFirstButtonReturn {
+            AppSettings.shared.hasCompletedFirstRun = true
             NotificationCenter.default.post(
                 name: .openSettingsRequest,
                 object: nil,
