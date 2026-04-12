@@ -4,19 +4,20 @@ struct SettingsView: View {
     @State private var selectedTab: String = "homeassistant"
 
     var body: some View {
+        // Tab API requires macOS 15; using tabItem() for macOS 14 compatibility.
         TabView(selection: $selectedTab) {
-            Tab("Home Assistant", systemImage: "house", value: "homeassistant") {
-                HomeAssistantTab()
-            }
-            Tab("Scenes", systemImage: "theatermasks", value: "scenes") {
-                ScenesTab()
-            }
-            Tab("Triggers", systemImage: "bolt.fill", value: "triggers") {
-                TriggersTab()
-            }
-            Tab("General", systemImage: "gear", value: "general") {
-                GeneralTab()
-            }
+            HomeAssistantTab()
+                .tabItem { Label("Home Assistant", systemImage: "house") }
+                .tag("homeassistant")
+            ScenesTab()
+                .tabItem { Label("Scenes", systemImage: "theatermasks") }
+                .tag("scenes")
+            TriggersTab()
+                .tabItem { Label("Triggers", systemImage: "bolt.fill") }
+                .tag("triggers")
+            GeneralTab()
+                .tabItem { Label("General", systemImage: "gear") }
+                .tag("general")
         }
         .frame(minWidth: 600, idealWidth: 600, minHeight: 500)
         .onReceive(NotificationCenter.default.publisher(for: .openSettingsRequest)) { notification in

@@ -9,7 +9,7 @@ macOS menu bar application that connects to Home Assistant to trigger scenes, pr
 - **Language**: Swift 6
 - **UI**: Hybrid AppKit (menu bar via NSStatusItem/NSMenu) + SwiftUI (Settings window)
 - **Frameworks**: CoreMediaIO (camera detection), CoreAudio (mic detection), ServiceManagement (launch at login), AppIntents (Shortcuts.app), Security (Keychain)
-- **Minimum Deployment**: macOS 15.0
+- **Minimum Deployment**: macOS 14.0
 - **Distribution**: Non-sandboxed (outside App Store)
 - **Project Generation**: XcodeGen (`project.yml` → `BusyLight.xcodeproj`)
 
