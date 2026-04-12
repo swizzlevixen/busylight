@@ -93,13 +93,26 @@ struct HomeAssistantTab: View {
     private func testConnection() {
         sanitizeAndValidateURL()
         guard urlWarning == nil else { return }
+
+        // Ensure the token is persisted before testing, in case .onChange
+        // hasn't fired yet (e.g. paste + immediate click).
+        settings.haToken = tokenText
+
         isTesting = true
         connectionStatus = .testing
+        let baseURL = settings.haBaseURL
+        let token = tokenText
         Task {
             do {
                 let ok = try await HomeAssistantService.shared.testConnection(
-                    baseURL: settings.haBaseURL, token: settings.haToken)
+                    baseURL: baseURL, token: token)
                 connectionStatus = ok ? .success : .failure("Unexpected response")
+
+                // Restart health checks with the (possibly new) credentials
+                if ok {
+                    await HomeAssistantService.shared.startHealthChecks(
+                        baseURL: baseURL, token: token)
+                }
             } catch {
                 connectionStatus = .failure(error.localizedDescription)
             }
