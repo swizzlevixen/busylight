@@ -16,10 +16,6 @@
             <result type="text" description="Confirmation message on success."/>
         </command>
 
-        <command name="deactivate scene" code="BsLtDact" description="Deactivate the current scene (set to No Scene).">
-            <cocoa class="BusyLight.DeactivateSceneCommand"/>
-        </command>
-
         <command name="list scenes" code="BsLtLsSc" description="List all configured scenes.">
             <cocoa class="BusyLight.ListScenesCommand"/>
             <result>
@@ -35,25 +31,11 @@
                 <cocoa key="currentSceneName"/>
             </property>
 
-            <property name="is busy" code="BsBz" type="boolean" access="r"
-                      description="Whether a scene is currently active (true if any scene is active).">
-                <cocoa key="isBusy"/>
-            </property>
-
             <property name="display mode" code="BsDm" type="text" access="rw"
                       description="Menu bar display mode: 'emoji', 'name', or 'both'.">
                 <cocoa key="scriptDisplayMode"/>
             </property>
 
-            <property name="camera active" code="BsCa" type="boolean" access="r"
-                      description="Whether any camera is currently in use.">
-                <cocoa key="isCameraActive"/>
-            </property>
-
-            <property name="microphone active" code="BsMa" type="boolean" access="r"
-                      description="Whether any microphone is currently in use.">
-                <cocoa key="isMicrophoneActive"/>
-            </property>
         </class>
 
     </suite>

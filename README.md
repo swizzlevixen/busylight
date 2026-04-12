@@ -132,15 +132,12 @@ tell application "Busy Light"
 
     -- Check current state
     get current scene        -- returns entity ID or ""
-    get is busy              -- returns true/false
-    get camera active        -- returns true/false
-    get microphone active    -- returns true/false
+
+    -- Deactivate (set current scene to empty string)
+    set current scene to ""
 
     -- Change display mode
     set display mode to "emoji"  -- "emoji", "name", or "both"
-
-    -- Deactivate
-    deactivate scene
 
     -- List configured scenes
     list scenes

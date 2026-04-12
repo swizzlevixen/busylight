@@ -17,11 +17,6 @@ class ScriptableApp: NSApplication {
     }
 
     @MainActor
-    @objc var isBusy: Bool {
-        AppSettings.shared.activeSceneId != nil
-    }
-
-    @MainActor
     @objc var scriptDisplayMode: String {
         get {
             AppSettings.shared.displayMode.rawValue
@@ -34,13 +29,4 @@ class ScriptableApp: NSApplication {
         }
     }
 
-    @MainActor
-    @objc var isCameraActive: Bool {
-        CameraMonitor.shared.isCameraOn
-    }
-
-    @MainActor
-    @objc var isMicrophoneActive: Bool {
-        MicrophoneMonitor.shared.isMicrophoneOn
-    }
 }
