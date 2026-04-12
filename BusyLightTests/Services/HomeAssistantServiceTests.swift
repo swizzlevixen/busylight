@@ -249,6 +249,20 @@ final class HomeAssistantServiceTests: XCTestCase {
         await service.stopHealthChecks()
     }
 
+    // MARK: - Cache Policy
+
+    func testRequestsDisableURLCaching() async throws {
+        MockURLProtocol.requestHandler = { request in
+            XCTAssertEqual(request.cachePolicy, .reloadIgnoringLocalCacheData,
+                           "API requests should bypass URL cache to avoid stale auth responses")
+            let response = HTTPURLResponse(url: request.url!, statusCode: 200, httpVersion: nil, headerFields: nil)!
+            let data = #"{"message": "API running."}"#.data(using: .utf8)!
+            return (response, data)
+        }
+
+        _ = try await service.testConnection(baseURL: "http://localhost:8123", token: "token")
+    }
+
     // MARK: - SceneActivationResult
 
     func testSceneActivationResultSuccess() {
