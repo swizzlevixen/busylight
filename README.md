@@ -2,7 +2,7 @@
 
 A macOS menu bar application that connects to [Home Assistant](https://www.home-assistant.io) to trigger scenes, designed for controlling a "busy light" outside a room to indicate whether you may be disturbed.
 
-![A macOS menu bar item. The meu bar says "🟡 Concentrating". Below that is an open menu with a series of red, amber, green, and off emojis and settings names for a busy light, a dividinng line, then on and off for webcam lights. Another dividing line, and then Help, Settings…, and Quit.](./ProductionAssets/web/menu-bar-item-clean.png "Busy Light's menu bar item")
+![A macOS menu bar item. The menu bar says "🟡 Concentrating". Below that is an open menu with a series of red, amber, green, and off emojis and settings names for a busy light, a dividing line, then on and off for webcam lights. Another dividing line, and then Help, Settings…, and Quit.](./ProductionAssets/web/menu-bar-item-clean.png "Busy Light's menu bar item")
 
 _However,_ you can use it to trigger _any_ scene set up in HA, so the possibilities are quite unlimited!
 
@@ -10,7 +10,7 @@ _However,_ you can use it to trigger _any_ scene set up in HA, so the possibilit
 >
 > #### Busy Light Hardware
 >
-> Documented [here](./Hardware/Busy%20Light%20Hardware.md), the one that I built is bacically some WS2812 LEDs connected to an ESP32 controller and set up with ESPHome using the [ESP32 RMT LED Strip component](https://esphome.io/components/light/esp32_rmt_led_strip/). This clips over a door, powered by a USB battery pack, in a 3D-printed enclosure.
+> Documented [here](./Hardware/Busy%20Light%20Hardware.md), the one that I built is basically some WS2812 LEDs connected to an ESP32 controller and set up with ESPHome using the [ESP32 RMT LED Strip component](https://esphome.io/components/light/esp32_rmt_led_strip/). This clips over a door, powered by a USB battery pack, in a 3D-printed enclosure.
 
 You can use it for anything you have a **Scene** set up for in Home Assistant: an RGB light bulb, a power switch for some other light, or it doesn't even have to be a light at all.
 
