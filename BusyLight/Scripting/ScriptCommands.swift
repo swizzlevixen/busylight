@@ -10,8 +10,21 @@ class ActivateSceneCommand: NSScriptCommand {
             return nil
         }
 
+        suspendExecution()
+        // NSScriptCommand is not Sendable, but performDefaultImplementation
+        // and the @MainActor Task both run on the main thread. The command
+        // is retained by suspendExecution() until resumeExecution() is called.
+        nonisolated(unsafe) let command = self
         Task { @MainActor in
-            MenuBarManager.shared.activateScene(entityId: entityId)
+            let result = await MenuBarManager.shared.activateSceneWithResult(entityId: entityId)
+            if result.success {
+                command.resumeExecution(withResult: "Scene \(entityId) activated." as NSString)
+            } else {
+                command.scriptErrorNumber = -10000
+                command.scriptErrorString = result.error?.localizedDescription
+                    ?? "Failed to activate scene \(entityId)."
+                command.resumeExecution(withResult: nil)
+            }
         }
         return nil
     }

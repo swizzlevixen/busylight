@@ -10,9 +10,10 @@
 
     <suite name="Busy Light Suite" code="BsLt" description="Busy Light scripting commands and classes.">
 
-        <command name="activate scene" code="BsLtActS" description="Activate a Home Assistant scene by entity ID.">
+        <command name="activate scene" code="BsLtActS" description="Activate a Home Assistant scene by entity ID. Returns a confirmation string on success or raises a script error if the Home Assistant call fails.">
             <cocoa class="BusyLight.ActivateSceneCommand"/>
             <direct-parameter type="text" description="The scene entity ID (e.g., scene.office_busy)."/>
+            <result type="text" description="Confirmation message on success."/>
         </command>
 
         <command name="deactivate scene" code="BsLtDact" description="Deactivate the current scene (set to No Scene).">
