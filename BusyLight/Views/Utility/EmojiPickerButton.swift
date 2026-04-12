@@ -177,7 +177,7 @@ final class EmojiInputProxy: NSObject, NSTextViewDelegate {
         // the context isn't active yet and the palette silently fails to open
         // (reproduces as "first click does nothing").  One async hop lets the
         // run-loop complete the initialisation before the palette attaches.
-        DispatchQueue.main.async {
+        Task { @MainActor in
             NSApp.orderFrontCharacterPalette(nil)
         }
     }
