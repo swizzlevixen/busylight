@@ -4,6 +4,7 @@ struct SettingsView: View {
     @State private var selectedTab: String = "homeassistant"
 
     var body: some View {
+        // Tab API requires macOS 15; using tabItem() for macOS 14 compatibility.
         TabView(selection: $selectedTab) {
             HomeAssistantTab()
                 .tabItem { Label("Home Assistant", systemImage: "house") }

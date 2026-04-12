@@ -45,12 +45,12 @@ xcodebuild test -project BusyLight.xcodeproj -scheme BusyLight -destination 'pla
 
 ### Services
 - `HomeAssistantService`: Actor with async/await REST API client, exponential backoff retry, connection health checks
-- `CameraMonitor`: CoreMediaIO `kCMIODevicePropertyDeviceIsRunningSomewhere` (2s polling)
-- `MicrophoneMonitor`: CoreAudio `kAudioDevicePropertyDeviceIsRunningSomewhere` (2s polling)
+- `CameraMonitor`: CoreMediaIO `CMIOObjectAddPropertyListenerBlock` event-driven monitoring
+- `MicrophoneMonitor`: CoreAudio `AudioObjectAddPropertyListenerBlock` event-driven monitoring
 - `ScreenLockMonitor`: `DistributedNotificationCenter` for lock/unlock, `NSWorkspace` for sleep
-- `FocusModeMonitor`: Reads `~/Library/DoNotDisturb/DB/Assertions.json` (5s polling, experimental)
-- `GlobalHotkeyManager`: `NSEvent.addGlobalMonitorForEvents` for system-wide keyboard shortcuts
-- `TriggerManager`: Coordinates all monitors, applies trigger settings, camera > mic priority
+- `FocusModeMonitor`: Reads `~/Library/DoNotDisturb/DB/Assertions.json` (15s polling, experimental)
+- `GlobalHotkeyManager`: Carbon `RegisterEventHotKey` for system-wide keyboard shortcuts
+- `TriggerManager`: Coordinates all monitors, applies trigger settings, camera > mic priority, error notifications
 
 ### Automation
 - AppleScript via SDEF (`BusyLight.sdef`) + `ScriptableApp` (NSApplication subclass) + `NSScriptCommand` subclasses
@@ -68,7 +68,7 @@ xcodebuild test -project BusyLight.xcodeproj -scheme BusyLight -destination 'pla
 - `BusyLight/BusyLight.sdef` - AppleScript dictionary
 - `BusyLight/AppDelegate.swift` - Menu bar NSStatusItem + NSMenuDelegate + first-run dialog
 - `BusyLight/Services/HomeAssistantService.swift` - HA REST API client
-- `BusyLight/Services/TriggerManager.swift` - Monitor coordination + Revert Scene logic
+- `BusyLight/Services/TriggerManager.swift` - Monitor coordination + trigger settings
 - `BusyLight/Models/AppSettings.swift` - All settings persistence
 - `BusyLight/Views/Utility/EmojiPickerButton.swift` - System emoji picker component (NSViewRepresentable)
 - `BusyLight/Views/Utility/ShortcutRecorderView.swift` - Keyboard shortcut recorder component
