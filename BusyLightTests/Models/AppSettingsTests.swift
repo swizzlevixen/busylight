@@ -130,6 +130,27 @@ final class AppSettingsTests: XCTestCase {
         XCTAssertFalse(settings.hasCompletedFirstRun)
     }
 
+    func testDuplicateShortcutResolution() {
+        let settings = AppSettings.shared
+        // Assign ⌘Q (keyCode 12, modifiers 256) to scene.a
+        settings.keyboardShortcuts = [
+            KeyboardShortcutConfig(keyCode: 12, modifiers: 256, sceneEntityId: "scene.a"),
+        ]
+
+        // Simulate recording the same combo for scene.b (same logic as ShortcutRecorderView)
+        let keyCode: UInt16 = 12
+        let modifiers: UInt = 256
+        var shortcuts = settings.keyboardShortcuts
+        shortcuts.removeAll { $0.sceneEntityId == "scene.b" }
+        shortcuts.removeAll { $0.keyCode == keyCode && $0.modifiers == modifiers }
+        shortcuts.append(KeyboardShortcutConfig(keyCode: keyCode, modifiers: modifiers, sceneEntityId: "scene.b"))
+        settings.keyboardShortcuts = shortcuts
+
+        // scene.a's shortcut should be gone, only scene.b remains
+        XCTAssertEqual(settings.keyboardShortcuts.count, 1)
+        XCTAssertEqual(settings.keyboardShortcuts[0].sceneEntityId, "scene.b")
+    }
+
     func testDefaultURLPrePopulated() {
         // The default URL should be pre-populated (not empty)
         let settings = AppSettings.shared
