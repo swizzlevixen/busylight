@@ -106,9 +106,11 @@ final class TriggerManager {
 
     // MARK: - Handlers
 
-    /// Camera triggers take highest priority over microphone triggers
+    /// Camera triggers take highest priority over microphone triggers.
+    /// Suppressed when the screen is locked to avoid false triggers during Power Nap.
     private func handleCameraChange(isOn: Bool?) {
         guard let isOn else { return }
+        guard !ScreenLockMonitor.shared.isScreenLocked else { return }
 
         if isOn && settings.webcamTriggerEnabled && !settings.webcamOnSceneId.isEmpty {
             activateScene(entityId: settings.webcamOnSceneId)
@@ -117,9 +119,11 @@ final class TriggerManager {
         }
     }
 
-    /// Microphone triggers only fire when camera is not active (camera has priority)
+    /// Microphone triggers only fire when camera is not active (camera has priority).
+    /// Suppressed when the screen is locked to avoid false triggers during Power Nap.
     private func handleMicChange(isOn: Bool?) {
         guard let isOn else { return }
+        guard !ScreenLockMonitor.shared.isScreenLocked else { return }
 
         // Don't override camera trigger
         if CameraMonitor.shared.isCameraOn { return }

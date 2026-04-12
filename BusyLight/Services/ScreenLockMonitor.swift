@@ -8,6 +8,10 @@ extension Notification.Name {
 final class ScreenLockMonitor {
     static let shared = ScreenLockMonitor()
 
+    /// Whether the screen is currently locked or the Mac is asleep.
+    /// Used by TriggerManager to suppress camera/mic triggers during Power Nap.
+    private(set) var isScreenLocked = false
+
     private var lockObserver: NSObjectProtocol?
     private var unlockObserver: NSObjectProtocol?
     private var sleepObserver: NSObjectProtocol?
@@ -22,7 +26,8 @@ final class ScreenLockMonitor {
         lockObserver = dnc.addObserver(
             forName: NSNotification.Name("com.apple.screenIsLocked"),
             object: nil, queue: .main
-        ) { _ in
+        ) { [weak self] _ in
+            MainActor.assumeIsolated { self?.isScreenLocked = true }
             NotificationCenter.default.post(
                 name: .screenLockStateChanged,
                 object: nil,
@@ -33,7 +38,8 @@ final class ScreenLockMonitor {
         unlockObserver = dnc.addObserver(
             forName: NSNotification.Name("com.apple.screenIsUnlocked"),
             object: nil, queue: .main
-        ) { _ in
+        ) { [weak self] _ in
+            MainActor.assumeIsolated { self?.isScreenLocked = false }
             NotificationCenter.default.post(
                 name: .screenLockStateChanged,
                 object: nil,
@@ -46,7 +52,8 @@ final class ScreenLockMonitor {
         sleepObserver = workspace.addObserver(
             forName: NSWorkspace.willSleepNotification,
             object: nil, queue: .main
-        ) { _ in
+        ) { [weak self] _ in
+            MainActor.assumeIsolated { self?.isScreenLocked = true }
             NotificationCenter.default.post(
                 name: .screenLockStateChanged,
                 object: nil,
