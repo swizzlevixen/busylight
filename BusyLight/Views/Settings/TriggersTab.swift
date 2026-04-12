@@ -7,12 +7,12 @@ struct TriggersTab: View {
         Form {
             Section("Webcam") {
                 triggerRow(
-                    label: "Enable scene when webcam in use:",
+                    label: "Activate scene when webcam turns on:",
                     isEnabled: $settings.webcamTriggerEnabled,
                     sceneId: $settings.webcamOnSceneId
                 )
                 triggerRow(
-                    label: "Enable scene when webcam turned off:",
+                    label: "Activate scene when webcam turns off:",
                     isEnabled: $settings.webcamOffTriggerEnabled,
                     sceneId: $settings.webcamOffSceneId
                 )
@@ -20,12 +20,12 @@ struct TriggersTab: View {
 
             Section("Microphone") {
                 triggerRow(
-                    label: "Enable scene when microphone in use:",
+                    label: "Activate scene when microphone turns on:",
                     isEnabled: $settings.micTriggerEnabled,
                     sceneId: $settings.micOnSceneId
                 )
                 triggerRow(
-                    label: "Enable scene when microphone turned off:",
+                    label: "Activate scene when microphone turns off:",
                     isEnabled: $settings.micOffTriggerEnabled,
                     sceneId: $settings.micOffSceneId
                 )
@@ -33,12 +33,12 @@ struct TriggersTab: View {
 
             Section("Screen Lock") {
                 triggerRow(
-                    label: "Enable scene when screen is locked:",
+                    label: "Activate scene when screen locks:",
                     isEnabled: $settings.screenLockTriggerEnabled,
                     sceneId: $settings.screenLockSceneId
                 )
                 triggerRow(
-                    label: "Enable scene when screen is unlocked:",
+                    label: "Activate scene when screen unlocks:",
                     isEnabled: $settings.screenUnlockTriggerEnabled,
                     sceneId: $settings.screenUnlockSceneId
                 )
@@ -46,13 +46,13 @@ struct TriggersTab: View {
 
             Section("Focus Mode") {
                 triggerRow(
-                    label: "Enable scene when Focus mode activated:",
+                    label: "Activate scene when Focus turns on:",
                     isEnabled: $settings.focusOnTriggerEnabled,
                     sceneId: $settings.focusOnSceneId
                 )
                 .disabled(!FocusModeMonitor.shared.isAvailable)
                 triggerRow(
-                    label: "Enable scene when Focus mode deactivated:",
+                    label: "Activate scene when Focus turns off:",
                     isEnabled: $settings.focusOffTriggerEnabled,
                     sceneId: $settings.focusOffSceneId
                 )
@@ -65,7 +65,7 @@ struct TriggersTab: View {
                 } else {
                     Text("Focus mode detection is not available on this version of macOS.")
                         .font(.caption)
-                        .foregroundStyle(.red)
+                        .foregroundStyle(.secondary)
                 }
             }
         }

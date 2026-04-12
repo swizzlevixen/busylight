@@ -40,9 +40,15 @@ struct ScenesTab: View {
 
             // Configured scene list
             if settings.menuItems.isEmpty {
-                Text("No scenes configured. Click + below to add scenes from Home Assistant.")
-                    .foregroundStyle(.secondary)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                Group {
+                    if settings.haBaseURL.isEmpty || settings.haToken.isEmpty {
+                        Text("Connect to Home Assistant in the Home Assistant tab to get started.")
+                    } else {
+                        Text("No scenes configured. Click + below to add scenes from Home Assistant.")
+                    }
+                }
+                .foregroundStyle(.secondary)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
             } else {
                 List(selection: $selectedItemId) {
                     ForEach(Array(settings.menuItems.enumerated()), id: \.element.id) { index, item in
@@ -117,13 +123,14 @@ struct ScenesTab: View {
 
                 TextField("Display Name", text: bindingForName(at: index))
                     .focused($focusedNameIndex, equals: index)
-                    .frame(minWidth: 100, maxWidth: 140)
+                    .frame(minWidth: 120, maxWidth: 200)
 
                 Text(scene.entityId)
                     .foregroundStyle(.secondary)
                     .font(.caption)
                     .lineLimit(1)
                     .truncationMode(.middle)
+                    .help(scene.entityId)
 
                 Spacer()
 
@@ -133,11 +140,13 @@ struct ScenesTab: View {
             }
         case .divider:
             HStack {
-                Text("--- Divider ---")
+                Spacer()
+                Text("\u{2014}\u{2014}\u{2014}  Divider  \u{2014}\u{2014}\u{2014}")
                     .foregroundStyle(.secondary)
-                    .italic()
                 Spacer()
             }
+            .frame(minHeight: 28)
+            .alignmentGuide(.listRowSeparatorLeading) { _ in 0 }
         }
     }
 

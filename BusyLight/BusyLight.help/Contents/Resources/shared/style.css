@@ -1,11 +1,13 @@
 /* Busy Light Help — Apple Help Viewer stylesheet */
+/* Uses -apple-system colors for automatic light/dark mode adaptation */
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 13px;
     line-height: 1.5;
-    color: #333;
-    background-color: #fff;
+    color-scheme: light dark;
+    color: -apple-system-label;
+    background-color: -apple-system-background;
     margin: 0;
     padding: 20px 24px;
     max-width: 600px;
@@ -14,21 +16,21 @@ body {
 h1 {
     font-size: 24px;
     font-weight: 600;
-    color: #000;
+    color: -apple-system-label;
     margin: 0 0 16px 0;
 }
 
 h2 {
     font-size: 17px;
     font-weight: 600;
-    color: #000;
+    color: -apple-system-label;
     margin: 24px 0 8px 0;
 }
 
 h3 {
     font-size: 14px;
     font-weight: 600;
-    color: #000;
+    color: -apple-system-label;
     margin: 20px 0 6px 0;
 }
 
@@ -46,7 +48,7 @@ li {
 }
 
 a {
-    color: #0068DA;
+    color: -apple-system-blue;
     text-decoration: none;
 }
 
@@ -57,7 +59,7 @@ a:hover {
 code {
     font-family: "SF Mono", Menlo, Monaco, monospace;
     font-size: 12px;
-    background-color: #f5f5f5;
+    background-color: -apple-system-tertiary-fill;
     padding: 1px 5px;
     border-radius: 3px;
 }
@@ -66,16 +68,16 @@ code {
 
 .breadcrumb {
     font-size: 11px;
-    color: #888;
+    color: -apple-system-secondary-label;
     margin-bottom: 12px;
 }
 
 .breadcrumb a {
-    color: #888;
+    color: -apple-system-secondary-label;
 }
 
 .breadcrumb a:hover {
-    color: #0068DA;
+    color: -apple-system-blue;
 }
 
 /* Topic links on landing page */
@@ -98,12 +100,12 @@ code {
 /* Emphasized notes */
 
 .note {
-    background-color: #f8f8f8;
-    border-left: 3px solid #0068DA;
+    background-color: -apple-system-tertiary-fill;
+    border-left: 3px solid -apple-system-blue;
     padding: 8px 12px;
     margin: 12px 0;
     font-size: 12px;
-    color: #555;
+    color: -apple-system-secondary-label;
 }
 
 /* Keyboard shortcut styling */
@@ -111,9 +113,9 @@ code {
 kbd {
     font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 12px;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
+    background-color: -apple-system-tertiary-fill;
+    border: 1px solid -apple-system-separator;
     border-radius: 3px;
     padding: 1px 5px;
-    box-shadow: 0 1px 0 #bbb;
+    box-shadow: 0 1px 0 -apple-system-separator;
 }

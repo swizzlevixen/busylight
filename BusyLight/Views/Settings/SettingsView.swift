@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @State private var selectedTab: String = "homeassistant"
+    @AppStorage("selectedSettingsTab") private var selectedTab: String = "homeassistant"
 
     var body: some View {
         // Tab API requires macOS 15; using tabItem() for macOS 14 compatibility.
@@ -10,7 +10,7 @@ struct SettingsView: View {
                 .tabItem { Label("Home Assistant", systemImage: "house") }
                 .tag("homeassistant")
             ScenesTab()
-                .tabItem { Label("Scenes", systemImage: "theatermasks") }
+                .tabItem { Label("Scenes", systemImage: "lamp.desk") }
                 .tag("scenes")
             TriggersTab()
                 .tabItem { Label("Triggers", systemImage: "bolt.fill") }
@@ -19,7 +19,7 @@ struct SettingsView: View {
                 .tabItem { Label("General", systemImage: "gear") }
                 .tag("general")
         }
-        .frame(minWidth: 600, idealWidth: 600, minHeight: 500)
+        .frame(minWidth: 600, idealWidth: 600, maxWidth: .infinity, minHeight: 500, maxHeight: .infinity)
         .onReceive(NotificationCenter.default.publisher(for: .openSettingsRequest)) { notification in
             if let tab = notification.userInfo?["tab"] as? String {
                 selectedTab = tab

@@ -33,6 +33,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @objc private func handleOpenSettings(_ notification: Notification) {
+        // Write the requested tab to UserDefaults before the window opens,
+        // so @AppStorage in SettingsView picks it up immediately.
+        if let tab = notification.userInfo?["tab"] as? String {
+            UserDefaults.standard.set(tab, forKey: "selectedSettingsTab")
+        }
+
         NSApp.setActivationPolicy(.regular)
         NSApp.activate()
 
@@ -80,11 +86,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         alert.addButton(withTitle: "Later")
         alert.alertStyle = .informational
 
-        AppSettings.shared.hasCompletedFirstRun = true
-
         let response = alert.runModal()
 
         if response == .alertFirstButtonReturn {
+            AppSettings.shared.hasCompletedFirstRun = true
             NotificationCenter.default.post(
                 name: .openSettingsRequest,
                 object: nil,
