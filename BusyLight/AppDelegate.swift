@@ -18,7 +18,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         // First-run welcome dialog (deferred so the app finishes launching first)
         if !AppSettings.shared.hasCompletedFirstRun {
-            DispatchQueue.main.async { [self] in
+            Task { @MainActor in
                 showFirstRunDialog()
             }
         }
@@ -26,14 +26,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc private func handleOpenSettings(_ notification: Notification) {
         NSApp.setActivationPolicy(.regular)
-        NSApp.activate(ignoringOtherApps: true)
+        NSApp.activate()
 
         // Open the Settings window via the captured SwiftUI openSettings action.
         // SettingsOpener captures this from MenuBarLabelView, which is always live.
         SettingsOpener.shared.openSettings()
 
         // Rename the settings window and remove the View menu after they appear.
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(300))
             if let settingsWindow = NSApp.windows.first(where: {
                 $0.isVisible && $0.styleMask.contains(.titled)
             }) {
