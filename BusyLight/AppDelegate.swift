@@ -28,24 +28,31 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         NSApp.setActivationPolicy(.regular)
         NSApp.activate()
 
-        // Open the Settings window via the captured SwiftUI openSettings action.
-        // SettingsOpener captures this from MenuBarLabelView, which is always live.
-        SettingsOpener.shared.openSettings()
+        // Listen for the Settings window to become key, then rename it and
+        // strip the unwanted View menu.  One-shot: removes itself after firing.
+        var token: NSObjectProtocol?
+        token = NotificationCenter.default.addObserver(
+            forName: NSWindow.didBecomeKeyNotification,
+            object: nil,
+            queue: .main
+        ) { windowNotification in
+            guard let window = windowNotification.object as? NSWindow,
+                  window.styleMask.contains(.titled) else { return }
 
-        // Rename the settings window and remove the View menu after they appear.
-        Task { @MainActor in
-            try? await Task.sleep(for: .milliseconds(300))
-            if let settingsWindow = NSApp.windows.first(where: {
-                $0.isVisible && $0.styleMask.contains(.titled)
-            }) {
-                settingsWindow.title = "Settings"
-                settingsWindow.makeKeyAndOrderFront(nil)
-                settingsWindow.orderFrontRegardless()
-            }
+            window.title = "Settings"
+            window.makeKeyAndOrderFront(nil)
+            window.orderFrontRegardless()
+
             if let viewMenu = NSApp.mainMenu?.item(withTitle: "View") {
                 NSApp.mainMenu?.removeItem(viewMenu)
             }
+
+            if let token { NotificationCenter.default.removeObserver(token) }
         }
+
+        // Open the Settings window via the captured SwiftUI openSettings action.
+        // SettingsOpener captures this from MenuBarLabelView, which is always live.
+        SettingsOpener.shared.openSettings()
     }
 
     private func showFirstRunDialog() {
