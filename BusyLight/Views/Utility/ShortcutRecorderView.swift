@@ -57,9 +57,11 @@ struct ShortcutRecorderView: View {
         keyMonitor.install { [sceneEntityId] keyCode, modifiers in
             // Capture undo snapshot before mutating shortcuts.
             onWillChange?()
-            // Upsert: remove any existing shortcut for this scene, then add the new one.
+            // Upsert: remove any existing shortcut for this scene, and clear
+            // any other scene that already uses the same key combo.
             var shortcuts = settings.keyboardShortcuts
             shortcuts.removeAll { $0.sceneEntityId == sceneEntityId }
+            shortcuts.removeAll { $0.keyCode == keyCode && $0.modifiers == modifiers }
             shortcuts.append(KeyboardShortcutConfig(
                 keyCode: keyCode,
                 modifiers: modifiers,
