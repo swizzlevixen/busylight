@@ -63,6 +63,7 @@ actor HomeAssistantService {
 
     private let session: URLSession
     private var healthCheckTask: Task<Void, Never>?
+    private var healthCheckGeneration: Int = 0
 
     private(set) var connectionState: ConnectionState = .unknown
 
@@ -94,24 +95,24 @@ actor HomeAssistantService {
 
     func startHealthChecks(baseURL: String, token: String) {
         stopHealthChecks()
+        healthCheckGeneration += 1
+        let myGeneration = healthCheckGeneration
         healthCheckTask = Task {
             while !Task.isCancelled {
                 do {
                     _ = try await self.testConnection(baseURL: baseURL, token: token)
-                    // connectionState is set inside testConnection
                 } catch {
-                    await self.setConnectionState(.disconnected)
+                    self.connectionState = .disconnected
                 }
+                // Exit if a newer health check loop has started
+                guard myGeneration == self.healthCheckGeneration else { break }
                 try? await Task.sleep(for: .seconds(30))
             }
         }
     }
 
-    private func setConnectionState(_ state: ConnectionState) {
-        connectionState = state
-    }
-
     func stopHealthChecks() {
+        healthCheckGeneration += 1
         healthCheckTask?.cancel()
         healthCheckTask = nil
     }

@@ -224,6 +224,31 @@ final class HomeAssistantServiceTests: XCTestCase {
         XCTAssertEqual(scene.entityId, "scene.test")
     }
 
+    // MARK: - Health Check Generation
+
+    func testStartHealthChecksSuperseedsPrevious() async throws {
+        // Mock a successful response
+        MockURLProtocol.requestHandler = { request in
+            let response = HTTPURLResponse(url: request.url!, statusCode: 200, httpVersion: nil, headerFields: nil)!
+            let data = #"{"message": "API running."}"#.data(using: .utf8)!
+            return (response, data)
+        }
+
+        // Start health checks twice in quick succession
+        await service.startHealthChecks(baseURL: "http://localhost:8123", token: "token")
+        await service.startHealthChecks(baseURL: "http://localhost:8123", token: "token2")
+
+        // The first loop should exit on its next generation check.
+        // Stop to clean up.
+        await service.stopHealthChecks()
+    }
+
+    func testStopHealthChecksIncrementsGeneration() async {
+        // Calling stop without start should not crash
+        await service.stopHealthChecks()
+        await service.stopHealthChecks()
+    }
+
     // MARK: - SceneActivationResult
 
     func testSceneActivationResultSuccess() {

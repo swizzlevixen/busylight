@@ -71,6 +71,7 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         BUNDLE_LOADER: "$(TEST_HOST)"
         TEST_HOST: "$(BUILT_PRODUCTS_DIR)/Busy Light.app/Contents/MacOS/Busy Light"
+        INFOPLIST_KEY_NSPrincipalClass: BusyLightTests.TestSetup
 
 schemes:
   BusyLight:
