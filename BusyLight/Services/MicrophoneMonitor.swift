@@ -84,7 +84,7 @@ final class MicrophoneMonitor {
             var runningSize = UInt32(MemoryLayout<UInt32>.size)
             var runningAddress = AudioObjectPropertyAddress(
                 mSelector: kAudioDevicePropertyDeviceIsRunningSomewhere,
-                mScope: kAudioObjectPropertyScopeGlobal,
+                mScope: kAudioObjectPropertyScopeInput,
                 mElement: kAudioObjectPropertyElementMain
             )
 
