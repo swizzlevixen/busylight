@@ -101,6 +101,7 @@ final class GlobalHotkeyManager {
         hotKeyRefs.removeAll()
         shortcutsByHotKeyId.removeAll()
         registeredShortcuts.removeAll()
+        nextHotKeyId = 1
     }
 
     // MARK: - Carbon dispatch
