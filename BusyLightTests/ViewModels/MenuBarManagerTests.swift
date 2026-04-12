@@ -83,7 +83,7 @@ final class MenuBarManagerTests: XCTestCase {
         XCTAssertEqual(AppSettings.shared.menuBarLabel, "\u{26AB} No Scene")
     }
 
-    // MARK: - MenuBarManager activation
+    // MARK: - MenuBarManager activation (SceneItem)
 
     func testActivateSceneSetsActiveSceneId() {
         AppSettings.shared.menuItems = [.scene(scene)]
@@ -110,5 +110,26 @@ final class MenuBarManagerTests: XCTestCase {
         AppSettings.shared.activeSceneId = scene.entityId
         MenuBarManager.shared.deactivateScene()
         XCTAssertEqual(AppSettings.shared.menuBarLabel, "\u{26AB} No Scene")
+    }
+
+    // MARK: - MenuBarManager activation (entityId)
+
+    func testActivateSceneByEntityIdSetsActiveSceneId() {
+        MenuBarManager.shared.activateScene(entityId: scene.entityId)
+        XCTAssertEqual(AppSettings.shared.activeSceneId, scene.entityId)
+    }
+
+    func testActivateSceneByEntityIdUpdatesMenuBarLabel() {
+        AppSettings.shared.displayMode = .both
+        AppSettings.shared.menuItems = [.scene(scene)]
+        MenuBarManager.shared.activateScene(entityId: scene.entityId)
+        XCTAssertEqual(AppSettings.shared.menuBarLabel, "\u{1F534} Busy")
+    }
+
+    func testActivateSceneWithResultSetsActiveSceneId() async {
+        let result = await MenuBarManager.shared.activateSceneWithResult(entityId: scene.entityId)
+        XCTAssertEqual(AppSettings.shared.activeSceneId, scene.entityId)
+        // No HA configured in tests, so returns success with empty entities
+        XCTAssertTrue(result.success)
     }
 }

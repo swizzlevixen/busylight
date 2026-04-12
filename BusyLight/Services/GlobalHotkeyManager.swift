@@ -149,23 +149,13 @@ final class GlobalHotkeyManager {
     }
 
     private func handleShortcutActivation(_ shortcut: KeyboardShortcutConfig) {
-        let settings = AppSettings.shared
         let entityId = shortcut.sceneEntityId
 
         // Toggle: if this scene is already active, deactivate it.
-        // MenuBarLabelView updates automatically via @Observable on AppSettings.
-        if settings.activeSceneId == entityId {
-            settings.activeSceneId = nil
+        if AppSettings.shared.activeSceneId == entityId {
+            MenuBarManager.shared.deactivateScene()
         } else {
-            settings.activeSceneId = entityId
-
-            Task {
-                await HomeAssistantService.shared.activateScene(
-                    entityId: entityId,
-                    baseURL: settings.haBaseURL,
-                    token: settings.haToken
-                )
-            }
+            MenuBarManager.shared.activateScene(entityId: entityId)
         }
     }
 

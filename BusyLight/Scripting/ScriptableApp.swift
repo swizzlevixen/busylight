@@ -9,21 +9,9 @@ class ScriptableApp: NSApplication {
         }
         set {
             if newValue.isEmpty {
-                AppSettings.shared.activeSceneId = nil
+                MenuBarManager.shared.deactivateScene()
             } else {
-                AppSettings.shared.activeSceneId = newValue
-            }
-            // MenuBarLabelView updates automatically via @Observable on AppSettings
-
-            // If setting a scene, also trigger it via HA
-            if !newValue.isEmpty {
-                let baseURL = AppSettings.shared.haBaseURL
-                let token = AppSettings.shared.haToken
-                Task {
-                    await HomeAssistantService.shared.activateScene(
-                        entityId: newValue, baseURL: baseURL, token: token
-                    )
-                }
+                MenuBarManager.shared.activateScene(entityId: newValue)
             }
         }
     }

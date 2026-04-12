@@ -169,46 +169,16 @@ final class TriggerManager {
             previousSceneId = settings.activeSceneId
         }
 
-        settings.activeSceneId = entityId
-        // MenuBarLabelView updates automatically via @Observable on AppSettings
-
-        guard !settings.haBaseURL.isEmpty && !settings.haToken.isEmpty else { return }
-
-        Task {
-            let result = await HomeAssistantService.shared.activateScene(
-                entityId: entityId,
-                baseURL: settings.haBaseURL,
-                token: settings.haToken
-            )
-            if !result.success {
-                // TODO: Show transient error notification
-            }
-        }
+        MenuBarManager.shared.activateScene(entityId: entityId)
     }
 
     /// Reverts to the scene that was active before a trigger fired.
     private func revertToPreviousScene() {
         if let previous = previousSceneId {
-            settings.activeSceneId = previous
-            // MenuBarLabelView updates automatically via @Observable on AppSettings
-
-            // Activate the previous scene on HA
-            guard !settings.haBaseURL.isEmpty && !settings.haToken.isEmpty else {
-                previousSceneId = nil
-                return
-            }
-
-            Task {
-                await HomeAssistantService.shared.activateScene(
-                    entityId: previous,
-                    baseURL: settings.haBaseURL,
-                    token: settings.haToken
-                )
-            }
+            MenuBarManager.shared.activateScene(entityId: previous)
         } else {
             // No previous scene to revert to; clear active scene
-            settings.activeSceneId = nil
-            // MenuBarLabelView updates automatically via @Observable on AppSettings
+            MenuBarManager.shared.deactivateScene()
         }
         previousSceneId = nil
     }
