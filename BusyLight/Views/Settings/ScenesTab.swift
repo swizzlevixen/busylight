@@ -140,14 +140,10 @@ struct ScenesTab: View {
             }
         case .divider:
             HStack {
-                VStack {
-                    Divider()
-                }
-                Text("Divider")
-                    .layoutPriority(1)
-                VStack {
-                    Divider()
-                }
+                Spacer()
+                Text("\u{2014}\u{2014}\u{2014}  Divider  \u{2014}\u{2014}\u{2014}")
+                    .foregroundStyle(.secondary)
+                Spacer()
             }
         }
     }
