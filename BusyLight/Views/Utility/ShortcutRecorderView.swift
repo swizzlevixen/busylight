@@ -21,20 +21,30 @@ struct ShortcutRecorderView: View {
     @State private var keyMonitor = LocalKeyEventMonitor()
 
     var body: some View {
-        Button {
-            if isRecording {
-                keyMonitor.remove()
-                isRecording = false
-            } else {
-                startRecording()
+        HStack(spacing: 4) {
+            Button {
+                if isRecording {
+                    keyMonitor.remove()
+                    isRecording = false
+                } else {
+                    startRecording()
+                }
+            } label: {
+                Text(isRecording ? "Press keys\u{2026}" : shortcutDisplayText)
+                    .frame(width: 100)
+                    .foregroundStyle(isRecording ? .blue : .primary)
             }
-        } label: {
-            Text(isRecording ? "Press keys\u{2026}" : shortcutDisplayText)
-                .frame(width: 100)
-                .foregroundStyle(isRecording ? .blue : .primary)
+            .buttonStyle(.bordered)
+            .controlSize(.small)
+
+            if hasShortcut && !isRecording {
+                Button("Clear shortcut", systemImage: "xmark.circle.fill", action: clearShortcut)
+                    .labelStyle(.iconOnly)
+                    .buttonStyle(.borderless)
+                    .foregroundStyle(.secondary)
+                    .controlSize(.small)
+            }
         }
-        .buttonStyle(.bordered)
-        .controlSize(.small)
         .onDisappear {
             // Cancel any in-progress recording if the view is removed (e.g.
             // the scene row is deleted while the recorder is active).
@@ -44,6 +54,15 @@ struct ShortcutRecorderView: View {
     }
 
     // MARK: - Private
+
+    private var hasShortcut: Bool {
+        settings.keyboardShortcuts.contains { $0.sceneEntityId == sceneEntityId }
+    }
+
+    private func clearShortcut() {
+        onWillChange?()
+        settings.keyboardShortcuts.removeAll { $0.sceneEntityId == sceneEntityId }
+    }
 
     private var shortcutDisplayText: String {
         if let sc = settings.keyboardShortcuts.first(where: { $0.sceneEntityId == sceneEntityId }) {
