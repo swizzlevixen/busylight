@@ -146,7 +146,7 @@ struct ScenesTab: View {
                 Spacer()
             }
             .frame(minHeight: 28)
-            .listRowSeparator(.visible)
+            .alignmentGuide(.listRowSeparatorLeading) { _ in 0 }
         }
     }
 
