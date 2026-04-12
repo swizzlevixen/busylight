@@ -47,7 +47,7 @@ xcodebuild test -project BusyLight.xcodeproj -scheme BusyLight -destination 'pla
 - `HomeAssistantService`: Actor with async/await REST API client, exponential backoff retry, connection health checks
 - `CameraMonitor`: CoreMediaIO `kCMIODevicePropertyDeviceIsRunningSomewhere` (2s polling)
 - `MicrophoneMonitor`: CoreAudio `kAudioDevicePropertyDeviceIsRunningSomewhere` (2s polling)
-- `ScreenLockMonitor`: `DistributedNotificationCenter` for lock/unlock/sleep/wake
+- `ScreenLockMonitor`: `DistributedNotificationCenter` for lock/unlock, `NSWorkspace` for sleep
 - `FocusModeMonitor`: Reads `~/Library/DoNotDisturb/DB/Assertions.json` (5s polling, experimental)
 - `GlobalHotkeyManager`: `NSEvent.addGlobalMonitorForEvents` for system-wide keyboard shortcuts
 - `TriggerManager`: Coordinates all monitors, applies trigger settings, camera > mic priority
