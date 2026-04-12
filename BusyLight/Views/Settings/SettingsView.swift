@@ -19,7 +19,7 @@ struct SettingsView: View {
                 .tabItem { Label("General", systemImage: "gear") }
                 .tag("general")
         }
-        .frame(minWidth: 600, idealWidth: 600, minHeight: 500)
+        .frame(minWidth: 600, idealWidth: 600, maxWidth: .infinity, minHeight: 500, maxHeight: .infinity)
         .onReceive(NotificationCenter.default.publisher(for: .openSettingsRequest)) { notification in
             if let tab = notification.userInfo?["tab"] as? String {
                 selectedTab = tab
