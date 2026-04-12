@@ -139,14 +139,10 @@ struct ScenesTab: View {
                 }
             }
         case .divider:
-            HStack(spacing: 8) {
-                Text("Divider")
-                    .foregroundStyle(.tertiary)
-                    .font(.caption)
-                    .frame(width: 48, alignment: .leading)
-                Divider()
-                    .frame(maxWidth: .infinity, maxHeight: 1)
-                Spacer()
+            HStack {
+                Rectangle()
+                    .fill(.separator)
+                    .frame(height: 1)
             }
         }
     }
