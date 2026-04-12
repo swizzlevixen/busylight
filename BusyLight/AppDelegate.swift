@@ -33,6 +33,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @objc private func handleOpenSettings(_ notification: Notification) {
+        // Write the requested tab to UserDefaults before the window opens,
+        // so @AppStorage in SettingsView picks it up immediately.
+        if let tab = notification.userInfo?["tab"] as? String {
+            UserDefaults.standard.set(tab, forKey: "selectedSettingsTab")
+        }
+
         NSApp.setActivationPolicy(.regular)
         NSApp.activate()
 
