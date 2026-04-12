@@ -2,7 +2,7 @@
 
 A macOS menu bar application that connects to [Home Assistant](https://www.home-assistant.io) to trigger scenes, designed for controlling a "busy light" outside a room to indicate whether you may be disturbed.
 
-![A macOS menu bar item. The meu bar says "🟡 Concentrating". Below that is an open menu with a series of red, amber, green, and off emojis and settings names for a busy light, a dividinng line, then on and off for webcam lights. Another dividing line, and then Help, Settings…, and Quit.](./ProductionAssets/web/menu-bar-item-cleanpng "Busy Light's menu bar item")
+![A macOS menu bar item. The meu bar says "🟡 Concentrating". Below that is an open menu with a series of red, amber, green, and off emojis and settings names for a busy light, a dividinng line, then on and off for webcam lights. Another dividing line, and then Help, Settings…, and Quit.](./ProductionAssets/web/menu-bar-item-clean.png "Busy Light's menu bar item")
 
 _However,_ you can use it to trigger _any_ scene set up in HA, so the possibilities are quite unlimited!
 
@@ -14,12 +14,12 @@ _However,_ you can use it to trigger _any_ scene set up in HA, so the possibilit
 
 You can use it for anything you have a **Scene** set up for in Home Assistant: an RGB light bulb, a power switch for some other light, or it doesn't even have to be a light at all.
 
-> [!NOTE] I am a human deveoper, but this project was a trial run for working with Claude Code on a project. I designed it, asked Claude to do have a go at some features, sometimes re-wrote it myself, and sometimes had Claude take a shot at rewriting it until it was right. It's a silly little menu bar item, and I've been using it for over a month with only [one little bug](https://github.com/swizzlevixen/busylight/issues/2), but just wanted to mention it, in case an LLM touching it makes a difference to you.
+> [!NOTE] I am a human developer, but this project was a trial run for working with Claude Code on a project. I designed it, asked Claude to do have a go at some features, sometimes re-wrote it myself, and sometimes had Claude take a shot at rewriting it until it was right. It's a silly little menu bar item, and I've been using it for over a month with only [one little bug](https://github.com/swizzlevixen/busylight/issues/2), but just wanted to mention it, in case an LLM touching it makes a difference to you.
 
 ## Screenshots
 
-![](./ProductionAssets/web/settings-scenes.png "Screenshot of the Triggers tab in Settings")
-![](./ProductionAssets/web/settings-triggers.png "Screenshot of the Scenes tab in Settings")
+![](./ProductionAssets/web/settings-scenes.png "Screenshot of the Scenes tab in Settings")
+![](./ProductionAssets/web/settings-triggers.png "Screenshot of the Triggers tab in Settings")
 ![](./ProductionAssets/web/help-getting-started.png "Help that is actually helpful")
 
 ## Features
@@ -82,10 +82,10 @@ Download [the latest release of the signed app](https://github.com/swizzlevixen/
 
 ### Build from Source
 
-1. Clone the repository: [TK NOT CORRECT URL]
+1. Clone the repository:
 
    ```bash
-   git clone https://github.com/mboszko/busylight.git
+   git clone https://github.com/swizzlevixen/busylight.git
    cd busylight
    ```
 
@@ -166,7 +166,7 @@ The detection checks a system property (`DeviceIsRunningSomewhere`) that reports
 
 ### Revert Scene
 
-When a trigger's "off" action is set to "Revert Scene", the app remembers which scene was last activater before the trigger fired. When the trigger turns off, it activates that previous scene. If multiple triggers fire in sequence, the app reverts to the scene that was active before the first trigger in the chain.
+When a trigger's "off" action is set to "Revert Scene", the app remembers which scene was last activated before the trigger fired. When the trigger turns off, it activates that previous scene. If multiple triggers fire in sequence, the app reverts to the scene that was active before the first trigger in the chain.
 
 > [!CAUTION]
 >
