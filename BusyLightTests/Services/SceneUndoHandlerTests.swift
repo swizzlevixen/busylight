@@ -9,6 +9,7 @@ final class SceneUndoHandlerTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
+        KeychainHelper.testStore = [:]
         undoManager = UndoManager()
         handler = SceneUndoHandler()
         handler.undoManager = undoManager
@@ -20,6 +21,7 @@ final class SceneUndoHandlerTests: XCTestCase {
     override func tearDown() {
         AppSettings.shared.menuItems = []
         AppSettings.shared.keyboardShortcuts = []
+        KeychainHelper.testStore = nil
         super.tearDown()
     }
 

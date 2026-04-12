@@ -4,6 +4,16 @@ import XCTest
 @MainActor
 final class TriggerManagerTests: XCTestCase {
 
+    override func setUp() {
+        super.setUp()
+        KeychainHelper.testStore = [:]
+    }
+
+    override func tearDown() {
+        KeychainHelper.testStore = nil
+        super.tearDown()
+    }
+
     func testStartStopMonitors() {
         let manager = TriggerManager.shared
         manager.startAllMonitors()

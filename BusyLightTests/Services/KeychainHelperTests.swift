@@ -2,10 +2,15 @@ import XCTest
 @testable import BusyLight
 
 final class KeychainHelperTests: XCTestCase {
-    private let testKey = "com.mboszko.BusyLightTests.keychainTest.\(UUID().uuidString)"
+    private let testKey = "com.mboszko.BusyLightTests.keychainTest"
+
+    override func setUp() {
+        super.setUp()
+        KeychainHelper.testStore = [:]
+    }
 
     override func tearDown() {
-        KeychainHelper.delete(key: testKey)
+        KeychainHelper.testStore = nil
         super.tearDown()
     }
 
@@ -16,7 +21,7 @@ final class KeychainHelperTests: XCTestCase {
     }
 
     func testLoadNonExistent() {
-        let loaded = KeychainHelper.load(key: "com.mboszko.nonexistent.\(UUID().uuidString)")
+        let loaded = KeychainHelper.load(key: "com.mboszko.nonexistent")
         XCTAssertNil(loaded)
     }
 
