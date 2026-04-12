@@ -145,6 +145,7 @@ struct ScenesTab: View {
                     .foregroundStyle(.secondary)
                 Spacer()
             }
+            .frame(minHeight: 28)
         }
     }
 
