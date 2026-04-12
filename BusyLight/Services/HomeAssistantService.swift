@@ -203,6 +203,7 @@ actor HomeAssistantService {
         req.setValue("application/json", forHTTPHeaderField: "Content-Type")
         req.httpBody = body
         req.timeoutInterval = 10
+        req.cachePolicy = .reloadIgnoringLocalCacheData
 
         let (data, response): (Data, URLResponse)
         do {
