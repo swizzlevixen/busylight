@@ -11,7 +11,6 @@ final class ScreenLockMonitor {
     private var lockObserver: NSObjectProtocol?
     private var unlockObserver: NSObjectProtocol?
     private var sleepObserver: NSObjectProtocol?
-    private var wakeObserver: NSObjectProtocol?
     private var isMonitoring = false
 
     func startMonitoring() {
@@ -55,16 +54,6 @@ final class ScreenLockMonitor {
             )
         }
 
-        wakeObserver = workspace.addObserver(
-            forName: NSWorkspace.didWakeNotification,
-            object: nil, queue: .main
-        ) { _ in
-            NotificationCenter.default.post(
-                name: .screenLockStateChanged,
-                object: nil,
-                userInfo: ["isLocked": false]
-            )
-        }
     }
 
     func stopMonitoring() {
@@ -74,12 +63,10 @@ final class ScreenLockMonitor {
 
         let workspace = NSWorkspace.shared.notificationCenter
         if let o = sleepObserver { workspace.removeObserver(o) }
-        if let o = wakeObserver { workspace.removeObserver(o) }
 
         lockObserver = nil
         unlockObserver = nil
         sleepObserver = nil
-        wakeObserver = nil
         isMonitoring = false
     }
 }
