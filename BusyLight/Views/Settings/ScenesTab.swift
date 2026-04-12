@@ -8,6 +8,8 @@ struct ScenesTab: View {
     @State private var isFetching = false
     @State private var fetchError: String?
     @State private var selectedItemId: String?
+    @FocusState private var focusedNameIndex: Int?
+    @State private var nameEditSnapshotIndex: Int?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -51,6 +53,9 @@ struct ScenesTab: View {
                 }
                 .listStyle(.bordered)
                 .onDeleteCommand(perform: removeSelectedItem)
+                .onChange(of: focusedNameIndex) { _, _ in
+                    nameEditSnapshotIndex = nil
+                }
             }
 
             // +/- toolbar buttons
@@ -111,6 +116,7 @@ struct ScenesTab: View {
                 EmojiPickerButton(emoji: bindingForEmoji(at: index))
 
                 TextField("Display Name", text: bindingForName(at: index))
+                    .focused($focusedNameIndex, equals: index)
                     .frame(minWidth: 100, maxWidth: 140)
 
                 Text(scene.entityId)
@@ -162,7 +168,10 @@ struct ScenesTab: View {
             set: { newValue in
                 guard index < settings.menuItems.count,
                       case .scene(var scene) = settings.menuItems[index] else { return }
-                undoHandler.saveSnapshot(actionName: "Change Name")
+                if nameEditSnapshotIndex != index {
+                    undoHandler.saveSnapshot(actionName: "Change Name")
+                    nameEditSnapshotIndex = index
+                }
                 scene.displayName = newValue
                 settings.menuItems[index] = .scene(scene)
             }
