@@ -13,24 +13,12 @@ struct ActivateSceneIntent: AppIntent {
 
     @MainActor
     func perform() async throws -> some IntentResult & ReturnsValue<String> {
-        let settings = AppSettings.shared
-        settings.activeSceneId = entityId
-        // MenuBarLabelView updates automatically via @Observable on AppSettings
+        let activation = await MenuBarManager.shared.activateSceneWithResult(entityId: entityId)
 
-        guard !settings.haBaseURL.isEmpty && !settings.haToken.isEmpty else {
-            return .result(value: "Scene set locally but HA not configured")
-        }
-
-        let result = await HomeAssistantService.shared.activateScene(
-            entityId: entityId,
-            baseURL: settings.haBaseURL,
-            token: settings.haToken
-        )
-
-        if result.success {
+        if activation.success {
             return .result(value: "Scene '\(entityId)' activated successfully")
         } else {
-            return .result(value: "Failed to activate scene: \(result.error?.localizedDescription ?? "Unknown error")")
+            return .result(value: "Failed to activate scene: \(activation.error?.localizedDescription ?? "Unknown error")")
         }
     }
 }
@@ -44,8 +32,7 @@ struct DeactivateSceneIntent: AppIntent {
 
     @MainActor
     func perform() async throws -> some IntentResult & ReturnsValue<String> {
-        AppSettings.shared.activeSceneId = nil
-        // MenuBarLabelView updates automatically via @Observable on AppSettings
+        MenuBarManager.shared.deactivateScene()
         return .result(value: "Scene deactivated")
     }
 }

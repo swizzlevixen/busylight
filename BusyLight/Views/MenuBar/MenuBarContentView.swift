@@ -51,7 +51,7 @@ struct MenuBarContentView: View {
                 switch item {
                 case .scene(let scene):
                     Button {
-                        activateScene(scene)
+                        MenuBarManager.shared.activateScene(scene)
                     } label: {
                         // Label puts the image in the checkmark column;
                         // plain Text leaves it empty — the correct Mac pattern.
@@ -138,18 +138,6 @@ struct MenuBarContentView: View {
         case .emojiOnly: return scene.emoji
         case .nameOnly:  return scene.displayName
         case .both:      return "\(scene.emoji) \(scene.displayName)"
-        }
-    }
-
-    private func activateScene(_ scene: SceneItem) {
-        settings.activeSceneId = scene.entityId
-        guard !settings.haBaseURL.isEmpty && !settings.haToken.isEmpty else { return }
-        Task {
-            await HomeAssistantService.shared.activateScene(
-                entityId: scene.entityId,
-                baseURL: settings.haBaseURL,
-                token: settings.haToken
-            )
         }
     }
 
