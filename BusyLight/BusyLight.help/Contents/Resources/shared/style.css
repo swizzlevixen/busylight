@@ -5,6 +5,7 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 13px;
     line-height: 1.5;
+    color-scheme: light dark;
     color: -apple-system-label;
     background-color: -apple-system-background;
     margin: 0;

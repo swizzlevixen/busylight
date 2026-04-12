@@ -139,11 +139,17 @@ struct ScenesTab: View {
                 }
             }
         case .divider:
-            HStack {
+            ZStack {
                 Rectangle()
                     .fill(.separator)
                     .frame(height: 1)
+                Text("Divider")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .padding(.horizontal, 6)
+                    .background(.background)
             }
+            .frame(maxWidth: .infinity, minHeight: 28)
         }
     }
 
