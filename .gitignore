@@ -35,3 +35,7 @@ Package.resolved
 
 # Claude
 .claude/
+
+# MCP artifacts
+entities.json
+mempalace.yaml
