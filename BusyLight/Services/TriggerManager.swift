@@ -1,4 +1,5 @@
 import Foundation
+import UserNotifications
 
 @MainActor
 final class TriggerManager {
@@ -6,6 +7,10 @@ final class TriggerManager {
 
     private let settings = AppSettings.shared
     private var observers: [NSObjectProtocol] = []
+
+    /// Debounce: suppress error notifications within this interval.
+    private var lastErrorNotificationDate: Date?
+    private let errorNotificationCooldown: TimeInterval = 30
 
     func startAllMonitors() {
         CameraMonitor.shared.startMonitoring()
@@ -158,6 +163,38 @@ final class TriggerManager {
     // MARK: - Scene Activation
 
     private func activateScene(entityId: String) {
-        MenuBarManager.shared.activateScene(entityId: entityId)
+        Task {
+            let result = await MenuBarManager.shared.activateSceneWithResult(entityId: entityId)
+            if !result.success {
+                postErrorNotification(entityId: entityId, error: result.error)
+            }
+        }
+    }
+
+    // MARK: - Error Notifications
+
+    private func postErrorNotification(entityId: String, error: (any Error)?) {
+        if let last = lastErrorNotificationDate,
+           Date().timeIntervalSince(last) < errorNotificationCooldown {
+            return
+        }
+        lastErrorNotificationDate = Date()
+
+        let sceneName = settings.scenes
+            .first { $0.entityId == entityId }
+            .map { "\($0.emoji) \($0.displayName)" }
+            ?? entityId
+
+        let content = UNMutableNotificationContent()
+        content.title = "Busy Light"
+        content.body = "Failed to activate \"\(sceneName)\" — \(error?.localizedDescription ?? "Unknown error")"
+        content.sound = .default
+
+        let request = UNNotificationRequest(
+            identifier: "trigger-error",
+            content: content,
+            trigger: nil
+        )
+        UNUserNotificationCenter.current().add(request)
     }
 }
