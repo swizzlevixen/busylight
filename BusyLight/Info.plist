@@ -6,6 +6,10 @@
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleHelpBookFolder</key>
+	<string>BusyLight.help</string>
+	<key>CFBundleHelpBookName</key>
+	<string>Busy Light Help</string>
 	<key>CFBundleIconFile</key>
 	<string>AppIcon</string>
 	<key>CFBundleIdentifier</key>
@@ -17,24 +21,22 @@
 	<key>CFBundlePackageType</key>
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>1.0.0</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>GitShortSHA</key>
+	<string></string>
 	<key>LSMinimumSystemVersion</key>
 	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
 	<key>LSUIElement</key>
 	<true/>
 	<key>NSAppleScriptEnabled</key>
 	<true/>
-	<key>OSAScriptingDefinition</key>
-	<string>BusyLight.sdef</string>
+	<key>NSHumanReadableCopyright</key>
+	<string>Copyright © 2026 Mark Boszko. Licensed under MIT License.</string>
 	<key>NSPrincipalClass</key>
 	<string>BusyLight.ScriptableApp</string>
-	<key>NSHumanReadableCopyright</key>
-	<string>Copyright © 2026 mboszko. All rights reserved.</string>
-	<key>CFBundleHelpBookFolder</key>
-	<string>BusyLight.help</string>
-	<key>CFBundleHelpBookName</key>
-	<string>Busy Light Help</string>
+	<key>OSAScriptingDefinition</key>
+	<string>BusyLight.sdef</string>
 </dict>
 </plist>

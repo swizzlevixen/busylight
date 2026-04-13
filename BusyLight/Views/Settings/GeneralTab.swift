@@ -46,7 +46,13 @@ struct GeneralTab: View {
             HStack {
                 if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String,
                    let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
-                    Text("Version \(version) (\(build))")
+                    let sha = Bundle.main.infoDictionary?["GitShortSHA"] as? String
+                    let versionText = if let sha, !sha.isEmpty {
+                        "Version \(version) (\(build)) \u{2022} \(sha)"
+                    } else {
+                        "Version \(version) (\(build))"
+                    }
+                    Text(versionText)
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }

@@ -31,6 +31,14 @@ targets:
         buildPhase: resources
       - path: AppIcon.icon
         buildPhase: sources
+    preBuildScripts:
+      - name: "Set Build Number"
+        script: |
+          PLIST="${PROJECT_DIR}/BusyLight/Info.plist"
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $(date +%y%m%d.%H%M)" "$PLIST"
+          GIT_SHA=$(git -C "${PROJECT_DIR}" rev-parse --short HEAD 2>/dev/null || echo "unknown")
+          /usr/libexec/PlistBuddy -c "Set :GitShortSHA ${GIT_SHA}" "$PLIST" 2>/dev/null || /usr/libexec/PlistBuddy -c "Add :GitShortSHA string ${GIT_SHA}" "$PLIST"
+        basedOnDependencyAnalysis: false
     postBuildScripts:
       - name: "Generate Help Index"
         script: |
