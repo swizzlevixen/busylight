@@ -4,13 +4,22 @@ Thanks for your interest in contributing! This is a small, single-maintainer pro
 
 ## Development Setup
 
-1. Install [XcodeGen](https://github.com/yonaskolb/XcodeGen): `brew install xcodegen`
-2. Generate the Xcode project: `xcodegen generate`
-3. Open `BusyLight.xcodeproj` in Xcode, or build from the command line:
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/swizzlevixen/busylight.git
+   cd busylight
+   ```
+
+2. Install [XcodeGen](https://github.com/yonaskolb/XcodeGen): `brew install xcodegen`
+3. Generate the Xcode project: `xcodegen generate`
+4. Open `BusyLight.xcodeproj` in Xcode, or build from the command line:
 
 ```bash
 xcodebuild -project BusyLight.xcodeproj -scheme BusyLight build
 ```
+
+   Or open `BusyLight.xcodeproj` in Xcode and press Run.
 
 Run tests:
 
