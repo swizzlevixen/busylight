@@ -38,10 +38,19 @@ targets:
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $(date +%y%m%d.%H%M)" "$PLIST"
           GIT_SHA=$(git -C "${PROJECT_DIR}" rev-parse --short HEAD 2>/dev/null || echo "unknown")
           /usr/libexec/PlistBuddy -c "Set :GitShortSHA ${GIT_SHA}" "$PLIST" 2>/dev/null || /usr/libexec/PlistBuddy -c "Add :GitShortSHA string ${GIT_SHA}" "$PLIST"
+          GIT_TAG=$(git -C "${PROJECT_DIR}" describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [ -n "$GIT_TAG" ]; then
+            MARKETING_VERSION="${GIT_TAG#v}"
+            /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString ${MARKETING_VERSION}" "$PLIST"
+          fi
         basedOnDependencyAnalysis: false
     postBuildScripts:
       - name: "Generate Help Index"
         script: |
+          HELP_PLIST="$BUILT_PRODUCTS_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/BusyLight.help/Contents/Info.plist"
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $(date +%y%m%d.%H%M)" "$HELP_PLIST"
+          APP_VERSION=$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" "${PROJECT_DIR}/BusyLight/Info.plist" 2>/dev/null || echo "1.0")
+          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString ${APP_VERSION}" "$HELP_PLIST"
           hiutil -I corespotlight -Caf "$BUILT_PRODUCTS_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/BusyLight.help/Contents/Resources/en.lproj/search.helpindex" "$BUILT_PRODUCTS_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/BusyLight.help/Contents/Resources/en.lproj/"
         basedOnDependencyAnalysis: false
     settings:
