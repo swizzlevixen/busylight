@@ -31,7 +31,14 @@ struct HomeAssistantTab: View {
                         settings.haToken = newValue
                     }
 
-                Text("To create a Long-Lived Access Token, go to your Home Assistant instance, click on your profile (bottom left), scroll to the bottom, and click \"Create Token\".")
+                Text("""
+                    To create a Long-Lived Access Token:
+                    \u{2022} Go to your Home Assistant instance
+                    \u{2022} Click on your profile icon (bottom left)
+                    \u{2022} Click on the Security tab
+                    \u{2022} Scroll to the bottom
+                    \u{2022} Click "Create token"
+                    """)
                     .font(.caption)
                     .foregroundStyle(.secondary)
 
