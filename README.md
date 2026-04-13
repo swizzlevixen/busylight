@@ -82,29 +82,7 @@ Download [the latest release of the signed app](https://github.com/swizzlevixen/
 
 ### Build from Source
 
-1. Clone the repository:
-
-   ```bash
-   git clone https://github.com/swizzlevixen/busylight.git
-   cd busylight
-   ```
-
-2. Generate the Xcode project:
-
-   ```bash
-   brew install xcodegen  # if not already installed
-   xcodegen generate
-   ```
-
-3. Build and run:
-
-   ```bash
-   xcodebuild -project BusyLight.xcodeproj -scheme BusyLight build
-   ```
-
-   Or open `BusyLight.xcodeproj` in Xcode and press Run.
-
-4. The app will appear in your menu bar (no dock icon).
+Follow the build instructions in [CONTRIBUTING](./CONTRIBUTING.md).
 
 ## Setup
 
