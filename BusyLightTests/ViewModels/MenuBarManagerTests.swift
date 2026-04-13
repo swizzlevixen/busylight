@@ -24,17 +24,17 @@ final class MenuBarManagerTests: XCTestCase {
 
     func testNoSceneLabelBoth() {
         AppSettings.shared.displayMode = .both
-        XCTAssertEqual(AppSettings.shared.noSceneLabel, "\u{26AB} No Scene")
+        XCTAssertEqual(AppSettings.shared.noSceneLabel, "🚦 Busy Light")
     }
 
     func testNoSceneLabelEmojiOnly() {
         AppSettings.shared.displayMode = .emojiOnly
-        XCTAssertEqual(AppSettings.shared.noSceneLabel, "\u{26AB}")
+        XCTAssertEqual(AppSettings.shared.noSceneLabel, "🚦")
     }
 
     func testNoSceneLabelNameOnly() {
         AppSettings.shared.displayMode = .nameOnly
-        XCTAssertEqual(AppSettings.shared.noSceneLabel, "No Scene")
+        XCTAssertEqual(AppSettings.shared.noSceneLabel, "Busy Light")
     }
 
     // MARK: - menuBarLabel (no active scene)
@@ -42,19 +42,19 @@ final class MenuBarManagerTests: XCTestCase {
     func testMenuBarLabelNoSceneBoth() {
         AppSettings.shared.displayMode = .both
         AppSettings.shared.activeSceneId = nil
-        XCTAssertEqual(AppSettings.shared.menuBarLabel, "\u{26AB} No Scene")
+        XCTAssertEqual(AppSettings.shared.menuBarLabel, "🚦 Busy Light")
     }
 
     func testMenuBarLabelNoSceneEmojiOnly() {
         AppSettings.shared.displayMode = .emojiOnly
         AppSettings.shared.activeSceneId = nil
-        XCTAssertEqual(AppSettings.shared.menuBarLabel, "\u{26AB}")
+        XCTAssertEqual(AppSettings.shared.menuBarLabel, "🚦")
     }
 
     func testMenuBarLabelNoSceneNameOnly() {
         AppSettings.shared.displayMode = .nameOnly
         AppSettings.shared.activeSceneId = nil
-        XCTAssertEqual(AppSettings.shared.menuBarLabel, "No Scene")
+        XCTAssertEqual(AppSettings.shared.menuBarLabel, "Busy Light")
     }
 
     // MARK: - menuBarLabel (with active scene)
@@ -86,7 +86,7 @@ final class MenuBarManagerTests: XCTestCase {
         AppSettings.shared.displayMode = .both
         AppSettings.shared.menuItems = [.scene(scene)]
         AppSettings.shared.activeSceneId = "scene.nonexistent"
-        XCTAssertEqual(AppSettings.shared.menuBarLabel, "\u{26AB} No Scene")
+        XCTAssertEqual(AppSettings.shared.menuBarLabel, "🚦 Busy Light")
     }
 
     // MARK: - MenuBarManager activation (SceneItem)
@@ -115,7 +115,7 @@ final class MenuBarManagerTests: XCTestCase {
         AppSettings.shared.menuItems = [.scene(scene)]
         AppSettings.shared.activeSceneId = scene.entityId
         MenuBarManager.shared.deactivateScene()
-        XCTAssertEqual(AppSettings.shared.menuBarLabel, "\u{26AB} No Scene")
+        XCTAssertEqual(AppSettings.shared.menuBarLabel, "🚦 Busy Light")
     }
 
     // MARK: - MenuBarManager activation (entityId)
