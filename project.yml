@@ -42,6 +42,8 @@ targets:
     postBuildScripts:
       - name: "Generate Help Index"
         script: |
+          HELP_PLIST="$BUILT_PRODUCTS_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/BusyLight.help/Contents/Info.plist"
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $(date +%y%m%d.%H%M)" "$HELP_PLIST"
           hiutil -I corespotlight -Caf "$BUILT_PRODUCTS_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/BusyLight.help/Contents/Resources/en.lproj/search.helpindex" "$BUILT_PRODUCTS_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/BusyLight.help/Contents/Resources/en.lproj/"
         basedOnDependencyAnalysis: false
     settings:
