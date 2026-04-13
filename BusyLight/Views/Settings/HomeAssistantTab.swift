@@ -33,11 +33,12 @@ struct HomeAssistantTab: View {
 
                 Text("""
                     To create a Long-Lived Access Token:
-                    \u{2022} Go to your Home Assistant instance
-                    \u{2022} Click on your profile icon (bottom left)
-                    \u{2022} Click on the Security tab
-                    \u{2022} Scroll to the bottom
-                    \u{2022} Click "Create token"
+                    1. Open your Home Assistant web interface.
+                    2. Click your profile icon in the bottom-left corner of the sidebar.
+                    3. Click on the Security tab.
+                    4. Scroll down to the Long-Lived Access Tokens section.
+                    5. Click Create Token, give it a name (e.g. "Busy Light"), and click OK.
+                    6. Copy the token immediately \u{2014} it is only shown once.
                     """)
                     .font(.caption)
                     .foregroundStyle(.secondary)
