@@ -20,9 +20,7 @@ You can use it for anything you have a **Scene** set up for in Home Assistant: a
 
 ## Screenshots
 
-![](./ProductionAssets/web/settings-scenes.png "Screenshot of the Scenes tab in Settings")
-![](./ProductionAssets/web/settings-triggers.png "Screenshot of the Triggers tab in Settings")
-![](./ProductionAssets/web/help-getting-started.png "Help that is actually helpful")
+<img src="./ProductionAssets/web/settings-scenes.png" title="Screenshot of the Scenes tab in Settings" alt="The Scenes tab in Settings. The screenshot shows a list titled Menu Items, and there are several items in the list, each with an emoji representing the scene, a title, a technical ID, and a keyboard shortcut. The items are: Busy, Concentrating, Free, Off, a Divider, Webcam Lights On, and Webcam Lights Off" width="30%"><img src="./ProductionAssets/web/settings-triggers.png" title="Screenshot of the Triggers tab in Settings" alt="The Triggers Tab in Settings. There are several groupings where the user can turn on or off the trigger, and set a separate scene for to be triggered for when the particular trigger turns on or off. The groupings are Webcam, Microphone, Screen Lock, and Focus Mode. Webcam has the scene Busy set for when the webcam turns on, and Concentrating set when the webcam turns off." width="30%"><img src="./ProductionAssets/web/help-getting-started.png" title="Help that is actually helpful" alt="A display of Help Book in-app help for macOS apps. The title is Getting Started, and it displays some basic information about how to get set up with the Busy Light app." width="30%">
 
 ## Features
 
