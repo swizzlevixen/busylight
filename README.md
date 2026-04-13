@@ -131,7 +131,7 @@ Focus mode detection reads from macOS system files and is considered experimenta
 
 ### Busy Light Hardware
 
-Documented [here](./Hardware/Busy%20Light%20Hardware.md), the one that I built is basically some WS2812 LEDs connected to an ESP32 controller and set up with ESPHome using the [ESP32 RMT LED Strip component](https://esphome.io/components/light/esp32_rmt_led_strip/). This clips over a door, powered by a USB battery pack, in a 3D-printed enclosure.
+[Documented here](https://github.com/swizzlevixen/busylight-hardware), the one that I built is basically some WS2812 LEDs connected to an ESP32 controller and set up with ESPHome using the [ESP32 RMT LED Strip component](https://esphome.io/components/light/esp32_rmt_led_strip/). This clips over a door, powered by a USB battery pack, in a 3D-printed enclosure.
 
 ### Resetting the App
 
