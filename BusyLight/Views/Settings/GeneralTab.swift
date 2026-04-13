@@ -1,6 +1,21 @@
 import SwiftUI
 import ServiceManagement
 
+/// A button style that always renders with a yellow fill, unaffected by
+/// the window's active state. The system `.borderedProminent` style becomes
+/// invisible in inactive windows; this keeps the Ko-fi button visible.
+private struct KofiButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.body.weight(.medium))
+            .foregroundStyle(.black)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 6)
+            .background(Color.yellow.opacity(configuration.isPressed ? 0.7 : 1.0))
+            .clipShape(.rect(cornerRadius: 6))
+    }
+}
+
 struct GeneralTab: View {
     @State private var settings = AppSettings.shared
     @State private var launchAtLogin = false
@@ -64,9 +79,8 @@ struct GeneralTab: View {
                 } label: {
                     Label("Buy Me a Coffee", systemImage: "heart.fill")
                 }
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(KofiButtonStyle())
                 .help(Text("Support Busy Light on Ko-fi"))
-                .tint(.yellow)
             }
             .padding()
         }
