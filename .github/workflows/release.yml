@@ -26,7 +26,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Determine version
         id: version
@@ -201,10 +201,15 @@ jobs:
             git push origin "$TAG"
           fi
 
-          gh release create "$TAG" \
-            "$DMG_PATH" \
-            --title "Busy Light $VERSION" \
-            --generate-notes
+          # Upload to existing release, or create one if it doesn't exist
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "$DMG_PATH" --clobber
+          else
+            gh release create "$TAG" \
+              "$DMG_PATH" \
+              --title "Busy Light $VERSION" \
+              --generate-notes
+          fi
 
       - name: Cleanup keychain
         if: always()
