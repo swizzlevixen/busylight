@@ -35,6 +35,9 @@ struct BusyLightApp: App {
                 Button("Using Triggers") {
                     HelpManager.openHelp(anchor: "using-triggers")
                 }
+                Button("Troubleshooting") {
+                    HelpManager.openHelp(anchor: "troubleshooting")
+                }
             }
         }
     }

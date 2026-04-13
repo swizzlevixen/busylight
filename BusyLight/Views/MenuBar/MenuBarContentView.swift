@@ -87,6 +87,9 @@ struct MenuBarContentView: View {
             Button { HelpManager.openHelp(anchor: "using-triggers") } label: {
                 Label("Using Triggers", systemImage: "bolt.fill")
             }
+            Button { HelpManager.openHelp(anchor: "troubleshooting") } label: {
+                Label("Troubleshooting", systemImage: "wrench.and.screwdriver")
+            }
         } label: {
             Label("Help", systemImage: "questionmark.circle")
         }
