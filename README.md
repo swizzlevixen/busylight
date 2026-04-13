@@ -1,4 +1,4 @@
-# Busy Light Controller for macOS
+# Busy Light menu bar item for macOS
 
 A macOS menu bar application that connects to [Home Assistant](https://www.home-assistant.io) to trigger scenes, designed for controlling a "busy light" outside a room to indicate whether you may be disturbed.
 
