@@ -46,6 +46,17 @@ final class AppSettings {
         didSet { UserDefaults.standard.set(activeSceneId, forKey: "activeSceneId") }
     }
 
+    // MARK: - Connection State (runtime only, not persisted)
+
+    var connectionState: ConnectionState = .unknown
+
+    var isDisconnected: Bool {
+        switch connectionState {
+        case .disconnected, .error: return true
+        default: return false
+        }
+    }
+
     // MARK: - Trigger Settings
 
     var webcamTriggerEnabled: Bool {
@@ -120,12 +131,13 @@ final class AppSettings {
 
     /// Text shown in the menu bar, reflecting the active scene and display mode.
     var menuBarLabel: String {
+        let warning = isDisconnected ? " \u{26A0}\u{FE0F}" : ""
         if let activeId = activeSceneId,
            let scene = scenes.first(where: { $0.entityId == activeId }) {
             switch displayMode {
-            case .emojiOnly: return scene.emoji
-            case .nameOnly:  return scene.displayName
-            case .both:      return "\(scene.emoji) \(scene.displayName)"
+            case .emojiOnly: return scene.emoji + warning
+            case .nameOnly:  return scene.displayName + warning
+            case .both:      return "\(scene.emoji) \(scene.displayName)" + warning
             }
         }
         return noSceneLabel
@@ -133,10 +145,11 @@ final class AppSettings {
 
     /// Text shown when no scene is active, respecting the display mode setting.
     var noSceneLabel: String {
+        let warning = isDisconnected ? " \u{26A0}\u{FE0F}" : ""
         switch displayMode {
-        case .emojiOnly: return "\u{26AB}"
-        case .nameOnly:  return "No Scene"
-        case .both:      return "\u{26AB} No Scene"
+        case .emojiOnly: return "\u{26AB}" + warning
+        case .nameOnly:  return "No Scene" + warning
+        case .both:      return "\u{26AB} No Scene" + warning
         }
     }
 

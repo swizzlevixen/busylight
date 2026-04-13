@@ -43,4 +43,5 @@ struct BusyLightApp: App {
 extension Notification.Name {
     static let openSettingsRequest = Notification.Name("BusyLight.openSettingsRequest")
     static let settingsWindowClosed = Notification.Name("BusyLight.settingsWindowClosed")
+    static let haConnectionStateChanged = Notification.Name("BusyLight.haConnectionStateChanged")
 }

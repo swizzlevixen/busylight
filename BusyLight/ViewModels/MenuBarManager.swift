@@ -15,15 +15,22 @@ final class MenuBarManager {
     }
 
     /// Fire-and-forget activation by entity ID string.
+    /// Sets `activeSceneId` optimistically and reverts if the HA call fails.
     func activateScene(entityId: String) {
+        let previousId = settings.activeSceneId
         settings.activeSceneId = entityId
         guard !settings.haBaseURL.isEmpty && !settings.haToken.isEmpty else { return }
         Task {
-            await HomeAssistantService.shared.activateScene(
+            let result = await HomeAssistantService.shared.activateScene(
                 entityId: entityId,
                 baseURL: settings.haBaseURL,
                 token: settings.haToken
             )
+            if !result.success {
+                await MainActor.run {
+                    settings.activeSceneId = previousId
+                }
+            }
         }
     }
 

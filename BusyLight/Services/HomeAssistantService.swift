@@ -67,6 +67,18 @@ actor HomeAssistantService {
 
     private(set) var connectionState: ConnectionState = .unknown
 
+    /// Updates `connectionState` and posts a notification when the state changes.
+    /// Skips posting if the new state matches the current one.
+    private func setConnectionState(_ newState: ConnectionState) {
+        guard connectionState != newState else { return }
+        connectionState = newState
+        NotificationCenter.default.post(
+            name: .haConnectionStateChanged,
+            object: nil,
+            userInfo: ["state": newState]
+        )
+    }
+
     enum HAError: LocalizedError {
         case invalidURL
         case unauthorized
@@ -102,7 +114,7 @@ actor HomeAssistantService {
                 do {
                     _ = try await self.testConnection(baseURL: baseURL, token: token)
                 } catch {
-                    self.connectionState = .disconnected
+                    self.setConnectionState(.disconnected)
                 }
                 // Exit if a newer health check loop has started
                 guard myGeneration == self.healthCheckGeneration else { break }
@@ -124,7 +136,7 @@ actor HomeAssistantService {
         struct HealthResponse: Decodable { let message: String }
         let response = try JSONDecoder().decode(HealthResponse.self, from: data)
         let success = response.message == "API running."
-        connectionState = success ? .connected : .error("Unexpected response")
+        setConnectionState(success ? .connected : .error("Unexpected response"))
         return success
     }
 
@@ -209,7 +221,7 @@ actor HomeAssistantService {
         do {
             (data, response) = try await session.data(for: req)
         } catch {
-            connectionState = .disconnected
+            setConnectionState(.disconnected)
             throw HAError.networkError(error)
         }
 
@@ -219,7 +231,7 @@ actor HomeAssistantService {
 
         switch httpResponse.statusCode {
         case 200...299:
-            connectionState = .connected
+            setConnectionState(.connected)
             return data
         case 401:
             throw HAError.unauthorized
