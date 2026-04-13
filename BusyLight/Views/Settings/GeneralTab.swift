@@ -59,7 +59,9 @@ struct GeneralTab: View {
 
                 Spacer()
 
-                Link(destination: URL(string: "https://ko-fi.com/swizzlevixen")!) {
+                Button {
+                    NSWorkspace.shared.open(URL(string: "https://ko-fi.com/swizzlevixen")!)
+                } label: {
                     Label("Buy Me a Coffee", systemImage: "heart.fill")
                 }
                 .buttonStyle(.borderedProminent)
