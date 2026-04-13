@@ -63,6 +63,21 @@ final class TriggerManager {
             }
         )
 
+        // Bridge HA connection state to AppSettings for UI observation
+        observers.append(
+            NotificationCenter.default.addObserver(
+                forName: .haConnectionStateChanged, object: nil, queue: .main
+            ) { [weak self] notification in
+                guard let state = notification.userInfo?["state"] as? ConnectionState else { return }
+                Task { @MainActor in
+                    self?.settings.connectionState = state
+                }
+            }
+        )
+
+        // Request notification permission so trigger-failure alerts display
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { _, _ in }
+
         // Start HA health checks if configured
         if !settings.haBaseURL.isEmpty && !settings.haToken.isEmpty {
             Task {

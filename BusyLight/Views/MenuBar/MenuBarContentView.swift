@@ -41,6 +41,12 @@ struct MenuBarContentView: View {
 
     @ViewBuilder
     private var menuItems: some View {
+        // Connection warning (auto-clears when health check succeeds)
+        if settings.isDisconnected {
+            Text("\u{26A0}\u{FE0F} Unable to reach Home Assistant")
+            Divider()
+        }
+
         // Scene list or empty-state shortcut
         if settings.menuItems.isEmpty {
             Button { postOpen(tab: "scenes") } label: {
