@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="color-scheme" content="light dark">
+    <meta name="AppleTitle" content="Busy Light Help">
+    <meta name="description" content="Troubleshooting common issues with Busy Light.">
+    <title>Troubleshooting</title>
+    <link rel="stylesheet" href="../shared/style.css">
+</head>
+<body>
+    <a name="troubleshooting"></a>
+    <div class="breadcrumb"><a href="index.html">Busy Light Help</a></div>
+    <h1>Troubleshooting</h1>
+
+    <h2>Cannot connect to Home Assistant</h2>
+    <ul>
+        <li>Make sure your Home Assistant URL is correct and includes the port
+            number if needed (e.g. <code>http://homeassistant.local:8123</code>).</li>
+        <li>Verify that your Mac can reach the Home Assistant server. Try
+            opening the URL in a web browser.</li>
+        <li>If you use HTTPS, ensure your certificate is valid or trusted by
+            your Mac.</li>
+        <li>Check that your firewall or network settings allow connections on
+            the Home Assistant port.</li>
+    </ul>
+
+    <h2>Token not recognized or authentication errors</h2>
+    <ul>
+        <li>Make sure you copied the entire token with no extra spaces or
+            line breaks.</li>
+        <li>Long-lived access tokens can expire if they are revoked in Home
+            Assistant. Create a new token and paste it into the Token field.</li>
+        <li>Verify the token belongs to a user with permission to activate
+            scenes.</li>
+    </ul>
+    <div class="note">
+        Your token is stored in the macOS Keychain. If you are prompted to
+        unlock the Keychain, allow access so Busy Light can retrieve the
+        token on launch.
+    </div>
+
+    <h2>Scenes not appearing in the list</h2>
+    <ul>
+        <li>Scenes must be configured in Home Assistant before they appear in
+            Busy Light. Check your HA dashboard to confirm they exist.</li>
+        <li>The scene list is fetched when you open the Scenes tab. Make sure
+            your connection is working first (a green checkmark on the Home
+            Assistant tab).</li>
+        <li>Only entities whose ID starts with <code>scene.</code> are
+            shown.</li>
+    </ul>
+
+    <h2>Triggers not firing</h2>
+    <ul>
+        <li>Open <strong>Settings &gt; Triggers</strong> and confirm that the
+            trigger toggle is turned on and a scene is selected.</li>
+        <li>The webcam trigger takes priority over the microphone trigger. If
+            both fire at the same time, only the webcam scene is used.</li>
+        <li>Focus Mode detection is experimental and reads from a system file
+            that may change between macOS versions. If it stops working after
+            a macOS update, it will degrade gracefully.</li>
+    </ul>
+
+    <h2>Camera or microphone not detected</h2>
+    <p>
+        Busy Light does <strong>not</strong> need camera or microphone
+        permissions. It reads device metadata (whether the device is in use)
+        rather than accessing the actual audio or video stream.
+    </p>
+    <ul>
+        <li>Some virtual cameras (e.g. software-only camera drivers) may not
+            report their status through the system APIs that Busy Light
+            monitors.</li>
+        <li>If detection stops working, try quitting and relaunching Busy
+            Light.</li>
+    </ul>
+
+    <h2>Resetting the app</h2>
+    <p>
+        To reset Busy Light to its first-run state, open Terminal and run:
+    </p>
+    <p><code>defaults delete com.mboszko.BusyLight</code></p>
+    <p>
+        This removes all preferences including scenes, triggers, and display
+        settings. Your Home Assistant token is stored separately in the
+        Keychain and is not affected by this command.
+    </p>
+
+</body>
+</html>
