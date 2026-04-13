@@ -147,9 +147,9 @@ final class AppSettings {
     var noSceneLabel: String {
         let warning = isDisconnected ? " \u{26A0}\u{FE0F}" : ""
         switch displayMode {
-        case .emojiOnly: return "\u{26AB}" + warning
-        case .nameOnly:  return "No Scene" + warning
-        case .both:      return "\u{26AB} No Scene" + warning
+        case .emojiOnly: return "🚦" + warning
+        case .nameOnly:  return "Busy Light" + warning
+        case .both:      return "🚦 Busy Light" + warning
         }
     }
 

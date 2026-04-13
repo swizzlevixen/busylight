@@ -52,7 +52,7 @@ final class ConnectionFeedbackTests: XCTestCase {
         AppSettings.shared.connectionState = .connected
         AppSettings.shared.displayMode = .both
         AppSettings.shared.activeSceneId = nil
-        XCTAssertEqual(AppSettings.shared.menuBarLabel, "⚫ No Scene")
+        XCTAssertEqual(AppSettings.shared.menuBarLabel, "🚦 Busy Light")
     }
 
     func testMenuBarLabelWarningWhenDisconnected() {
@@ -80,7 +80,7 @@ final class ConnectionFeedbackTests: XCTestCase {
     func testNoSceneLabelNoWarningWhenConnected() {
         AppSettings.shared.connectionState = .connected
         AppSettings.shared.displayMode = .nameOnly
-        XCTAssertEqual(AppSettings.shared.noSceneLabel, "No Scene")
+        XCTAssertEqual(AppSettings.shared.noSceneLabel, "Busy Light")
     }
 
     // MARK: - Warning clears on reconnect
