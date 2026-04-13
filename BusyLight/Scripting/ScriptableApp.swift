@@ -8,11 +8,8 @@ class ScriptableApp: NSApplication {
             AppSettings.shared.activeSceneId ?? ""
         }
         set {
-            if newValue.isEmpty {
-                MenuBarManager.shared.deactivateScene()
-            } else {
-                MenuBarManager.shared.activateScene(entityId: newValue)
-            }
+            guard !newValue.isEmpty else { return }
+            MenuBarManager.shared.activateScene(entityId: newValue)
         }
     }
 

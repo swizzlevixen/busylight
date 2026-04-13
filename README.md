@@ -97,9 +97,6 @@ tell application "Busy Light"
     -- Check current state
     get current scene        -- returns entity ID or ""
 
-    -- Deactivate (set current scene to empty string)
-    set current scene to ""
-
     -- Change display mode
     set display mode to "emoji"  -- "emoji", "name", or "both"
 
@@ -113,7 +110,6 @@ end tell
 The following actions are available in Shortcuts.app:
 
 - **Activate Scene** -- Trigger a Home Assistant scene
-- **Deactivate Scene** -- Clear the active scene
 - **Get Current Scene** -- Check what scene is active
 - **List Scenes** -- Get all configured scenes
 
