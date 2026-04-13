@@ -27,7 +27,7 @@
             <cocoa class="BusyLight.ScriptableApp"/>
 
             <property name="current scene" code="BsCu" type="text" access="rw"
-                      description="The entity ID of the currently active scene, or empty string if none.">
+                      description="The entity ID of the currently active scene (read), or a scene entity ID to activate (write).">
                 <cocoa key="currentSceneName"/>
             </property>
 

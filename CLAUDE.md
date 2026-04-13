@@ -54,7 +54,7 @@ xcodebuild test -project BusyLight.xcodeproj -scheme BusyLight -destination 'pla
 
 ### Automation
 - AppleScript via SDEF (`BusyLight.sdef`) + `ScriptableApp` (NSApplication subclass) + `NSScriptCommand` subclasses
-- Shortcuts.app via AppIntents framework (`ActivateSceneIntent`, `DeactivateSceneIntent`, etc.)
+- Shortcuts.app via AppIntents framework (`ActivateSceneIntent`, `GetCurrentSceneIntent`, `ListScenesIntent`)
 
 ### Data
 - `SceneItem`: Codable model (id, entityId, emoji, displayName)

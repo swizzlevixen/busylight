@@ -23,20 +23,6 @@ struct ActivateSceneIntent: AppIntent {
     }
 }
 
-// MARK: - Deactivate Scene Intent
-
-struct DeactivateSceneIntent: AppIntent {
-    static let title: LocalizedStringResource = "Deactivate Scene"
-    static let description: IntentDescription = "Clear the active scene in Busy Light."
-    static let openAppWhenRun: Bool = false
-
-    @MainActor
-    func perform() async throws -> some IntentResult & ReturnsValue<String> {
-        MenuBarManager.shared.deactivateScene()
-        return .result(value: "Scene deactivated")
-    }
-}
-
 // MARK: - Get Current Scene Intent
 
 struct GetCurrentSceneIntent: AppIntent {
@@ -83,17 +69,6 @@ struct BusyLightShortcuts: AppShortcutsProvider {
             ],
             shortTitle: "Activate Scene",
             systemImageName: "light.beacon.max.fill"
-        )
-
-        AppShortcut(
-            intent: DeactivateSceneIntent(),
-            phrases: [
-                "Deactivate \(.applicationName) scene",
-                "Turn off \(.applicationName)",
-                "Clear \(.applicationName) scene",
-            ],
-            shortTitle: "Deactivate Scene",
-            systemImageName: "light.beacon.min"
         )
 
         AppShortcut(
