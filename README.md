@@ -4,19 +4,7 @@ A macOS menu bar application that connects to [Home Assistant](https://www.home-
 
 ![A macOS menu bar item. The menu bar says "🟡 Concentrating". Below that is an open menu with a series of red, amber, green, and off emojis and settings names for a busy light, a dividing line, then on and off for webcam lights. Another dividing line, and then Help, Settings…, and Quit.](./ProductionAssets/web/menu-bar-item-clean.png "Busy Light's menu bar item")
 
-_However,_ you can use it to trigger _any_ scene set up in HA, so the possibilities are quite unlimited!
-
-> [!TIP]
->
-> #### Busy Light Hardware
->
-> Documented [here](./Hardware/Busy%20Light%20Hardware.md), the one that I built is basically some WS2812 LEDs connected to an ESP32 controller and set up with ESPHome using the [ESP32 RMT LED Strip component](https://esphome.io/components/light/esp32_rmt_led_strip/). This clips over a door, powered by a USB battery pack, in a 3D-printed enclosure.
-
-You can use it for anything you have a **Scene** set up for in Home Assistant: an RGB light bulb, a power switch for some other light, or it doesn't even have to be a light at all.
-
-> [!NOTE]
-> 
-> I am a human developer, but this project was a trial run for working with Claude Code on a project. I designed it, asked Claude to do have a go at some features, sometimes re-wrote it myself, and sometimes had Claude take a shot at rewriting it until it was right. It's a silly little menu bar item, and I've been using it for over a month with only [one little bug](https://github.com/swizzlevixen/busylight/issues/2), but just wanted to mention it, in case an LLM touching it makes a difference to you.
+_However,_ you can use it for anything you have a **Scene** set up for in Home Assistant: an RGB light bulb, a power switch for some other light, or it doesn't even have to be a light at all.
 
 ## Screenshots
 
@@ -141,7 +129,11 @@ The detection checks a system property (`DeviceIsRunningSomewhere`) that reports
 
 Focus mode detection reads from macOS system files and is considered experimental. It may not work across all macOS versions and degrades gracefully if the required files are unavailable.
 
-## Tech Note
+## Tech Notes
+
+### Busy Light Hardware
+
+Documented [here](./Hardware/Busy%20Light%20Hardware.md), the one that I built is basically some WS2812 LEDs connected to an ESP32 controller and set up with ESPHome using the [ESP32 RMT LED Strip component](https://esphome.io/components/light/esp32_rmt_led_strip/). This clips over a door, powered by a USB battery pack, in a 3D-printed enclosure.
 
 ### Resetting the App
 
@@ -158,3 +150,7 @@ defaults delete com.mboszko.BusyLight
 ```
 
 Note: The Home Assistant token is stored separately in the macOS Keychain, so `defaults delete` won't clear it. To also remove the token, delete the `com.mboszko.BusyLight.haToken` entry from Keychain Access.
+
+> [!NOTE]
+> 
+> I am a human developer, but this project was a trial run for working with Claude Code on a project. I designed it, asked Claude to have a go at writing features, sometimes re-wrote it myself, and sometimes had Claude take a shot at rewriting it until it was right. Just wanted to mention it, in case an LLM touching it makes a difference to you.
