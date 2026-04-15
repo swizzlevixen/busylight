@@ -19,12 +19,12 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Deploy via SFTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        uses: wangyucode/sftp-upload-action@v2.0.4
         with:
-          server: ${{ secrets.SFTP_HOST }}
+          host: ${{ secrets.SFTP_HOST }}
           username: ${{ secrets.SFTP_USERNAME }}
           password: ${{ secrets.SFTP_PASSWORD }}
           port: 22
-          protocol: sftp
-          local-dir: ./ProductionAssets/web/
-          server-dir: ${{ secrets.SFTP_REMOTE_PATH }}
+          localDir: ./ProductionAssets/web/
+          remoteDir: ${{ secrets.SFTP_REMOTE_PATH }}
+          forceUpload: true
