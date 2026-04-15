@@ -225,6 +225,31 @@ section {
   font-weight: 600;
 }
 
+/* ── Feedback Callout ── */
+.feedback-callout {
+  background: #fef9e7;
+  border: 1px solid #f0d86e;
+  color: #6b5c10;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+}
+
+.feedback-callout a {
+  color: #6b5c10;
+  font-weight: 600;
+}
+
+[data-bs-theme="dark"] .feedback-callout {
+  background: #3a3420;
+  border-color: #6b5c10;
+  color: #f0d86e;
+}
+
+[data-bs-theme="dark"] .feedback-callout a {
+  color: #f0d86e;
+}
+
 /* ── How It Works Steps ── */
 .step-icon {
   width: 64px;

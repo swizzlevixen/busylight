@@ -182,10 +182,10 @@
           I have ADHD, and when I&rsquo;m focused, the switching costs of someone popping in with &ldquo;just a quick question&rdquo; are <em>really</em> high for me. I wanted a &ldquo;busy light&rdquo; to put on the outside of my home office door, so my partner could see at a glance whether it was OK to interrupt.
         </p>
         <p>
-          There are plenty of USB busy lights on the market, but my door is far enough from my desk — and any outlet (in this old house) — that I needed something battery-powered and remote-controllable. So I built one: some LEDs, a controller chip, a battery pack, and a 3D-printed enclosure that hooks over the top of the door. It connects over Wi-Fi up to my Home Assistant.
+          There are plenty of USB busy lights on the market, but my door is far enough from my desk — and any outlet (in this old house) — that I needed something battery-powered and remote-controllable. So I built one that connects over Wi-Fi to Home Assistant.
         </p>
         <p>
-          I still needed a convenient way to switch scenes from my Mac. None of the existing Home Assistant apps were quite what I wanted, so I made my own software too.
+          I still needed a convenient way to switch lighting scenes from my Mac. None of the existing Home Assistant control apps were quite what I wanted, so I made my own software too.
         </p>
         <p>
           The bonus of going through Home Assistant is that the app can activate <em>any</em> scene — not just a light. Toss whatever you want into a scene: dim the office, change lighting colors, turn on a fan. It&rsquo;s yours to customize.
@@ -317,7 +317,7 @@
         <a href="settings-general.png" data-bs-toggle="modal" data-bs-target="#screenshotModal" class="screenshot-link">
           <img src="settings-general.png" alt="General settings tab with display mode and launch at login options" class="screenshot-img" loading="lazy">
         </a>
-        <p class="screenshot-caption text-center">Display mode, launch at login, and more.</p>
+        <p class="screenshot-caption text-center">Choose your menu item display mode, launch at login, and more.</p>
       </div>
     </div>
 
@@ -404,7 +404,7 @@
       <div class="col-md-7">
         <h2 class="mb-3">The Hardware (Optional!)</h2>
         <p>
-          I built a battery-powered LED ring using an ESP32 with ESPHome, housed in a 3D-printed enclosure that hooks over a door. It shows up in Home&nbsp;Assistant as a simple RGB light.
+          I built a battery-powered LED indicator using an ESP32 chip with ESPHome, housed in a 3D-printed enclosure that hooks over a door. It shows up in Home&nbsp;Assistant as a simple RGB light.
         </p>
         <p>
           The hardware project is open source too — feel free to build your own, remix it, or just use it as inspiration.
@@ -440,7 +440,7 @@
   <div class="container text-center">
     <h2 class="mb-3">Support the Project</h2>
     <p class="mb-4 mx-auto text-balance" style="max-width: 520px;">
-      Busy Light is free and always will be. If it saves you from a few interruptions, consider buying me a coffee.
+      Busy Light is free and always will be. If it saves you from a few interruptions, consider buying me a coffee?
     </p>
     <a href="https://ko-fi.com/swizzlevixen" class="kofi-btn mb-4" target="_blank" rel="noopener">
       <i class="bi bi-cup-hot-fill"></i> Support on Ko-fi
@@ -486,6 +486,16 @@
   </div>
 </section>
 
+<!-- Feedback callout -->
+<div class="container py-3">
+  <div class="feedback-callout d-flex align-items-start gap-2 mx-auto" style="max-width: 640px;">
+    <i class="bi bi-bug flex-shrink-0 mt-1"></i>
+    <span>
+      Found a bug, or have a feature request? Please use <a href="https://github.com/swizzlevixen/busylight/issues">GitHub Issues</a> or <a href="#" class="feedback-email">email</a> to send it along.
+    </span>
+  </div>
+</div>
+
 <!-- ════════════════════════════════════════════════════════════════════
      FOOTER
      ════════════════════════════════════════════════════════════════════ -->
@@ -509,6 +519,15 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         crossorigin="anonymous"></script>
 <script>
+  // Obfuscated email link (assembled at runtime to deter scrapers)
+  document.querySelector('.feedback-email').addEventListener('click', function (e) {
+    e.preventDefault();
+    var u = 'busylight'; var d = 'vixenlabs.info';
+    var s = encodeURIComponent('Busy Light Comment');
+    var b = encodeURIComponent('Thanks, I love Busy Light! But I have this idea\u2026\n\n');
+    window.location.href = 'mail' + 'to:' + u + '@' + d + '?subject=' + s + '&body=' + b;
+  });
+
   // Screenshot lightbox: set modal image src from clicked thumbnail
   document.getElementById('screenshotModal').addEventListener('show.bs.modal', function (event) {
     var link = event.relatedTarget;
