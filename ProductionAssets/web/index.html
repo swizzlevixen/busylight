@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="light">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Busy Light — Control Your Home Assistant Scenes from the Mac Menu Bar</title>
-  <meta name="description" content="A free, open-source macOS menu bar app that connects to Home Assistant to control a busy light outside your door — so your household knows when you're interruptible.">
+  <meta name="description"
+    content="A free, open-source macOS menu bar app that connects to Home Assistant to control a busy light outside your door — so your household knows when you're interruptible.">
   <meta property="og:title" content="Busy Light for macOS">
-  <meta property="og:description" content="Control Home Assistant scenes from your Mac's menu bar. Free and open source.">
-  <meta property="og:image" content="https://raw.githubusercontent.com/swizzlevixen/busylight/main/ProductionAssets/repository-open-graph.png">
+  <meta property="og:description"
+    content="Control Home Assistant scenes from your Mac's menu bar. Free and open source.">
+  <meta property="og:image"
+    content="https://raw.githubusercontent.com/swizzlevixen/busylight/main/ProductionAssets/repository-open-graph.png">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <meta property="og:url" content="https://busylight.app">
@@ -22,7 +26,7 @@
 
   <!-- Bootstrap 5.3 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        crossorigin="anonymous">
+    crossorigin="anonymous">
   <!-- Bootstrap Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
   <!-- Custom styles -->
@@ -65,481 +69,505 @@
     })();
   </script>
 </head>
+
 <body>
 
-<!-- ════════════════════════════════════════════════════════════════════
+  <!-- ════════════════════════════════════════════════════════════════════
      NAVBAR
      ════════════════════════════════════════════════════════════════════ -->
-<nav class="navbar navbar-expand-md sticky-top site-nav">
-  <div class="container">
-    <a class="navbar-brand d-flex align-items-center gap-2 fw-semibold" href="#">
-      <img src="app-icon-256.png" alt="" width="28" height="28" style="border-radius: 6px;">
-      Busy Light
-    </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navLinks" aria-controls="navLinks" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navLinks">
-      <ul class="navbar-nav ms-auto gap-1">
-        <li class="nav-item"><a class="nav-link" href="#story">Story</a></li>
-        <li class="nav-item"><a class="nav-link" href="#how-it-works">How It Works</a></li>
-        <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
-        <li class="nav-item"><a class="nav-link" href="#screenshots">Screenshots</a></li>
-        <li class="nav-item"><a class="nav-link" href="#use-cases">Use Cases</a></li>
-        <li class="nav-item"><a class="nav-link" href="#hardware">Hardware</a></li>
-        <li class="nav-item"><a class="nav-link" href="#privacy">Privacy</a></li>
-        <li class="nav-item">
-          <a class="nav-link" href="https://github.com/swizzlevixen/busylight/releases/latest">
-            <i class="bi bi-download me-1"></i>Download
-          </a>
-        </li>
-      </ul>
+  <nav class="navbar navbar-expand-md sticky-top site-nav">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2 fw-semibold" href="#">
+        <img src="app-icon-256.png" alt="" width="28" height="28" style="border-radius: 6px;">
+        Busy Light
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navLinks"
+        aria-controls="navLinks" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navLinks">
+        <ul class="navbar-nav ms-auto gap-1">
+          <li class="nav-item"><a class="nav-link" href="#story">Story</a></li>
+          <li class="nav-item"><a class="nav-link" href="#how-it-works">How It Works</a></li>
+          <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
+          <li class="nav-item"><a class="nav-link" href="#screenshots">Screenshots</a></li>
+          <li class="nav-item"><a class="nav-link" href="#use-cases">Use Cases</a></li>
+          <li class="nav-item"><a class="nav-link" href="#hardware">Hardware</a></li>
+          <li class="nav-item"><a class="nav-link" href="#privacy">Privacy</a></li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://github.com/swizzlevixen/busylight/releases/latest">
+              <i class="bi bi-download me-1"></i>Download
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
-  </div>
-</nav>
+  </nav>
 
-<!-- ════════════════════════════════════════════════════════════════════
+  <!-- ════════════════════════════════════════════════════════════════════
      HERO
      ════════════════════════════════════════════════════════════════════ -->
-<section class="hero">
-  <div class="container text-center">
-    <!-- App Icon -->
-    <img src="app-icon-256.png" alt="Busy Light app icon — a traffic light" class="hero-icon mb-4" width="128" height="128">
+  <section class="hero">
+    <div class="container text-center">
+      <!-- App Icon -->
+      <img src="app-icon-256.png" alt="Busy Light app icon — a traffic light" class="hero-icon mb-4" width="128"
+        height="128">
 
-    <h1 class="mb-3 text-balance">Your Mac knows when you&rsquo;re busy.<br>Now everyone else can too.</h1>
-    <p class="lead mb-4 text-balance">
-      A free macOS menu bar app that controls your Home&nbsp;Assistant scenes — perfect for a busy light outside your door.
-    </p>
+      <h1 class="mb-3 text-balance">Your Mac knows when you&rsquo;re busy.<br>Now everyone else can too.</h1>
+      <p class="lead mb-4 text-balance">
+        A free macOS menu bar app that controls your Home&nbsp;Assistant scenes — perfect for a busy light outside your
+        door.
+      </p>
 
-    <!-- CTAs -->
-    <div class="d-flex flex-wrap justify-content-center gap-3 mb-5">
-      <a href="https://github.com/swizzlevixen/busylight/releases/latest" class="btn btn-dark btn-lg px-4">
-        <i class="bi bi-apple me-2"></i>Download Free
-      </a>
-      <a href="https://github.com/swizzlevixen/busylight" class="btn btn btn-outline-secondary btn-lg px-4">
-        <i class="bi bi-github me-2"></i>View Source
-      </a>
+      <!-- CTAs -->
+      <div class="d-flex flex-wrap justify-content-center gap-3 mb-5">
+        <a href="https://github.com/swizzlevixen/busylight/releases/latest" class="btn btn-dark btn-lg px-4">
+          <i class="bi bi-apple me-2"></i>Download Free
+        </a>
+        <a href="https://github.com/swizzlevixen/busylight" class="btn btn btn-outline-secondary btn-lg px-4">
+          <i class="bi bi-github me-2"></i>View Source
+        </a>
+      </div>
+
+      <!-- macOS Menu Mockup -->
+      <div class="macos-menu mx-auto mb-3">
+        <div class="macos-menu-item">
+          <span class="check"></span>
+          <span class="scene-emoji">&#x1F534;</span>
+          <span class="scene-name">Busy</span>
+          <span class="shortcut">&#x2325;&#x21E7;&#x2318;R</span>
+        </div>
+        <div class="macos-menu-item" style="background: var(--bl-menu-hover);">
+          <span class="check">&#x2713;</span>
+          <span class="scene-emoji">&#x1F7E0;</span>
+          <span class="scene-name fw-medium">Concentrating</span>
+          <span class="shortcut">&#x2325;&#x21E7;&#x2318;Y</span>
+        </div>
+        <div class="macos-menu-item">
+          <span class="check"></span>
+          <span class="scene-emoji">&#x1F7E2;</span>
+          <span class="scene-name">Free</span>
+          <span class="shortcut">&#x2325;&#x21E7;&#x2318;G</span>
+        </div>
+        <div class="macos-menu-item">
+          <span class="check"></span>
+          <span class="scene-emoji">&#x26AB;</span>
+          <span class="scene-name">Off</span>
+          <span class="shortcut">&#x2325;&#x21E7;&#x2318;O</span>
+        </div>
+        <div class="macos-menu-divider"></div>
+        <div class="macos-menu-item">
+          <span class="check"></span>
+          <span class="scene-emoji">&#x1F4A1;</span>
+          <span class="scene-name">Webcam Lights On</span>
+          <span class="shortcut"></span>
+        </div>
+        <div class="macos-menu-item">
+          <span class="check"></span>
+          <span class="scene-emoji">&#x26AB;</span>
+          <span class="scene-name">Webcam Lights Off</span>
+          <span class="shortcut"></span>
+        </div>
+      </div>
+      <p class="text-muted small">Your scenes, one click away in the menu bar.</p>
     </div>
+  </section>
 
-    <!-- macOS Menu Mockup -->
-    <div class="macos-menu mx-auto mb-3">
-      <div class="macos-menu-item">
-        <span class="check"></span>
-        <span class="scene-emoji">&#x1F534;</span>
-        <span class="scene-name">Busy</span>
-        <span class="shortcut">&#x2325;&#x21E7;&#x2318;R</span>
-      </div>
-      <div class="macos-menu-item" style="background: var(--bl-menu-hover);">
-        <span class="check">&#x2713;</span>
-        <span class="scene-emoji">&#x1F7E0;</span>
-        <span class="scene-name fw-medium">Concentrating</span>
-        <span class="shortcut">&#x2325;&#x21E7;&#x2318;Y</span>
-      </div>
-      <div class="macos-menu-item">
-        <span class="check"></span>
-        <span class="scene-emoji">&#x1F7E2;</span>
-        <span class="scene-name">Free</span>
-        <span class="shortcut">&#x2325;&#x21E7;&#x2318;G</span>
-      </div>
-      <div class="macos-menu-item">
-        <span class="check"></span>
-        <span class="scene-emoji">&#x26AB;</span>
-        <span class="scene-name">Off</span>
-        <span class="shortcut">&#x2325;&#x21E7;&#x2318;O</span>
-      </div>
-      <div class="macos-menu-divider"></div>
-      <div class="macos-menu-item">
-        <span class="check"></span>
-        <span class="scene-emoji">&#x1F4A1;</span>
-        <span class="scene-name">Webcam Lights On</span>
-        <span class="shortcut"></span>
-      </div>
-      <div class="macos-menu-item">
-        <span class="check"></span>
-        <span class="scene-emoji">&#x26AB;</span>
-        <span class="scene-name">Webcam Lights Off</span>
-        <span class="shortcut"></span>
-      </div>
+  <!-- HA Callout -->
+  <div class="container py-3">
+    <div class="ha-callout d-flex align-items-start gap-2 mx-auto" style="max-width: 640px;">
+      <i class="bi bi-info-circle flex-shrink-0 mt-1"></i>
+      <span>
+        <strong>New to Home Assistant?</strong>
+        It&rsquo;s free, open-source software that lets you control all your smart home devices from one place.
+        <a href="https://www.home-assistant.io" target="_blank" rel="noopener">Learn more at home-assistant.io</a>
+      </span>
     </div>
-    <p class="text-muted small">Your scenes, one click away in the menu bar.</p>
   </div>
-</section>
 
-<!-- ════════════════════════════════════════════════════════════════════
+  <!-- ════════════════════════════════════════════════════════════════════
      THE STORY
      ════════════════════════════════════════════════════════════════════ -->
-<section id="story">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-8">
-        <div class="traffic-dots">
-          <span class="traffic-dot" style="background: var(--bl-red);"></span>
-          <span class="traffic-dot" style="background: var(--bl-amber);"></span>
-          <span class="traffic-dot" style="background: var(--bl-green);"></span>
+  <section id="story">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <div class="traffic-dots">
+            <span class="traffic-dot" style="background: var(--bl-red);"></span>
+            <span class="traffic-dot" style="background: var(--bl-amber);"></span>
+            <span class="traffic-dot" style="background: var(--bl-green);"></span>
+          </div>
+          <h2 class="text-center mb-4">Why I Built This</h2>
+          <p class="fs-5">
+            I have ADHD, and when I&rsquo;m focused, the switching costs of someone popping in with &ldquo;just a quick
+            question&rdquo; are <em>really</em> high for me. I wanted a &ldquo;busy light&rdquo; to put on the outside
+            of my home office door, so my partner could see at a glance whether it was OK to interrupt.
+          </p>
+          <p>
+            There are plenty of USB busy lights on the market, but my door is far enough from my desk — and any outlet
+            (in this old house) — that I needed something battery-powered and remote-controllable. So I built one that
+            connects over Wi-Fi to Home Assistant.
+          </p>
+          <p>
+            I still needed a convenient way to switch lighting scenes from my Mac. None of the existing Home Assistant
+            control apps were quite what I wanted, so I made my own software too.
+          </p>
+          <p>
+            The bonus of going through Home Assistant is that the app can activate <em>any</em> scene — not just a
+            light. Toss whatever you want into a scene: dim the office, change lighting colors, turn on a fan.
+            It&rsquo;s yours to customize.
+          </p>
         </div>
-        <h2 class="text-center mb-4">Why I Built This</h2>
-        <p class="fs-5">
-          I have ADHD, and when I&rsquo;m focused, the switching costs of someone popping in with &ldquo;just a quick question&rdquo; are <em>really</em> high for me. I wanted a &ldquo;busy light&rdquo; to put on the outside of my home office door, so my partner could see at a glance whether it was OK to interrupt.
-        </p>
-        <p>
-          There are plenty of USB busy lights on the market, but my door is far enough from my desk — and any outlet (in this old house) — that I needed something battery-powered and remote-controllable. So I built one that connects over Wi-Fi to Home Assistant.
-        </p>
-        <p>
-          I still needed a convenient way to switch lighting scenes from my Mac. None of the existing Home Assistant control apps were quite what I wanted, so I made my own software too.
-        </p>
-        <p>
-          The bonus of going through Home Assistant is that the app can activate <em>any</em> scene — not just a light. Toss whatever you want into a scene: dim the office, change lighting colors, turn on a fan. It&rsquo;s yours to customize.
-        </p>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- HA Callout -->
-<div class="container py-3">
-  <div class="ha-callout d-flex align-items-start gap-2 mx-auto" style="max-width: 640px;">
-    <i class="bi bi-info-circle flex-shrink-0 mt-1"></i>
-    <span>
-      <strong>New to Home Assistant?</strong>
-      It&rsquo;s free, open-source software that lets you control all your smart home devices from one place.
-      <a href="https://www.home-assistant.io" target="_blank" rel="noopener">Learn more at home-assistant.io</a>
-    </span>
-  </div>
-</div>
-
-<!-- ════════════════════════════════════════════════════════════════════
+  <!-- ════════════════════════════════════════════════════════════════════
      HOW IT WORKS
      ════════════════════════════════════════════════════════════════════ -->
-<section id="how-it-works" class="section-alt">
-  <div class="container">
-    <h2 class="text-center mb-5">How It Works</h2>
-    <div class="row text-center steps-row g-4">
-      <div class="col-md-4">
-        <span class="step-number d-block mb-2">Step 1</span>
-        <div class="step-icon step-icon-1">
-          <i class="bi bi-link-45deg"></i>
+  <section id="how-it-works" class="section-alt">
+    <div class="container">
+      <h2 class="text-center mb-5">How It Works</h2>
+      <div class="row text-center steps-row g-4">
+        <div class="col-md-4">
+          <span class="step-number d-block mb-2">Step 1</span>
+          <div class="step-icon step-icon-1">
+            <i class="bi bi-link-45deg"></i>
+          </div>
+          <h3 class="h5 fw-semibold">Connect</h3>
+          <p class="text-body-secondary">
+            Enter your Home Assistant URL and paste a long-lived access token.
+          </p>
         </div>
-        <h3 class="h5 fw-semibold">Connect</h3>
-        <p class="text-body-secondary">
-          Enter your Home Assistant URL and paste a long-lived access token.
-        </p>
-      </div>
-      <div class="col-md-4">
-        <span class="step-number d-block mb-2">Step 2</span>
-        <div class="step-icon step-icon-2">
-          <i class="bi bi-palette"></i>
+        <div class="col-md-4">
+          <span class="step-number d-block mb-2">Step 2</span>
+          <div class="step-icon step-icon-2">
+            <i class="bi bi-palette"></i>
+          </div>
+          <h3 class="h5 fw-semibold">Pick Your Scenes</h3>
+          <p class="text-body-secondary">
+            Busy Light fetches your scenes from Home Assistant. Choose which ones you want in your menu bar.
+          </p>
         </div>
-        <h3 class="h5 fw-semibold">Pick Your Scenes</h3>
-        <p class="text-body-secondary">
-          Busy Light fetches your scenes from Home Assistant. Choose which ones you want in your menu bar.
-        </p>
-      </div>
-      <div class="col-md-4">
-        <span class="step-number d-block mb-2">Step 3</span>
-        <div class="step-icon step-icon-3">
-          <i class="bi bi-lightbulb"></i>
+        <div class="col-md-4">
+          <span class="step-number d-block mb-2">Step 3</span>
+          <div class="step-icon step-icon-3">
+            <i class="bi bi-lightbulb"></i>
+          </div>
+          <h3 class="h5 fw-semibold">You&rsquo;re Set</h3>
+          <p class="text-body-secondary">
+            Switch scenes from your menu bar, or let the app handle it automatically.
+          </p>
         </div>
-        <h3 class="h5 fw-semibold">You&rsquo;re Set</h3>
-        <p class="text-body-secondary">
-          Switch scenes from your menu bar, or let the app handle it automatically.
-        </p>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ════════════════════════════════════════════════════════════════════
+  <!-- ════════════════════════════════════════════════════════════════════
      KEY FEATURES
      ════════════════════════════════════════════════════════════════════ -->
-<section id="features">
-  <div class="container">
-    <h2 class="text-center mb-5">Features</h2>
-    <div class="row g-4">
-      <div class="col-md-6 col-lg-4">
-        <div class="feature-card">
-          <div class="feature-icon" style="color: var(--bl-red);">
-            <i class="bi bi-lightning-charge"></i>
+  <section id="features">
+    <div class="container">
+      <h2 class="text-center mb-5">Features</h2>
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-4">
+          <div class="feature-card">
+            <div class="feature-icon" style="color: var(--bl-red);">
+              <i class="bi bi-lightning-charge"></i>
+            </div>
+            <h3>Automatic Triggers</h3>
+            <p>Detects your webcam, mic, screen lock, and Focus mode. Your light changes the moment a call starts — no
+              manual switching needed.</p>
           </div>
-          <h3>Automatic Triggers</h3>
-          <p>Detects your webcam, mic, screen lock, and Focus mode. Your light changes the moment a call starts — no manual switching needed.</p>
         </div>
-      </div>
-      <div class="col-md-6 col-lg-4">
-        <div class="feature-card">
-          <div class="feature-icon" style="color: var(--bl-amber);">
-            <i class="bi bi-house-gear"></i>
+        <div class="col-md-6 col-lg-4">
+          <div class="feature-card">
+            <div class="feature-icon" style="color: var(--bl-amber);">
+              <i class="bi bi-house-gear"></i>
+            </div>
+            <h3>Not Just Lights</h3>
+            <p>It triggers any Home Assistant scene — not only lights. Start the coffee maker, play an announcement,
+              turn on a fan. If HA can control it, Busy Light can trigger it.</p>
           </div>
-          <h3>Not Just Lights</h3>
-          <p>It triggers any Home Assistant scene — not only lights. Start the coffee maker, play an announcement, turn on a fan. If HA can control it, Busy Light can trigger it.</p>
         </div>
-      </div>
-      <div class="col-md-6 col-lg-4">
-        <div class="feature-card">
-          <div class="feature-icon" style="color: var(--bl-green);">
-            <i class="bi bi-command"></i>
+        <div class="col-md-6 col-lg-4">
+          <div class="feature-card">
+            <div class="feature-icon" style="color: var(--bl-green);">
+              <i class="bi bi-command"></i>
+            </div>
+            <h3>Keyboard &amp; Shortcuts</h3>
+            <p>Assign global hotkeys to any scene for instant switching, and control from Shortcuts.app or AppleScript.
+            </p>
           </div>
-          <h3>Keyboard &amp; Shortcuts</h3>
-          <p>Assign global hotkeys to any scene for instant switching, and control from Shortcuts.app or AppleScript.</p>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ════════════════════════════════════════════════════════════════════
+  <!-- ════════════════════════════════════════════════════════════════════
      SCREENSHOTS
      ════════════════════════════════════════════════════════════════════ -->
-<section id="screenshots" class="section-alt">
-  <div class="container">
-    <h2 class="text-center mb-5">A Closer Look</h2>
-    <div class="row g-4 justify-content-center">
-      <div class="col-md-6">
-        <a href="settings-scenes.png" data-bs-toggle="modal" data-bs-target="#screenshotModal" class="screenshot-link">
-          <img src="settings-scenes.png" alt="Scenes settings tab showing a list of scenes with emoji, names, and keyboard shortcuts" class="screenshot-img" loading="lazy">
-        </a>
-        <p class="screenshot-caption text-center">Build your custom scene list with emoji, names, and shortcuts.</p>
+  <section id="screenshots" class="section-alt">
+    <div class="container">
+      <h2 class="text-center mb-5">A Closer Look</h2>
+      <div class="row g-4 justify-content-center">
+        <div class="col-md-6">
+          <a href="settings-scenes.png" data-bs-toggle="modal" data-bs-target="#screenshotModal"
+            class="screenshot-link">
+            <img src="settings-scenes.png"
+              alt="Scenes settings tab showing a list of scenes with emoji, names, and keyboard shortcuts"
+              class="screenshot-img" loading="lazy">
+          </a>
+          <p class="screenshot-caption text-center">Build your custom scene list with emoji, names, and shortcuts.</p>
+        </div>
+        <div class="col-md-6">
+          <a href="settings-triggers.png" data-bs-toggle="modal" data-bs-target="#screenshotModal"
+            class="screenshot-link">
+            <img src="settings-triggers.png"
+              alt="Triggers settings tab showing webcam, mic, screen lock, and focus mode toggle options"
+              class="screenshot-img" loading="lazy">
+          </a>
+          <p class="screenshot-caption text-center">Set up automatic triggers for your webcam, mic, screen lock, and
+            Focus mode.</p>
+        </div>
       </div>
-      <div class="col-md-6">
-        <a href="settings-triggers.png" data-bs-toggle="modal" data-bs-target="#screenshotModal" class="screenshot-link">
-          <img src="settings-triggers.png" alt="Triggers settings tab showing webcam, mic, screen lock, and focus mode toggle options" class="screenshot-img" loading="lazy">
-        </a>
-        <p class="screenshot-caption text-center">Set up automatic triggers for your webcam, mic, screen lock, and Focus mode.</p>
-      </div>
-    </div>
-    <div class="row g-4 justify-content-center mt-2">
-      <div class="col-md-5">
-        <a href="settings-home-assistant.png" data-bs-toggle="modal" data-bs-target="#screenshotModal" class="screenshot-link">
-          <img src="settings-home-assistant.png" alt="Home Assistant connection settings with URL and token fields" class="screenshot-img" loading="lazy">
-        </a>
-        <p class="screenshot-caption text-center">Connect to your Home Assistant instance in seconds.</p>
-      </div>
-      <div class="col-md-5">
-        <a href="settings-general.png" data-bs-toggle="modal" data-bs-target="#screenshotModal" class="screenshot-link">
-          <img src="settings-general.png" alt="General settings tab with display mode and launch at login options" class="screenshot-img" loading="lazy">
-        </a>
-        <p class="screenshot-caption text-center">Choose your menu item display mode, launch at login, and more.</p>
-      </div>
-    </div>
 
-    <!-- Screenshot Lightbox Modal -->
-    <div class="modal fade" id="screenshotModal" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-xl modal-dialog-centered">
-        <div class="modal-content bg-transparent border-0 shadow-none">
-          <div class="modal-body p-0 text-center">
-            <img src="" alt="" class="img-fluid" id="screenshotModalImg" style="border-radius: 12px; cursor: zoom-out;">
+      <!-- Screenshot Lightbox Modal -->
+      <div class="modal fade" id="screenshotModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+          <div class="modal-content bg-transparent border-0 shadow-none">
+            <div class="modal-body p-0 text-center">
+              <img src="" alt="" class="img-fluid" id="screenshotModalImg"
+                style="border-radius: 12px; cursor: zoom-out;">
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ════════════════════════════════════════════════════════════════════
+  <!-- ════════════════════════════════════════════════════════════════════
      USE CASES
      ════════════════════════════════════════════════════════════════════ -->
-<section id="use-cases">
-  <div class="container">
-    <h2 class="text-center mb-2">Ideas for How to Use It</h2>
-    <p class="text-center text-body-secondary mb-5">Busy Light is flexible — here are some ways people use it.</p>
-    <div class="row g-4 justify-content-center">
-      <div class="col-lg-6">
-        <div class="use-case-item">
-          <span class="use-case-icon">&#x1F4F9;</span>
-          <div>
-            <h4>Video calls</h4>
-            <p>Light goes red automatically when your webcam turns on. Back to green when the call ends.</p>
+  <section id="use-cases">
+    <div class="container">
+      <h2 class="text-center mb-2">Ideas for How to Use It</h2>
+      <p class="text-center text-body-secondary mb-5">Busy Light is flexible — here are some ways people use it.</p>
+      <div class="row g-4 justify-content-center">
+        <div class="col-lg-6">
+          <div class="use-case-item">
+            <span class="use-case-icon">&#x1F4F9;</span>
+            <div>
+              <h4>Video calls</h4>
+              <p>Light goes red automatically when your webcam turns on. Back to green when the call ends.</p>
+            </div>
+          </div>
+          <div class="use-case-item">
+            <span class="use-case-icon">&#x1F9D1;&#x200D;&#x1F4BB;</span>
+            <div>
+              <h4>Deep focus</h4>
+              <p>Set to &ldquo;concentrating&rdquo; with a hotkey — your household knows you&rsquo;re in the zone.</p>
+            </div>
+          </div>
+          <div class="use-case-item">
+            <span class="use-case-icon">&#x1F3A4;</span>
+            <div>
+              <h4>Recording</h4>
+              <p>Podcasting, streaming, or recording a screencast? Nobody walks in.</p>
+            </div>
           </div>
         </div>
-        <div class="use-case-item">
-          <span class="use-case-icon">&#x1F9D1;&#x200D;&#x1F4BB;</span>
-          <div>
-            <h4>Deep focus</h4>
-            <p>Set to &ldquo;concentrating&rdquo; with a hotkey — your household knows you&rsquo;re in the zone.</p>
+        <div class="col-lg-6">
+          <div class="use-case-item">
+            <span class="use-case-icon">&#x1F6A9;</span>
+            <div>
+              <h4>Therapy or private sessions</h4>
+              <p>Signal that you absolutely cannot be interrupted right now.</p>
+            </div>
           </div>
-        </div>
-        <div class="use-case-item">
-          <span class="use-case-icon">&#x1F3A4;</span>
-          <div>
-            <h4>Recording</h4>
-            <p>Podcasting, streaming, or recording a screencast? Nobody walks in.</p>
+          <div class="use-case-item">
+            <span class="use-case-icon">&#x1F3E2;</span>
+            <div>
+              <h4>Shared offices</h4>
+              <p>Visual availability signal without the awkward headphones-on-means-busy guessing game.</p>
+            </div>
           </div>
-        </div>
-      </div>
-      <div class="col-lg-6">
-        <div class="use-case-item">
-          <span class="use-case-icon">&#x1F6A9;</span>
-          <div>
-            <h4>Therapy or private sessions</h4>
-            <p>Signal that you absolutely cannot be interrupted right now.</p>
-          </div>
-        </div>
-        <div class="use-case-item">
-          <span class="use-case-icon">&#x1F3E2;</span>
-          <div>
-            <h4>Shared offices</h4>
-            <p>Visual availability signal without the awkward headphones-on-means-busy guessing game.</p>
-          </div>
-        </div>
-        <div class="use-case-item">
-          <span class="use-case-icon">&#x1F9D2;</span>
-          <div>
-            <h4>Parenting + WFH</h4>
-            <p>Kids learn the traffic light system fast. Red means wait, green means come on in.</p>
+          <div class="use-case-item">
+            <span class="use-case-icon">&#x1F9D2;</span>
+            <div>
+              <h4>Parenting + WFH</h4>
+              <p>Kids learn the traffic light system fast. Red means wait, green means come on in.</p>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ════════════════════════════════════════════════════════════════════
+  <!-- ════════════════════════════════════════════════════════════════════
      HARDWARE + OPEN SOURCE
      ════════════════════════════════════════════════════════════════════ -->
-<section id="hardware" class="section-alt">
-  <div class="container">
-    <div class="row align-items-center g-5">
-      <div class="col-md-5 text-center">
-        <img src="busy-light-hardware.jpeg" alt="The Busy Light hardware: an LED ring in a 3D-printed enclosure mounted on a door frame" class="hardware-img" style="max-height: 380px; object-fit: cover;" loading="lazy" width="380" height="380">
-      </div>
-      <div class="col-md-7">
-        <h2 class="mb-3">The Hardware (Optional!)</h2>
-        <p>
-          I built a battery-powered LED indicator using an ESP32 chip with ESPHome, housed in a 3D-printed enclosure that hooks over a door. It shows up in Home&nbsp;Assistant as a simple RGB light.
-        </p>
-        <p>
-          The hardware project is open source too — feel free to build your own, remix it, or just use it as inspiration.
-          But <strong>you don&rsquo;t need my hardware</strong>. Busy Light works with any light, LED strip, or device that Home&nbsp;Assistant can control.
-        </p>
-        <a href="https://github.com/swizzlevixen/busylight-hardware" class="btn btn-outline-secondary" target="_blank" rel="noopener">
-          <i class="bi bi-github me-2"></i>Hardware Repo
-        </a>
+  <section id="hardware" class="section-alt">
+    <div class="container">
+      <div class="row align-items-center g-5">
+        <div class="col-md-5 text-center">
+          <img src="busy-light-hardware.jpeg"
+            alt="The Busy Light hardware: an LED ring in a 3D-printed enclosure mounted on a door frame"
+            class="hardware-img" style="max-height: 380px; object-fit: cover;" loading="lazy" width="380" height="380">
+        </div>
+        <div class="col-md-7">
+          <h2 class="mb-3">The Hardware (Optional!)</h2>
+          <p>
+            I built a battery-powered LED indicator using an ESP32 chip with ESPHome, housed in a 3D-printed enclosure
+            that hooks over a door. It shows up in Home&nbsp;Assistant as a simple RGB light.
+          </p>
+          <p>
+            The hardware project is open source too — feel free to build your own, remix it, or just use it as
+            inspiration.
+            But <strong>you don&rsquo;t need my hardware</strong>. Busy Light works with any light, LED strip, or device
+            that Home&nbsp;Assistant can control.
+          </p>
+          <a href="https://github.com/swizzlevixen/busylight-hardware" class="btn btn-outline-secondary" target="_blank"
+            rel="noopener">
+            <i class="bi bi-github me-2"></i>Hardware Repo
+          </a>
 
-        <hr class="my-4">
+          <hr class="my-4">
 
-        <h3 class="h5 mb-3">
-          <i class="bi bi-unlock me-2"></i>Open Source
-        </h3>
-        <p>
-          Busy Light is released under the MIT license. The code is on GitHub — contributions, issues, and ideas are welcome.
-        </p>
-        <p class="text-body-secondary mb-1">
-          <strong>System requirements:</strong> macOS 14.0 (Sonoma) or later
-        </p>
-        <p class="text-body-secondary">
-          Signed and notarized by an Apple developer, so it just works — no Gatekeeper warnings.
-        </p>
+          <h3 class="h5 mb-3">
+            <i class="bi bi-unlock me-2"></i>Open Source
+          </h3>
+          <p>
+            Busy Light is released under the MIT license. The code is on GitHub — contributions, issues, and ideas are
+            welcome.
+          </p>
+          <p class="text-body-secondary mb-1">
+            <strong>System requirements:</strong> macOS 14.0 (Sonoma) or later
+          </p>
+          <p class="text-body-secondary">
+            Signed and notarized by an Apple developer, so it just works — no Gatekeeper warnings.
+          </p>
+
+          <!-- Feedback callout -->
+          <div class="feedback-callout d-flex align-items-start gap-2 mx-auto" style="max-width: 640px;">
+            <i class="bi bi-bug flex-shrink-0 mt-1"></i>
+            <span>
+              Found a bug, or have a feature request? Please use <a
+                href="https://github.com/swizzlevixen/busylight/issues">GitHub Issues</a> or <a href="#"
+                class="feedback-email">email</a> to send it along.
+            </span>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ════════════════════════════════════════════════════════════════════
+  <!-- ════════════════════════════════════════════════════════════════════
      SUPPORT THE PROJECT
      ════════════════════════════════════════════════════════════════════ -->
-<section id="support">
-  <div class="container text-center">
-    <h2 class="mb-3">Support the Project</h2>
-    <p class="mb-4 mx-auto text-balance" style="max-width: 520px;">
-      Busy Light is free and always will be. If it saves you from a few interruptions, consider buying me a coffee?
-    </p>
-    <a href="https://ko-fi.com/swizzlevixen" class="kofi-btn mb-4" target="_blank" rel="noopener">
-      <i class="bi bi-cup-hot-fill"></i> Support on Ko-fi
-    </a>
-
-    <hr class="my-5 mx-auto" style="max-width: 200px;">
-
-    <p class="lead fw-semibold mb-3">Ready to try it?</p>
-    <div class="d-flex flex-wrap justify-content-center gap-3">
-      <a href="https://github.com/swizzlevixen/busylight/releases/latest" class="btn btn-dark btn-lg px-4">
-        <i class="bi bi-apple me-2"></i>Download Free
+  <section id="support">
+    <div class="container text-center">
+      <h2 class="mb-3">Support the Project</h2>
+      <p class="mb-4 mx-auto text-balance" style="max-width: 520px;">
+        Busy Light is free and always will be. If it saves you from a few interruptions, consider buying me a coffee?
+      </p>
+      <a href="https://ko-fi.com/swizzlevixen" class="kofi-btn mb-4" target="_blank" rel="noopener">
+        <i class="bi bi-cup-hot-fill"></i> Support on Ko-fi
       </a>
-      <a href="https://github.com/swizzlevixen/busylight" class="btn btn btn-outline-secondary btn-lg px-4">
-        <i class="bi bi-github me-2"></i>View Source
-      </a>
-    </div>
-  </div>
-</section>
 
-<!-- ════════════════════════════════════════════════════════════════════
-     PRIVACY
-     ════════════════════════════════════════════════════════════════════ -->
-<section id="privacy" class="section-alt">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-8">
-        <h2 class="text-center mb-4">Privacy Policy</h2>
-        <p>
-          Busy Light respects your privacy. Here&rsquo;s the short version:
-        </p>
-        <ul>
-          <li><strong>No analytics or tracking.</strong> The app doesn&rsquo;t phone home, collect usage data, or talk to any server other than your own Home&nbsp;Assistant instance.</li>
-          <li><strong>No account required.</strong> There&rsquo;s no sign-up, no cloud service, nothing to opt out of.</li>
-          <li><strong>Your token stays on your Mac.</strong> Your Home Assistant access token is stored in the macOS Keychain — the same secure storage your Mac uses for passwords and certificates.</li>
-          <li><strong>Camera and mic detection, not access.</strong> Busy Light detects <em>whether</em> your webcam or mic is in use by another app. It never accesses the camera or microphone itself, and no audio or video data is ever captured or transmitted.</li>
-          <li><strong>Local only.</strong> All settings are stored locally in standard macOS preferences. Nothing leaves your machine except scene activation requests sent directly to your Home&nbsp;Assistant instance over your local network.</li>
-        </ul>
-        <p class="text-body-secondary small">
-          Busy Light is open source — you can <a href="https://github.com/swizzlevixen/busylight">read the code yourself</a> and verify all of the above.
-        </p>
+      <hr class="my-5 mx-auto" style="max-width: 200px;">
+
+      <p class="lead fw-semibold mb-3">Ready to try it?</p>
+      <div class="d-flex flex-wrap justify-content-center gap-3">
+        <a href="https://github.com/swizzlevixen/busylight/releases/latest" class="btn btn-dark btn-lg px-4">
+          <i class="bi bi-apple me-2"></i>Download Free
+        </a>
+        <a href="https://github.com/swizzlevixen/busylight" class="btn btn btn-outline-secondary btn-lg px-4">
+          <i class="bi bi-github me-2"></i>View Source
+        </a>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- Feedback callout -->
-<div class="container py-3">
-  <div class="feedback-callout d-flex align-items-start gap-2 mx-auto" style="max-width: 640px;">
-    <i class="bi bi-bug flex-shrink-0 mt-1"></i>
-    <span>
-      Found a bug, or have a feature request? Please use <a href="https://github.com/swizzlevixen/busylight/issues">GitHub Issues</a> or <a href="#" class="feedback-email">email</a> to send it along.
-    </span>
-  </div>
-</div>
+  <!-- ════════════════════════════════════════════════════════════════════
+     PRIVACY
+     ════════════════════════════════════════════════════════════════════ -->
+  <section id="privacy" class="section-alt">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <h2 class="text-center mb-4">Privacy Policy</h2>
+          <p>
+            Busy Light respects your privacy. Here&rsquo;s the short version:
+          </p>
+          <ul>
+            <li><strong>No analytics or tracking.</strong> The app doesn&rsquo;t phone home, collect usage data, or talk
+              to any server other than your own Home&nbsp;Assistant instance.</li>
+            <li><strong>No account required.</strong> There&rsquo;s no sign-up, no cloud service, nothing to opt out of.
+            </li>
+            <li><strong>Your token stays on your Mac.</strong> Your Home Assistant access token is stored in the macOS
+              Keychain — the same secure storage your Mac uses for passwords and certificates.</li>
+            <li><strong>Camera and mic detection, not access.</strong> Busy Light detects <em>whether</em> your webcam
+              or mic is in use by another app. It never accesses the camera or microphone itself, and no audio or video
+              data is ever captured or transmitted.</li>
+            <li><strong>Local only.</strong> All settings are stored locally in standard macOS preferences. Nothing
+              leaves your machine except scene activation requests sent directly to your Home&nbsp;Assistant instance
+              over your local network.</li>
+          </ul>
+          <p class="text-body-secondary small">
+            Busy Light is open source — you can <a href="https://github.com/swizzlevixen/busylight">read the code
+              yourself</a> and verify all of the above.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<!-- ════════════════════════════════════════════════════════════════════
+  <!-- ════════════════════════════════════════════════════════════════════
      FOOTER
      ════════════════════════════════════════════════════════════════════ -->
-<footer class="site-footer">
-  <div class="container text-center">
-    <p class="mb-2">
-      Made by <a href="https://github.com/swizzlevixen">Mark Boszko</a>
-    </p>
-    <p class="mb-2">
-      <a href="https://github.com/swizzlevixen/busylight" class="me-3"><i class="bi bi-github me-1"></i>GitHub</a>
-      <a href="https://ko-fi.com/swizzlevixen"><i class="bi bi-cup-hot me-1"></i>Ko-fi</a>
-    </p>
-    <p class="mb-0 small" style="opacity: 0.6;">
-      &copy; 2026 Mark Boszko. Licensed under MIT.
-      Busy Light is not affiliated with Home Assistant.
-    </p>
-  </div>
-</footer>
+  <footer class="site-footer">
+    <div class="container text-center">
+      <p class="mb-2">
+        Made by <a href="https://github.com/swizzlevixen">Mark Boszko</a>
+      </p>
+      <p class="mb-2">
+        <a href="https://github.com/swizzlevixen/busylight" class="me-3"><i class="bi bi-github me-1"></i>GitHub</a>
+        <a href="https://ko-fi.com/swizzlevixen"><i class="bi bi-cup-hot me-1"></i>Ko-fi</a>
+      </p>
+      <p class="mb-0 small" style="opacity: 0.6;">
+        &copy; 2026 Mark Boszko. Licensed under MIT.
+        Busy Light is not affiliated with Home Assistant.
+      </p>
+    </div>
+  </footer>
 
-<!-- Bootstrap 5.3 JS Bundle -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        crossorigin="anonymous"></script>
-<script>
-  // Obfuscated email link (assembled at runtime to deter scrapers)
-  document.querySelector('.feedback-email').addEventListener('click', function (e) {
-    e.preventDefault();
-    var u = 'busylight'; var d = 'vixenlabs.info';
-    var s = encodeURIComponent('Busy Light Comment');
-    var b = encodeURIComponent('Thanks, I love Busy Light! But I have this idea\u2026\n\n');
-    window.location.href = 'mail' + 'to:' + u + '@' + d + '?subject=' + s + '&body=' + b;
-  });
+  <!-- Bootstrap 5.3 JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    crossorigin="anonymous"></script>
+  <script>
+    // Obfuscated email link (assembled at runtime to deter scrapers)
+    document.querySelector('.feedback-email').addEventListener('click', function (e) {
+      e.preventDefault();
+      var u = 'busylight'; var d = 'vixenlabs.info';
+      var s = encodeURIComponent('Busy Light Comment');
+      var b = encodeURIComponent('Thanks, I love Busy Light! But I have this idea\u2026\n\n');
+      window.location.href = 'mail' + 'to:' + u + '@' + d + '?subject=' + s + '&body=' + b;
+    });
 
-  // Screenshot lightbox: set modal image src from clicked thumbnail
-  document.getElementById('screenshotModal').addEventListener('show.bs.modal', function (event) {
-    var link = event.relatedTarget;
-    var imgSrc = link.getAttribute('href');
-    var imgAlt = link.querySelector('img').getAttribute('alt');
-    document.getElementById('screenshotModalImg').src = imgSrc;
-    document.getElementById('screenshotModalImg').alt = imgAlt;
-  });
-  // Click the modal image to dismiss
-  document.getElementById('screenshotModalImg').addEventListener('click', function () {
-    bootstrap.Modal.getInstance(document.getElementById('screenshotModal')).hide();
-  });
-</script>
+    // Screenshot lightbox: set modal image src from clicked thumbnail
+    document.getElementById('screenshotModal').addEventListener('show.bs.modal', function (event) {
+      var link = event.relatedTarget;
+      var imgSrc = link.getAttribute('href');
+      var imgAlt = link.querySelector('img').getAttribute('alt');
+      document.getElementById('screenshotModalImg').src = imgSrc;
+      document.getElementById('screenshotModalImg').alt = imgAlt;
+    });
+    // Click the modal image to dismiss
+    document.getElementById('screenshotModalImg').addEventListener('click', function () {
+      bootstrap.Modal.getInstance(document.getElementById('screenshotModal')).hide();
+    });
+  </script>
 </body>
+
 </html>
