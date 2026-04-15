@@ -1,0 +1,439 @@
+/* Busy Light Landing Page - Custom Styles */
+
+/* ── CSS Custom Properties ── */
+:root {
+  --bl-red: #e8140a;
+  --bl-amber: #f0a000;
+  --bl-green: #2ecc40;
+  --bl-hero-bg: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+  --bl-section-alt: #f8f9fa;
+  --bl-card-bg: #ffffff;
+  --bl-card-border: rgba(0, 0, 0, 0.08);
+  --bl-card-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  --bl-menu-bg: #f6f6f6;
+  --bl-menu-border: rgba(0, 0, 0, 0.12);
+  --bl-menu-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+  --bl-menu-hover: rgba(0, 122, 255, 0.12);
+  --bl-menu-check: #000;
+  --bl-menu-shortcut: #888;
+  --bl-menu-divider: rgba(0, 0, 0, 0.1);
+  --bl-callout-bg: #e8f4fd;
+  --bl-callout-border: #b6d4e8;
+  --bl-callout-text: #1a5276;
+  --bl-kofi-bg: #ff5e5b;
+  --bl-footer-bg: #1a1a2e;
+  --bl-footer-text: #a0aec0;
+}
+
+[data-bs-theme="dark"] {
+  --bl-hero-bg: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  --bl-section-alt: #1e1e30;
+  --bl-card-bg: #2a2a3c;
+  --bl-card-border: rgba(255, 255, 255, 0.08);
+  --bl-card-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+  --bl-menu-bg: #3a3a4a;
+  --bl-menu-border: rgba(255, 255, 255, 0.1);
+  --bl-menu-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --bl-menu-hover: rgba(0, 122, 255, 0.25);
+  --bl-menu-check: #fff;
+  --bl-menu-shortcut: #999;
+  --bl-menu-divider: rgba(255, 255, 255, 0.1);
+  --bl-callout-bg: #1a2a3a;
+  --bl-callout-border: #2a4a5e;
+  --bl-callout-text: #8ec8e8;
+  --bl-footer-bg: #0d0d1a;
+  --bl-footer-text: #6b7a8d;
+}
+
+/* ── General ── */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+section {
+  padding: 4rem 0;
+}
+
+.section-alt {
+  background-color: var(--bl-section-alt);
+}
+
+/* ── Navbar ── */
+.site-nav {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 0.4rem 0;
+  font-size: 0.9rem;
+}
+
+[data-bs-theme="dark"] .site-nav {
+  background: rgba(26, 26, 46, 0.85);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.site-nav .navbar-brand img {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Offset scroll targets so they don't hide behind sticky nav */
+:target {
+  scroll-margin-top: 70px;
+}
+
+/* ── Hero ── */
+.hero {
+  background: var(--bl-hero-bg);
+  padding: 5rem 0 3rem;
+}
+
+.hero-icon {
+  width: 128px;
+  height: 128px;
+  border-radius: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+}
+
+.hero h1 {
+  font-size: 2.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.hero .lead {
+  font-size: 1.25rem;
+  opacity: 0.85;
+}
+
+@media (max-width: 576px) {
+  .hero h1 {
+    font-size: 2rem;
+  }
+  .hero .lead {
+    font-size: 1.1rem;
+  }
+}
+
+/* ── macOS Menu Mockup ── */
+.macos-menu {
+  background: var(--bl-menu-bg);
+  border: 1px solid var(--bl-menu-border);
+  border-radius: 10px;
+  box-shadow: var(--bl-menu-shadow);
+  padding: 5px 0;
+  max-width: 320px;
+  margin: 0 auto;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+  font-size: 13px;
+  user-select: none;
+}
+
+.macos-menu-item {
+  display: flex;
+  align-items: center;
+  padding: 4px 12px 4px 8px;
+  gap: 6px;
+  cursor: default;
+  border-radius: 4px;
+  margin: 0 5px;
+  transition: background 0.1s;
+}
+
+.macos-menu-item:hover {
+  background: var(--bl-menu-hover);
+}
+
+.macos-menu-item .check {
+  width: 16px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--bl-menu-check);
+  flex-shrink: 0;
+}
+
+.macos-menu-item .scene-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.macos-menu-item .scene-emoji {
+  font-size: 14px;
+  line-height: 1;
+  flex-shrink: 0;
+  width: 16px;
+  text-align: center;
+}
+
+.macos-menu-item .scene-name {
+  flex: 1;
+  color: var(--bl-menu-check);
+  text-align: left;
+}
+
+.macos-menu-item .shortcut {
+  color: var(--bl-menu-shortcut);
+  font-size: 12px;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.macos-menu-divider {
+  height: 1px;
+  background: var(--bl-menu-divider);
+  margin: 5px 12px;
+}
+
+.macos-menu-header {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--bl-menu-shortcut);
+  padding: 6px 26px 2px;
+}
+
+/* Subtle animation on the active scene dot */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 4px rgba(240, 160, 0, 0.4); }
+  50% { box-shadow: 0 0 10px rgba(240, 160, 0, 0.7); }
+}
+
+.scene-dot-active {
+  animation: pulse-glow 2.5s ease-in-out infinite;
+}
+
+/* ── HA Callout ── */
+.ha-callout {
+  background: var(--bl-callout-bg);
+  border: 1px solid var(--bl-callout-border);
+  color: var(--bl-callout-text);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+}
+
+.ha-callout a {
+  color: var(--bl-callout-text);
+  font-weight: 600;
+}
+
+/* ── How It Works Steps ── */
+.step-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin: 0 auto 1rem;
+}
+
+.step-icon-1 { background: rgba(232, 20, 10, 0.1); color: var(--bl-red); }
+.step-icon-2 { background: rgba(240, 160, 0, 0.1); color: var(--bl-amber); }
+.step-icon-3 { background: rgba(46, 204, 64, 0.1); color: var(--bl-green); }
+
+.step-number {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.5;
+}
+
+/* Step connector lines (desktop only) */
+@media (min-width: 768px) {
+  .steps-row {
+    position: relative;
+  }
+  .steps-row::before {
+    content: "";
+    position: absolute;
+    top: 32px;
+    left: 25%;
+    right: 25%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--bl-red), var(--bl-amber), var(--bl-green));
+    opacity: 0.2;
+    z-index: 0;
+  }
+  .steps-row .col-md-4 {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+/* ── Feature Cards ── */
+.feature-card {
+  background: var(--bl-card-bg);
+  border: 1px solid var(--bl-card-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  height: 100%;
+  box-shadow: var(--bl-card-shadow);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.feature-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.feature-card .feature-icon {
+  font-size: 1.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.feature-card h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.feature-card p {
+  font-size: 0.95rem;
+  opacity: 0.8;
+  margin-bottom: 0;
+}
+
+/* ── Screenshots ── */
+.screenshot-img {
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+  max-width: 100%;
+  height: auto;
+}
+
+.screenshot-caption {
+  font-size: 0.9rem;
+  opacity: 0.65;
+  margin-top: 0.75rem;
+}
+
+/* ── Use Cases ── */
+.use-case-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.use-case-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  width: 40px;
+  text-align: center;
+}
+
+.use-case-item h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.15rem;
+}
+
+.use-case-item p {
+  font-size: 0.95rem;
+  opacity: 0.75;
+  margin-bottom: 0;
+}
+
+/* ── Hardware Section ── */
+.hardware-img {
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  max-width: 100%;
+  height: auto;
+}
+
+/* ── Ko-fi / Support Section ── */
+.kofi-btn {
+  background: var(--bl-kofi-bg);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.65rem 1.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.kofi-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  color: #fff;
+}
+
+/* ── Footer ── */
+.site-footer {
+  background: var(--bl-footer-bg);
+  color: var(--bl-footer-text);
+  padding: 2.5rem 0;
+  font-size: 0.9rem;
+}
+
+.site-footer a {
+  color: #cbd5e0;
+  text-decoration: none;
+}
+
+.site-footer a:hover {
+  color: #fff;
+}
+
+/* ── Traffic Light Accent Dots (decorative) ── */
+.traffic-dots {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.traffic-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+/* ── Screenshot Lightbox ── */
+.screenshot-link {
+  display: block;
+  cursor: zoom-in;
+  transition: transform 0.2s;
+}
+
+.screenshot-link:hover {
+  transform: scale(1.02);
+}
+
+.screenshot-link:hover .screenshot-img {
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.18);
+}
+
+#screenshotModal .modal-content {
+  background: transparent !important;
+}
+
+/* ── View Source Button (dark mode) ── */
+[data-bs-theme="dark"] .btn-outline-secondary {
+  --bs-btn-color: #cbd5e0;
+  --bs-btn-border-color: rgba(255, 255, 255, 0.4);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: rgba(255, 255, 255, 0.15);
+  --bs-btn-hover-border-color: rgba(255, 255, 255, 0.6);
+}
+
+/* ── Utility ── */
+.text-balance {
+  text-wrap: balance;
+}
